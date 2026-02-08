@@ -18,5 +18,8 @@ export { generateDomainLanguageSkill } from './generators/domain-language.js';
 export { generateLeanOrbitalSkill } from './orbitals-skills-generators/lean/lean-orbital-generator.js';
 export { generateLeanFixingSkill } from './orbitals-skills-generators/lean/lean-fixing-generator.js';
 
+// Helper functions (used by tools and generators)
+export { getKeyBehaviorsReference } from './prompts/behaviors-reference.js';
+
 // Types
 export type { SkillFrontmatter, GeneratedSkill } from './generators/types.js';

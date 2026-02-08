@@ -13,3 +13,26 @@
 // ============================================================================
 
 export * from './skill-sections/index.js';
+
+// ============================================================================
+// Generation Prompts (Composed from Skill Sections)
+// ============================================================================
+
+export {
+  getOrbitalDecompositionPrompt,
+  getFullOrbitalPrompt,
+  getRequirementsDecomposePrompt,
+  getRequirementsTraitPrompt,
+} from './generation-prompts.js';
+
+// ============================================================================
+// Type References (From @almadar packages)
+// ============================================================================
+
+export {
+  getMinimalTypeReference,
+  getPatternTypesCompact,
+  getSExprQuickRef,
+  getRenderUIQuickRef,
+  getFieldTypesCompact,
+} from './type-references.js';
