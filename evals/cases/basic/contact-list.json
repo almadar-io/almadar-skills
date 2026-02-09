@@ -1,0 +1,13 @@
+{
+  "id": "basic-contact-list",
+  "description": "Contact list with CRUD",
+  "prompt": "Create a contact list app. Each contact has a name, email, phone number, and company. Users should be able to add, edit, and delete contacts.",
+  "semanticExpectations": [
+    "Has a Contact entity with name, email, phone, and company fields",
+    "Includes CRUD operations for contacts",
+    "Has a page for managing contacts",
+    "Uses entity-table for displaying contacts",
+    "Uses form-section for creating/editing contacts"
+  ],
+  "tags": ["basic", "crud"]
+}

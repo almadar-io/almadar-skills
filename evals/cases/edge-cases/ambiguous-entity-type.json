@@ -1,0 +1,13 @@
+{
+  "id": "edge-entity-as-type",
+  "description": "Prompt that tempts using entity name as field type",
+  "prompt": "Build an app to manage books and authors. Each book has a title, page count, and its author.",
+  "semanticExpectations": [
+    "Has Book and Author entities",
+    "Book has a relation field to Author (not type: 'Author')",
+    "Uses type: 'relation' with proper relation configuration",
+    "Book has title and pageCount fields",
+    "Author entity exists with appropriate fields"
+  ],
+  "tags": ["edge-case", "relations"]
+}

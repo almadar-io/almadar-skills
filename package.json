@@ -40,12 +40,19 @@
     "validate": "tsx scripts/validate.ts",
     "sync": "tsx scripts/sync.ts",
     "sync:dry": "tsx scripts/sync.ts --dry-run",
-    "clean": "rm -rf .skills dist"
+    "clean": "rm -rf .skills dist",
+    "eval": "tsx evals/cli.ts",
+    "eval:basic": "tsx evals/cli.ts --tags basic",
+    "eval:edge": "tsx evals/cli.ts --tags edge-case",
+    "eval:compare": "tsx evals/cli.ts compare"
   },
   "dependencies": {
     "@almadar/core": "workspace:*",
+    "@almadar/llm": "workspace:*",
     "@almadar/patterns": "workspace:*",
-    "@almadar/std": "workspace:*"
+    "@almadar/std": "workspace:*",
+    "commander": "^12.0.0",
+    "glob": "^10.3.10"
   },
   "devDependencies": {
     "tsup": "^8.0.0",

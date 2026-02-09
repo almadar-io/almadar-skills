@@ -1,0 +1,13 @@
+{
+  "id": "basic-task-manager",
+  "description": "Simple task management app with CRUD operations",
+  "prompt": "Build a task management app where users can create, view, edit, and delete tasks. Each task has a title, description, status (todo, in-progress, done), and due date.",
+  "semanticExpectations": [
+    "Has a Task entity with title, description, status, and dueDate fields",
+    "Status field is an enum with values: todo, in-progress, done",
+    "Includes CRUD operations (create, read, update, delete) for tasks",
+    "Has a page at /tasks for managing tasks",
+    "Uses appropriate patterns like entity-table and form-section"
+  ],
+  "tags": ["basic", "crud"]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "basic-blog",
+  "description": "Blog post management",
+  "prompt": "Build a blog management system. Posts have a title, body, author name, publish date, and status (draft, published, archived).",
+  "semanticExpectations": [
+    "Has a Post entity with title, body, author, publishDate, and status fields",
+    "Status is an enum with values: draft, published, archived",
+    "Includes CRUD operations for posts",
+    "Has a page for managing posts"
+  ],
+  "tags": ["basic", "crud", "content"]
+}

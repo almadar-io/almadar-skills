@@ -1,0 +1,6 @@
+# Baseline reports (can be committed if you want to track history)
+# baselines/*.json
+
+# Temporary output files
+*.tmp
+*.log
