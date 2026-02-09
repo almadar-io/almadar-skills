@@ -121,21 +121,28 @@ ${mod.operators.map(op => `- **${op.name}**: ${op.description}`).join('\n')}
  */
 export function getStdBehaviorsWithStateMachines(): string {
   const behaviors = getAllBehaviors();
-  const nonGameBehaviors = behaviors.filter(b => 
-    !b.category?.includes('game') && b.stateMachine
-  );
-  
+  const nonGameBehaviors = behaviors.filter(b => {
+    const traits = b.orbitals?.[0]?.traits ?? [];
+    const hasGameCategory = traits.some((t: any) => t.category?.includes('game'));
+    const hasStateMachine = traits.some((t: any) => t.stateMachine);
+    return !hasGameCategory && hasStateMachine;
+  });
+
   return `## Standard Behaviors
 
-${nonGameBehaviors.map(behavior => `### ${behavior.name}
+${nonGameBehaviors.map(behavior => {
+    const trait = (behavior.orbitals?.[0]?.traits ?? []).find((t: any) => t.stateMachine) as any;
+    const sm = trait?.stateMachine;
+    return `### ${behavior.name}
 
-**States**: ${behavior.stateMachine.states.map((s: any) => s.name).join(', ')}
-**Events**: ${behavior.stateMachine.events.join(', ')}
+**States**: ${sm?.states?.map((s: any) => s.name).join(', ') ?? 'N/A'}
+**Events**: ${sm?.events?.join(', ') ?? 'N/A'}
 
 \`\`\`json
 ${JSON.stringify(behavior, null, 2)}
 \`\`\`
-`).join('\n\n')}
+`;
+  }).join('\n\n')}
 `;
 }
 
