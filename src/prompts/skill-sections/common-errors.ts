@@ -67,37 +67,30 @@ function getValidViewTypes(): string {
 
 /**
  * Get common errors section.
- * These are the most frequent mistakes made during generation.
+ * Supports tiered output: 'top6' for generation skill, 'full' for fixing skill.
  */
-export function getCommonErrorsSection(): string {
+export function getCommonErrorsSection(level: 'top6' | 'full' = 'full'): string {
+  const critical = getCriticalErrors();
+  if (level === 'top6') return critical;
+  return critical + getEdgeCaseErrors();
+}
+
+/**
+ * Top 6 critical errors — the mistakes the LLM actually makes repeatedly.
+ * ~4,100 chars. Used by the generation skill.
+ */
+function getCriticalErrors(): string {
   return `## Critical Rules
 
-### NEVER Use @payload in set Effects (CRITICAL)
-
-The \`set\` effect modifies entity state. **@payload is READ-ONLY** - it contains event data.
-
-\`\`\`json
-// WRONG - @payload is read-only!
-["set", "@payload.data.createdAt", "@now"]
-["set", "@payload.data.status", "active"]
-
-// CORRECT - Use @entity to modify state
-["set", "@entity.createdAt", "@now"]
-["set", "@entity.status", "active"]
-\`\`\`
-
-**Rule:** \`set\` target MUST start with \`@entity\`, never \`@payload\`.
-
-### INIT Transition Required (CRITICAL)
+### 1. INIT Transition Required (CRITICAL)
 
 Every trait MUST have an INIT self-loop transition. The runtime fires \`INIT\` when page loads.
 
 \`\`\`json
-// REQUIRED in EVERY trait:
 {
   "from": "Browsing",
   "to": "Browsing",
-  "event": "INIT",  // ← Runtime fires this on page load
+  "event": "INIT",
   "effects": [
     ["render-ui", "main", { "type": "page-header", ... }],
     ["render-ui", "main", { "type": "entity-table", ... }]
@@ -107,43 +100,40 @@ Every trait MUST have an INIT self-loop transition. The runtime fires \`INIT\` w
 
 Without INIT: Page loads blank, nothing renders, no UI appears.
 
-### Valid Patterns ONLY (CRITICAL)
+### 2. NEVER Use @payload in set Effects
+
+The \`set\` effect modifies entity state. **@payload is READ-ONLY**.
+
+\`\`\`json
+// WRONG
+["set", "@payload.data.status", "active"]
+
+// CORRECT
+["set", "@entity.status", "active"]
+\`\`\`
+
+**Rule:** \`set\` target MUST start with \`@entity\`, never \`@payload\`.
+
+### 3. Valid Patterns ONLY
 
 **DO NOT invent custom patterns!** Only these patterns exist:
 
 ${getPatternCategories()}
 
-**NEVER use**: \`onboarding-welcome\`, \`category-selector\`, \`assessment-question\`, etc. - these DO NOT exist!
+**NEVER use**: \`onboarding-welcome\`, \`category-selector\`, \`assessment-question\`, etc.
 
-### Valid viewType Values
+Valid viewType values: ${getValidViewTypes()}
 
-Pages must use valid viewType values: ${getValidViewTypes()}
-
-Invalid values like \`form\`, \`wizard\`, \`onboarding\` will cause validation errors.
-
-${getPatternPropsCompact()}
-
-${getPatternActionsRef()}
-
-### Page Structure Required (CRITICAL)
+### 4. Page Structure Required
 
 Every page MUST have \`path\` and \`traits\` properties:
 
 \`\`\`json
-// WRONG - missing path and traits:
 {
   "pages": [{
     "name": "TasksPage",
-    "entity": "Task"  // ❌ Missing path and traits!
-  }]
-}
-
-// CORRECT - complete page definition:
-{
-  "pages": [{
-    "name": "TasksPage",
-    "path": "/tasks",           // ← REQUIRED: starts with /
-    "traits": [{ "ref": "TaskManagement" }]  // ← REQUIRED: trait-driven UI
+    "path": "/tasks",
+    "traits": [{ "ref": "TaskManagement" }]
   }]
 }
 \`\`\`
@@ -151,232 +141,124 @@ Every page MUST have \`path\` and \`traits\` properties:
 Without \`path\`: Validation error \`ORB_P_MISSING_PATH\`
 Without \`traits\`: Validation error \`ORB_P_MISSING_TRAITS\`
 
-### Valid Field Types ONLY (CRITICAL)
+### 5. Valid Field Types ONLY
 
 Field types MUST be one of: \`string\`, \`number\`, \`boolean\`, \`date\`, \`timestamp\`, \`datetime\`, \`array\`, \`object\`, \`enum\`, \`relation\`
 
 \`\`\`json
 // WRONG - using entity name as type:
-{ "name": "author", "type": "User" }           // ❌ "User" is not a valid type!
-{ "name": "post", "type": "BlogPost" }         // ❌ Invalid!
+{ "name": "author", "type": "User" }
 
-// CORRECT - use relation type with entity reference:
+// CORRECT - use relation type:
 { "name": "author", "type": "relation", "relation": { "entity": "User", "cardinality": "one" } }
-{ "name": "post", "type": "relation", "relation": { "entity": "BlogPost", "cardinality": "one" } }
-
-// CORRECT for arrays of primitives:
-{ "name": "tags", "type": "array", "items": { "type": "string" } }
-
-// CORRECT for enums:
-{ "name": "status", "type": "enum", "values": ["pending", "active", "done"] }
 \`\`\`
 
-### Event Listeners Structure
+### 6. Modal State Machine Pattern
 
-Event listeners go INSIDE traits, not at orbital level:
+When a transition opens a modal/drawer, the target state MUST have CLOSE and CANCEL transitions:
 
 \`\`\`json
-// WRONG - at orbital level:
-{
-  "name": "Task Management",
-  "listens": ["SOME_EVENT"]  // ❌ Wrong location, wrong format
-}
-
-// CORRECT - inside trait:
-{
-  "traits": [{
-    "name": "TaskInteraction",
-    "listens": [
-      { "event": "USER_UPDATED", "handler": "REFRESH_LIST" }  // ✅ Object format
-    ]
-  }]
-}
+{ "from": "Browsing", "to": "Creating", "event": "CREATE",
+  "effects": [["render-ui", "modal", { "type": "form-section", "cancelEvent": "CANCEL", ... }]] },
+{ "from": "Creating", "to": "Browsing", "event": "CANCEL",
+  "effects": [["render-ui", "modal", null]] },
+{ "from": "Creating", "to": "Browsing", "event": "CLOSE",
+  "effects": [["render-ui", "modal", null]] },
+{ "from": "Creating", "to": "Browsing", "event": "SAVE",
+  "effects": [["persist", "create", "Entity", "@payload.data"], ["render-ui", "modal", null], ["emit", "INIT"]] }
 \`\`\`
 
+**CLOSE** = user clicks outside modal/presses Escape. **CANCEL** = form cancel button. Both needed.
+`;
+}
+
+/**
+ * Edge case errors 7-16 — less frequent, validator catches most of these.
+ * ~4,000 chars. Used by the fixing skill.
+ */
+function getEdgeCaseErrors(): string {
+  return `
 ---
 
-## Common Errors (AVOID)
+## Additional Errors (Edge Cases)
 
-### 1. Missing INIT Transition
-\`\`\`
-WRONG: No INIT transition → Page loads blank
-CORRECT: { "from": "browsing", "to": "browsing", "event": "INIT", "effects": [...render-ui...] }
-\`\`\`
-
-### 2. Over-Generating Pages
+### 7. Over-Generating Pages
 \`\`\`
 WRONG: TaskListPage, TaskCreatePage, TaskEditPage, TaskViewPage (4 pages!)
 CORRECT: TasksPage with EntityManagement trait (1 page)
 \`\`\`
 
-### 3. Duplicate Slot Rendering
+### 8. Duplicate Slot Rendering
 \`\`\`
 WRONG: Two traits both render to "main" on page load
 CORRECT: ONE trait owns each slot
 \`\`\`
 
-### 4. Missing onSubmit in form-section
+### 9. Missing onSubmit in form-section
 \`\`\`
 WRONG: { "type": "form-section", "entity": "Task" }
 CORRECT: { "type": "form-section", "entity": "Task", "onSubmit": "SAVE" }
 \`\`\`
 
-### 5. Duplicate Transitions (Same from+event)
+### 10. Duplicate Transitions (Same from+event)
 \`\`\`
 WRONG: Two transitions with same "from" and "event" without guards
 CORRECT: Use GUARDS to differentiate transitions
 \`\`\`
 
-### 6. Using "render" Instead of "render-ui"
+### 11. Using "render" Instead of "render-ui"
 \`\`\`
 WRONG: ["render", "main", {...}]
 CORRECT: ["render-ui", "main", {...}]
 \`\`\`
 
-### 7. Generating Sections Array (Legacy)
+### 12. Generating Sections Array (Legacy)
 \`\`\`
 WRONG: { "pages": [{ "sections": [...] }] }
 CORRECT: { "pages": [{ "traits": [...] }] } - UI comes from render-ui effects
 \`\`\`
 
-### 8. Using form-actions Pattern (DOES NOT EXIST!)
+### 13. Using form-actions Pattern (DOES NOT EXIST!)
 \`\`\`
 WRONG: ["render-ui", "main", { "type": "form-actions", "actions": [...] }]
-CORRECT: Use form-section with onSubmit/onCancel props:
-         { "type": "form-section", "entity": "Task", "fields": [...], "onSubmit": "SAVE", "onCancel": "CANCEL" }
+CORRECT: Use form-section with onSubmit/onCancel props
 \`\`\`
-Actions are INSIDE patterns, not separate patterns. The form-section pattern includes submit/cancel buttons.
+Actions are INSIDE patterns, not separate patterns.
 
-### 9. Forgetting itemActions in entity-table
+### 14. Forgetting itemActions in entity-table
 \`\`\`
-WRONG: { "type": "entity-table", "entity": "Task" }  // No row actions
-CORRECT: { "type": "entity-table", "entity": "Task", "itemActions": [{"label": "Edit", "event": "EDIT"}, {"label": "Delete", "event": "DELETE"}] }
+WRONG: { "type": "entity-table", "entity": "Task" }
+CORRECT: { "type": "entity-table", "entity": "Task", "itemActions": [{"label": "Edit", "event": "EDIT"}] }
 \`\`\`
 
-### 10. Duplicate Trait Names Across Orbitals
+### 15. Duplicate Trait Names Across Orbitals
 \`\`\`
 WRONG: UserOrbital uses "EntityManagement", TaskOrbital uses "EntityManagement"
 CORRECT: UserOrbital uses "UserManagement", TaskOrbital uses "TaskManagement"
 \`\`\`
 Each trait name MUST be unique. Pattern: \`{Entity}{Purpose}\`
 
-### 11. Using @payload in set Effect
+### 16. Hallucinated itemAction Properties
 \`\`\`
-WRONG: ["set", "@payload.acceptedAt", "@now"]  // @payload is read-only!
-CORRECT: ["set", "@entity.acceptedAt", "@now"]  // set modifies entity state
-\`\`\`
-\`set\` effect MUST use \`@entity.field\` binding. \`@payload\` is read-only event data.
-
-### 12. Hallucinated itemAction Properties
-\`\`\`
-WRONG: { "label": "View", "event": "VIEW", "condition": "@entity.status === 'active'" }
-CORRECT: { "label": "View", "event": "VIEW", "showWhen": ["=", "@entity.status", "active"] }
+WRONG: { "label": "View", "event": "VIEW", "condition": "..." }
+CORRECT: { "label": "View", "event": "VIEW" }
 \`\`\`
 Valid itemAction props: \`label\`, \`event\`, \`navigatesTo\`, \`placement\`, \`variant\`, \`showWhen\`
-Note: \`showWhen\` is defined but NOT yet implemented - actions always visible.
 
-### 14. Missing Page Path
-\`\`\`
-WRONG: { "pages": [{ "name": "TasksPage", "entity": "Task" }] }
-CORRECT: { "pages": [{ "name": "TasksPage", "path": "/tasks", "traits": [...] }] }
-\`\`\`
-
-### 15. Using Entity Name as Field Type
-\`\`\`
-WRONG: { "name": "author", "type": "User" }
-CORRECT: { "name": "author", "type": "relation", "relation": { "entity": "User", "cardinality": "one" } }
-\`\`\`
-
-### 16. Missing Traits Array on Page
-\`\`\`
-WRONG: { "pages": [{ "name": "TasksPage", "path": "/tasks" }] }
-CORRECT: { "pages": [{ "name": "TasksPage", "path": "/tasks", "traits": [{ "ref": "TaskManagement" }] }] }
-\`\`\`
-
-### 13. Modal State Machine Pattern (CRITICAL)
-
-When a transition opens a modal (renders to \`modal\` or \`drawer\` slot), the target state MUST have:
-1. A **CLOSE** transition to clear the modal and return to browsing state
-2. A **CANCEL** transition (for forms with cancel buttons)
-3. The CLOSE/CANCEL effects MUST include \`["render-ui", "modal", null]\` to clear the slot
-
+### 17. Event Listeners Structure
+Event listeners go INSIDE traits, not at orbital level:
 \`\`\`json
-// WRONG - Modal opens but no way to close it!
-{
-  "from": "browsing", "to": "creating", "event": "CREATE",
-  "effects": [["render-ui", "modal", { "type": "form-section", ... }]]
-}
-// No CLOSE or CANCEL transition from "creating" → Page gets stuck!
-
-// CORRECT - Full modal open/close cycle:
-{
-  "from": "browsing", "to": "creating", "event": "CREATE",
-  "effects": [["render-ui", "modal", { "type": "form-section", "cancelEvent": "CANCEL", ... }]]
-},
-{
-  "from": "creating", "to": "browsing", "event": "CANCEL",
-  "effects": [["render-ui", "modal", null]]
-},
-{
-  "from": "creating", "to": "browsing", "event": "CLOSE",
-  "effects": [["render-ui", "modal", null]]
-},
-{
-  "from": "creating", "to": "browsing", "event": "SAVE",
-  "effects": [
-    ["persist", "create", "Entity", "@payload.data"],
-    ["render-ui", "modal", null],  // ← IMPORTANT: Clear modal on save too!
-    ["fetch", "Entity", {}]
-  ]
-}
+"traits": [{ "name": "TaskInteraction",
+  "listens": [{ "event": "USER_UPDATED", "handler": "REFRESH_LIST" }] }]
 \`\`\`
 
-**Why CLOSE is needed:** The UI sends \`CLOSE\` when user clicks outside the modal or presses Escape.
-**Why CANCEL is needed:** Forms emit \`CANCEL\` when user clicks the Cancel button.
-**Both are needed** for complete modal behavior. Without them, the modal cannot be dismissed and reopened.
-
-### 14. Wrong Filtering Pattern (Use Query Singleton)
-\`\`\`
-WRONG: Individual filter buttons with manual FILTER events
-       { "type": "button", "label": "Active", "action": "FILTER", "data": { "status": "active" } }
-
-CORRECT: Use Query Singleton entity + filter-group pattern:
-\`\`\`
-
-**Query Singleton Pattern for Filtering:**
-
-1. Define a singleton entity to hold filter state:
+### 18. Wrong Filtering Pattern (Use Query Singleton)
+Use a singleton entity for filter state + \`query\` prop on entity-table:
 \`\`\`json
-{
-  "name": "TaskQuery",
-  "entity": {
-    "name": "TaskQuery",
-    "singleton": true,
-    "runtime": true,
-    "fields": [
-      { "name": "status", "type": "string" },
-      { "name": "search", "type": "string" }
-    ]
-  }
-}
+{ "name": "TaskQuery", "entity": { "name": "TaskQuery", "singleton": true, "runtime": true,
+    "fields": [{ "name": "status", "type": "string" }, { "name": "search", "type": "string" }] } }
 \`\`\`
-
-2. Use \`set\` effects to update filter state:
-\`\`\`json
-{
-  "from": "Browsing", "to": "Browsing", "event": "FILTER",
-  "effects": [["set", "@TaskQuery.status", "@payload.status"]]
-}
-\`\`\`
-
-3. Reference query in patterns:
-\`\`\`json
-["render-ui", "main", {
-  "type": "entity-table",
-  "entity": "Task",
-  "query": "@TaskQuery"
-}]
-\`\`\`
+Reference: \`["render-ui", "main", { "type": "entity-table", "entity": "Task", "query": "@TaskQuery" }]\`
 `;
 }
 

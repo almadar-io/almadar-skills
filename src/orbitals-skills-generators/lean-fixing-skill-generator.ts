@@ -10,7 +10,6 @@
  */
 
 import {
-    getMinimalTypeReference,
     getSExprQuickRef,
     getRenderUIQuickRef,
 } from './helpers.js';
@@ -19,6 +18,7 @@ import {
     getArchitectureSection,
     getCommonErrorsSection,
     getSchemaUpdateSection,
+    getCustomTraitSection,
     // Fixing-specific sections
     getFixingWorkflowSection,
     getCommonFixPatternsSection,
@@ -88,10 +88,6 @@ ${getArchitectureSection()}
 
 ---
 
-${getMinimalTypeReference()}
-
----
-
 ${getSExprQuickRef()}
 
 ---
@@ -112,7 +108,11 @@ ${getOverGenerationSection()}` : ''}
 
 ---
 
-${getCommonErrorsSection()}
+${getCommonErrorsSection('full')}
+
+---
+
+${getCustomTraitSection()}
 
 ${includeSchemaUpdates ? `---
 

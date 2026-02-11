@@ -13,12 +13,17 @@ export {
 } from "./common-errors.js";
 export {
   getDecompositionSection,
+  getDecompositionCompact,
   getDecompositionChecklist,
+  getConnectivityCompact,
   // UX Enhancement sections
   getFlowPatternSection,
   getPortableOrbitalOutputSection,
   getOrbitalConnectivitySection,
 } from "./decomposition.js";
+
+// Pattern design guide (render-ui design guide)
+export { getRenderUIDesignGuide } from "./pattern-design-guide.js";
 export {
   getCustomTraitSection,
   getCustomTraitCompact,

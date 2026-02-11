@@ -5,6 +5,10 @@
  * Uses the orbital skill generator from the orbitals module and adds
  * domain classification, interaction models, and trait-driven UI guidance.
  *
+ * v4.0: Reduced from ~49K to ~15K by cutting std dump, schema-updates,
+ * custom-traits, and half the errors. Added render-ui design guide with
+ * pattern catalog and composition recipes.
+ *
  * @packageDocumentation
  */
 
@@ -14,29 +18,36 @@ import { generateLeanOrbitalSkill } from '../orbitals-skills-generators/lean-orb
 /**
  * Generate the kflow-orbitals skill.
  *
- * Uses the lean orbital skill generator which produces a ~90% smaller skill
- * by deriving prompts from types and using focused, minimal sections.
+ * Uses the lean orbital skill generator with minimal defaults (~15K).
+ * The design guide, top-6 errors, and enriched example are always included.
  *
  * Options:
- * - compact: false (default) - Include full std/* state machine examples (49K chars)
- * - compact: true - Exclude std/* examples for minimal size (24K chars)
+ * - compact: false (default) - Standard ~15K generation skill
+ * - compact: true - Same (compact flag preserved for API compat, no-op now)
  */
 export function generateKflowOrbitalsSkill(compact = false): GeneratedSkill {
   const frontmatter = {
     name: 'kflow-orbitals',
     description: 'Generate KFlow schemas using the Orbitals composition model. Decomposes applications into atomic Orbital Units (Entity x Traits x Patterns) with structural caching for efficiency.',
-    allowedTools: ['Read', 'Write', 'Edit'],
-    version: '3.1.0', // Bumped version for compact option
+    allowedTools: ['Read', 'Write', 'Edit', 'generate_orbital', 'design_transition', 'finish_task', 'query_schema_structure', 'extract_chunk', 'apply_chunk'],
+    version: '4.1.0', // v4.1: design refinement workflow with design_transition
   };
 
-  // Use the lean orbital skill generator:
-  // - Type-derived prompts (auto-sync with types)
-  // - Focused architecture, errors, and decomposition sections
-  // - Compact mode (~24K chars) vs Full mode (~49K chars)
+  // v4: Minimal skill with design guide (~15K).
+  // - No std behaviors dump (saves 21K)
+  // - No schema-updates (moved to fixing skill)
+  // - No custom-traits (moved to fixing skill)
+  // - Top 6 errors only (saves 4K)
+  // - render-ui design guide with pattern catalog + composition recipes
+  // - Enriched example with stats + searchable table
   const content = generateLeanOrbitalSkill({
     includeExample: true,
     includeToolWorkflow: true,
-    includeStdStateMachines: !compact, // Full std/* examples (21K chars)
+    includeStdStateMachines: false,
+    includeSchemaUpdates: false,
+    includeCustomTraits: false,
+    errorLevel: 'top6',
+    includeDesignGuide: true,
   });
 
   return {

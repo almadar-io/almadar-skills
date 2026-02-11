@@ -110,6 +110,88 @@ export function getDecompositionChecklist(): string {
 `;
 }
 
+/**
+ * Get compact decomposition protocol (~1,250 chars).
+ * Steps 0-6 without verbose guard examples (guards covered in S-Expr + errors).
+ */
+export function getDecompositionCompact(): string {
+    return `## Orbital Decomposition Protocol
+
+### Step 0: Classify Domain
+| Domain | Keywords | Key Traits |
+|--------|----------|------------|
+| business | manage, track, workflow | EntityManagement, SearchAndFilter |
+| game | play, score, level | Physics2D, Health, GameState |
+| form | wizard, onboarding | Wizard, FormSubmission |
+| dashboard | metrics, KPI | EntityManagement |
+| content | blog, CMS | none (page navigation) |
+
+### Step 1: Identify Entities (ONE Orbital Per Entity)
+- What are the core data objects?
+- persistent (DB), runtime (memory), or singleton (config)?
+- **CRITICAL: Create exactly ONE orbital per entity**
+
+### Step 2: Select Interaction Model
+| Domain | Create | View | Edit | Delete |
+|--------|--------|------|------|--------|
+| business | modal | drawer | modal | confirm |
+| game | none | none | none | none |
+| form | wizard | drawer | page | confirm |
+
+### Step 3: Choose Traits
+- Business: EntityManagement (handles CRUD via render-ui)
+- Game: Physics2D, Health, Score, Collision
+- Form: Wizard (multi-step) or FormSubmission (single)
+
+### Step 4: Define State Machine
+\`\`\`
+states: Identify user-facing modes (browsing, creating, editing, viewing)
+events: Identify user actions (INIT, CREATE, VIEW, EDIT, SAVE, CLOSE)
+transitions: Map (from, event) → (to, effects)
+\`\`\`
+
+### Step 5: Add INIT Transition (CRITICAL)
+Every trait MUST have an INIT self-loop with render-ui effects. Without INIT, the page loads blank!
+
+### Step 6: Define Pages
+- ONE page per entity (business) or workflow (form)
+- Attach traits to pages via \`traits\` array
+- Add \`"guard"\` (singular) S-expressions on SAVE transitions for business rules
+`;
+}
+
+/**
+ * Get compact orbital connectivity (~750 chars).
+ * One combined example instead of three separate examples.
+ */
+export function getConnectivityCompact(): string {
+    return `## Orbital Connectivity
+
+For multi-entity apps, connect orbitals:
+
+\`\`\`json
+{
+  "entity": {
+    "fields": [
+      { "name": "customerId", "type": "relation", "relation": { "entity": "Customer", "cardinality": "one" } }
+    ]
+  },
+  "emits": ["ORDER_COMPLETED"],
+  "listens": [{ "event": "MENU_ITEM_UNAVAILABLE", "triggers": "DISABLE_ITEM" }],
+  "design": {
+    "uxHints": {
+      "relatedLinks": [{ "relation": "customerId", "label": "View Customer", "targetView": "detail" }]
+    }
+  }
+}
+\`\`\`
+
+- **relation fields**: Link entities (Order → Customer)
+- **emits/listens**: Cross-orbital event communication
+- **relatedLinks**: Navigation between related records
+`;
+}
+
 // ============================================================================
 // UX Enhancement Sections
 // ============================================================================

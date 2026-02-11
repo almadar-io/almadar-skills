@@ -15,6 +15,7 @@ export * from './prompts/index.js';
 export { generateKflowOrbitalsSkill } from './generators/kflow-orbitals.js';
 export { generateKflowOrbitalFixingSkill } from './generators/kflow-orbital-fixing.js';
 export { generateDomainLanguageSkill } from './generators/domain-language.js';
+export { generateKflowDesignSkill } from './generators/kflow-design.js';
 export { generateLeanOrbitalSkill } from './orbitals-skills-generators/lean/lean-orbital-generator.js';
 export { generateLeanFixingSkill } from './orbitals-skills-generators/lean/lean-fixing-generator.js';
 

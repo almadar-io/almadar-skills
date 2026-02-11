@@ -6,15 +6,19 @@
  * 2. Using focused, minimal guidance sections
  * 3. Avoiding verbose explanations and redundancy
  *
- * Target: <1000 lines output (vs 4000+ in original)
+ * v4: Reduced from ~49K to ~15K by:
+ * - Removing std behaviors JSON dump (21K)
+ * - Removing schema-updates (moved to fixing skill)
+ * - Removing custom-traits (moved to fixing skill)
+ * - Trimming common-errors to top 6
+ * - Replacing 380-char render-ui quickref with 2.5K design guide
+ * - Using compact decomposition and connectivity variants
  *
  * @packageDocumentation
  */
 
 import {
-    getMinimalTypeReference,
     getSExprQuickRef,
-    getRenderUIQuickRef,
     getStdMinimalReference,
     getStdFullReference,
     getStdBehaviorsWithStateMachines,
@@ -24,9 +28,12 @@ import {
     getArchitectureSection,
     getCommonErrorsSection,
     getDecompositionSection,
+    getDecompositionCompact,
     getCustomTraitSection,
     getSchemaUpdateSection,
-    // UX Enhancement sections (Phase 3)
+    getConnectivityCompact,
+    getRenderUIDesignGuide,
+    // UX Enhancement sections
     getFlowPatternSection,
     getPortableOrbitalOutputSection,
     getOrbitalConnectivitySection,
@@ -50,6 +57,12 @@ export interface LeanSkillOptions {
     includeStdStateMachines?: boolean;
     /** Include schema update guidance section */
     includeSchemaUpdates?: boolean;
+    /** Include custom trait examples section */
+    includeCustomTraits?: boolean;
+    /** Error detail level: 'top6' for generation, 'full' for fixing */
+    errorLevel?: 'top6' | 'full';
+    /** Include render-ui design guide with pattern catalog and recipes */
+    includeDesignGuide?: boolean;
 }
 
 // ============================================================================
@@ -59,22 +72,26 @@ export interface LeanSkillOptions {
 /**
  * Generate a lean orbital skill.
  *
- * This produces a skill that is ~75% smaller than the original while
- * containing all essential information for orbital generation.
+ * Default options produce a ~15K skill focused on generation quality.
+ * Set includeStdStateMachines/includeCustomTraits/errorLevel='full' for
+ * the larger ~49K variant used by legacy callers.
  */
 export function generateLeanOrbitalSkill(options: LeanSkillOptions = {}): string {
     const {
         includeExample = true,
         includeToolWorkflow = true,
-        includeStdLibrary = true,
+        includeStdLibrary = false,
         stdLibraryFull = false,
-        includeStdStateMachines = true,
-        includeSchemaUpdates = true,
+        includeStdStateMachines = false,
+        includeSchemaUpdates = false,
+        includeCustomTraits = false,
+        errorLevel = 'top6',
+        includeDesignGuide = true,
     } = options;
 
     // Build std section based on options
     let stdSection = '';
-    if (includeStdLibrary) {
+    if (includeStdLibrary || includeStdStateMachines) {
         if (includeStdStateMachines) {
             // Include expanded behaviors with state machines (non-game only)
             stdSection = `---
@@ -98,6 +115,15 @@ ${getStdMinimalReference()}
         }
     }
 
+    // Use compact or full decomposition/connectivity
+    const decompositionSection = (includeStdStateMachines || includeCustomTraits)
+        ? getDecompositionSection()
+        : getDecompositionCompact();
+
+    const connectivitySection = (includeStdStateMachines || includeCustomTraits)
+        ? getOrbitalConnectivitySection()
+        : getConnectivityCompact();
+
     return `# Orbital Generation Skill
 
 > Generate Orbital applications using Orbital Units: Entity × Traits × Patterns
@@ -106,15 +132,11 @@ ${getArchitectureSection()}
 
 ---
 
-${getMinimalTypeReference()}
-
----
-
 ${getSExprQuickRef()}
 
 ---
 
-${getRenderUIQuickRef()}
+${includeDesignGuide ? getRenderUIDesignGuide() : ''}
 
 ${stdSection}
 ---
@@ -123,7 +145,7 @@ ${getFlowPatternSection()}
 
 ---
 
-${getDecompositionSection()}
+${decompositionSection}
 
 ---
 
@@ -131,7 +153,7 @@ ${getPortableOrbitalOutputSection()}
 
 ---
 
-${getOrbitalConnectivitySection()}
+${connectivitySection}
 
 ---
 
@@ -139,12 +161,12 @@ ${getContextUsageCompact()}
 
 ---
 
-${getCommonErrorsSection()}
+${getCommonErrorsSection(errorLevel)}
 
----
+${includeCustomTraits ? `---
 
 ${getCustomTraitSection()}
-
+` : ''}
 ${includeToolWorkflow ? getToolWorkflowSection() : ''}
 
 ${includeSchemaUpdates ? `---
@@ -214,22 +236,73 @@ function getToolWorkflowSection(): string {
 
 ## Tool Workflow
 
-1. **DECOMPOSE**: Break requirements into OrbitalUnits
-2. **GENERATE**: Call \`generate_orbital\` for each orbital
-3. **COMBINE**: Call \`construct_combined_schema\` (FINAL STEP)
+### Phase 1: DECOMPOSE
+Break requirements into OrbitalUnits (pure reasoning, no tools).
+
+### Phase 2: GENERATE
+Call \`generate_orbital\` for each orbital:
 
 \`\`\`
 generate_orbital({ orbital: {...}, orbitalIndex: 0, totalOrbitals: N })
 generate_orbital({ orbital: {...}, orbitalIndex: 1, totalOrbitals: N })
 ...
-construct_combined_schema({ name: "App", description: "..." })
-# STOP HERE - job is done
 \`\`\`
+
+Each orbital is written to \`.orbitals/<name>.json\` with ALL effects (render-ui, persist, emit, set, etc.).
+
+### Phase 3: COMBINE
+Call \`finish_task\` to auto-combine and validate:
+
+\`\`\`
+finish_task({ appName: "App" })
+# Reads .orbitals/*.json → schema.json → orbital validate
+\`\`\`
+
+### Phase 4: DESIGN REFINEMENT (optional but recommended)
+
+After \`finish_task\` produces \`schema.json\`, enhance key transitions with \`design_transition\`.
+
+**When to use**: INIT transitions (they benefit most from rich composition — header + stats + content), and CREATE/VIEW transitions for polished forms and detail views.
+
+**Step-by-step:**
+
+1. Call \`design_transition\` for the transition:
+\`\`\`json
+{
+  "from": "Browsing", "to": "Browsing", "event": "INIT",
+  "slot": "main", "entityName": "Task",
+  "entityFields": [{"name": "title", "type": "string"}, {"name": "status", "type": "enum", "values": ["pending", "active", "done"]}],
+  "domainCategory": "business"
+}
+\`\`\`
+Returns: \`{ "success": true, "effects": [["render-ui", "main", {...}], ...] }\`
+
+2. Extract the orbital chunk:
+\`\`\`json
+{ "file": "schema.json", "type": "orbital", "name": "Task Management" }
+\`\`\`
+
+3. Edit the chunk file: replace render-ui effects in the target transition with the designed effects. **Keep all non-render-ui effects** (persist, emit, set) — only replace the render-ui tuples.
+
+4. Apply the chunk back:
+\`\`\`json
+{ "chunkId": "<id from extract_chunk>" }
+\`\`\`
+
+**Splicing rule**: For a transition with mixed effects like:
+\`\`\`json
+[["persist", "create", "Task", "@payload.data"], ["render-ui", "modal", null], ["emit", "INIT"]]
+\`\`\`
+Keep \`persist\` and \`emit\`, replace \`render-ui\` with the designed effects.
+For INIT transitions (render-ui only), replace all effects.
+
+**Skip design_transition for**: SAVE, CANCEL, CONFIRM_DELETE transitions (they have persist/emit effects with simple slot-clearing — no UI to design).
 `;
 }
 
 /**
  * Get minimal example section.
+ * Enriched INIT transition: page-header + stats + searchable entity-table.
  */
 function getMinimalExample(): string {
     return `---
@@ -266,8 +339,9 @@ function getMinimalExample(): string {
           {
             "from": "Browsing", "to": "Browsing", "event": "INIT",
             "effects": [
-              ["render-ui", "main", { "type": "page-header", "title": "Tasks", "actions": [{ "label": "New Task", "event": "CREATE", "variant": "primary" }] }],
-              ["render-ui", "main", { "type": "entity-table", "entity": "Task", "columns": ["title", "status"], "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE" }] }]
+              ["render-ui", "main", { "type": "page-header", "title": "Tasks", "subtitle": "Manage your tasks", "actions": [{ "label": "New Task", "event": "CREATE", "variant": "primary" }] }],
+              ["render-ui", "main", { "type": "stats", "entity": "Task", "metrics": [{ "label": "Total", "value": "@count", "icon": "clipboard" }, { "label": "Active", "value": "@count:status=active", "icon": "clock" }, { "label": "Done", "value": "@count:status=done", "icon": "check-circle" }] }],
+              ["render-ui", "main", { "type": "entity-table", "entity": "Task", "columns": ["title", "status"], "searchable": true, "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE" }] }]
             ]
           },
           {
@@ -324,14 +398,15 @@ function getMinimalExample(): string {
 
 **Key points**:
 - ONE page (TasksPage) not four (list/create/edit/view)
-- INIT transition renders initial UI (page-header + entity-table)
+- INIT transition composes **multiple patterns**: page-header + stats + entity-table
 - States are OBJECTS with \`isInitial\` flag
 - **Actions are INSIDE patterns (use unified props)**:
   - \`page-header\` has \`actions: [{label, event, variant}]\`
-  - \`entity-table\` has \`itemActions: [{label, event}]\`
+  - \`entity-table\` has \`itemActions: [{label, event}]\` and \`searchable: true\`
   - \`form-section\` has \`submitEvent\` and \`cancelEvent\` (NOT onSubmit/onCancel!)
   - \`entity-detail\` has \`actions\` (NOT headerActions!)
   - \`confirmation\` emits action events
+  - \`stats\` has \`metrics: [{label, value, icon}]\`
 - **NEVER use**: \`onSubmit\`, \`onCancel\`, \`headerActions\`, \`loading\` (use \`isLoading\`)
 - NO separate "form-actions" pattern - it doesn't exist!
 `;
@@ -356,15 +431,22 @@ export function getLeanSkillStats(options: LeanSkillOptions = {}): { lines: numb
  * Get comparison stats for different configurations.
  */
 export function getSkillSizeComparison(): {
-    withoutStd: { lines: number; chars: number };
+    minimal: { lines: number; chars: number };
     withStdMinimal: { lines: number; chars: number };
     withStdFull: { lines: number; chars: number };
     withStdStateMachines: { lines: number; chars: number };
+    legacy: { lines: number; chars: number };
 } {
     return {
-        withoutStd: getLeanSkillStats({ includeStdLibrary: false }),
-        withStdMinimal: getLeanSkillStats({ includeStdLibrary: true, stdLibraryFull: false, includeStdStateMachines: false }),
-        withStdFull: getLeanSkillStats({ includeStdLibrary: true, stdLibraryFull: true, includeStdStateMachines: false }),
-        withStdStateMachines: getLeanSkillStats({ includeStdLibrary: true, includeStdStateMachines: true }),
+        minimal: getLeanSkillStats({}),
+        withStdMinimal: getLeanSkillStats({ includeStdLibrary: true, stdLibraryFull: false }),
+        withStdFull: getLeanSkillStats({ includeStdLibrary: true, stdLibraryFull: true }),
+        withStdStateMachines: getLeanSkillStats({ includeStdStateMachines: true }),
+        legacy: getLeanSkillStats({
+            includeStdStateMachines: true,
+            includeSchemaUpdates: true,
+            includeCustomTraits: true,
+            errorLevel: 'full',
+        }),
     };
 }
