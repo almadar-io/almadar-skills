@@ -63,7 +63,7 @@ You receive a single transition to design. Use these inputs to make UI decisions
 3. What DOMAIN?
    ├─ business → entity-table + stats + filter-group
    ├─ dashboard → dashboard-grid + chart + stats
-   ├─ e-commerce → entity-cards + stats (revenue)
+   ├─ ecommerce → entity-cards + stats (revenue)
    ├─ content → entity-cards + tabs + media
    └─ workflow → timeline + progress-bar
 

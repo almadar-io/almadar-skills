@@ -154,7 +154,7 @@ Layout patterns wrap other patterns via \`children\` arrays for rich, structured
 | Domain | List Pattern | Extras |
 |--------|-------------|--------|
 | business/admin | \`entity-table\` (searchable) | \`stats\`, \`filter-group\` |
-| e-commerce | \`entity-cards\` | \`stats\` (revenue), \`chart\` |
+| ecommerce | \`entity-cards\` | \`stats\` (revenue), \`chart\` |
 | content/CMS | \`entity-cards\` | \`tabs\`, \`media-gallery\` |
 | dashboard | \`dashboard-grid\` | \`stats\`, \`chart\`, \`meter\`, \`timeline\` |
 | workflow | \`entity-table\` | \`progress-bar\`, \`timeline\` |

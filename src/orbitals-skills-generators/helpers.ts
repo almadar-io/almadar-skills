@@ -136,7 +136,7 @@ ${nonGameBehaviors.map(behavior => {
     return `### ${behavior.name}
 
 **States**: ${sm?.states?.map((s: any) => s.name).join(', ') ?? 'N/A'}
-**Events**: ${sm?.events?.join(', ') ?? 'N/A'}
+**Events**: ${sm?.events?.map((e: any) => e.key ?? e.name ?? e).join(', ') ?? 'N/A'}
 
 \`\`\`json
 ${JSON.stringify(behavior, null, 2)}

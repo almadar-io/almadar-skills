@@ -99,13 +99,13 @@ function installSkills(): void {
     console.log('✅ Created skills directory:', SKILLS_DIR);
   }
 
-  // Generate skills first if not already generated
+  // Always regenerate skills to ensure freshness
+  console.log('📝 Generating skills...\n');
   if (!existsSync(SOURCE_DIR)) {
-    console.log('📝 Generating skills first...\n');
     mkdirSync(SOURCE_DIR, { recursive: true });
-    const skills = generateAllBuilderSkills();
-    writeAllSkills(skills, SOURCE_DIR);
   }
+  const generatedSkills = generateAllBuilderSkills();
+  writeAllSkills(generatedSkills, SOURCE_DIR);
 
   // Copy skills to installation directory
   const skills = readdirSync(SOURCE_DIR);

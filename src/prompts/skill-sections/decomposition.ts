@@ -21,6 +21,9 @@ export function getDecompositionSection(): string {
 | form | wizard, onboarding | Wizard, FormSubmission |
 | dashboard | metrics, KPI | EntityManagement |
 | content | blog, CMS | none (page navigation) |
+| social | chat, feed, profile, follow | EntityManagement |
+| ecommerce | shop, store, cart, checkout | EntityManagement, SearchAndFilter |
+| workflow | automate, process, pipeline | EntityManagement |
 
 ### Step 1: Identify Entities (ONE Orbital Per Entity)
 - What are the core data objects?
@@ -96,7 +99,7 @@ Without INIT, the page loads blank!
 export function getDecompositionChecklist(): string {
     return `## Decomposition Checklist
 
-- [ ] Domain classified (business/game/form/dashboard/content)
+- [ ] Domain classified (business/game/form/dashboard/content/social/ecommerce/workflow)
 - [ ] Entities identified with persistence type
 - [ ] **ONE orbital per entity** (not multiple orbitals for same entity!)
 - [ ] Traits selected (EntityManagement for CRUD, domain-specific for others)
@@ -125,6 +128,9 @@ export function getDecompositionCompact(): string {
 | form | wizard, onboarding | Wizard, FormSubmission |
 | dashboard | metrics, KPI | EntityManagement |
 | content | blog, CMS | none (page navigation) |
+| social | chat, feed, profile, follow | EntityManagement |
+| ecommerce | shop, store, cart, checkout | EntityManagement, SearchAndFilter |
+| workflow | automate, process, pipeline | EntityManagement |
 
 ### Step 1: Identify Entities (ONE Orbital Per Entity)
 - What are the core data objects?
