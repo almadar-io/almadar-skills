@@ -62,7 +62,7 @@ Trait State Machine → render-ui → UI Component → User Action → Event →
 | **One trait per slot** | Each slot (main, modal, drawer) owned by ONE trait |
 | **INIT renders UI** | Every trait needs INIT self-loop to render initial UI |
 | **One page per entity** | Use trait's render-ui for create/edit/view, not separate pages |
-| **form-section has onSubmit** | Connects form to trait events |
+| **form-section has submitEvent** | Connects form to trait events (NOT onSubmit!) |
 | **std/* are templates** | Guide LLM generation, not runtime code |
 
 ### Slot Ownership

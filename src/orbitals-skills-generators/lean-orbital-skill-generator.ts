@@ -258,45 +258,16 @@ finish_task({ appName: "App" })
 # Reads .orbitals/*.json → schema.json → orbital validate
 \`\`\`
 
-### Phase 4: DESIGN REFINEMENT (optional but recommended)
+### Phase 4: VERIFY COMPOSITION QUALITY
 
-After \`finish_task\` produces \`schema.json\`, enhance key transitions with \`design_transition\`.
+Before calling \`finish_task\`, verify each INIT transition:
 
-**When to use**: INIT transitions (they benefit most from rich composition — header + stats + content), and CREATE/VIEW transitions for polished forms and detail views.
+1. **Uses a single \`render-ui\` call** with top-level \`stack\` and \`children\` — NOT flat sequential calls
+2. **Has 3+ composed sections**: header (HStack: title + action), metrics (HStack/Grid of Box cards), data (entity-table/entity-cards)
+3. **Uses domain-appropriate atoms**: \`badge\` for status, \`typography\` for labels/values, \`button\` for actions
+4. **Props are correct**: \`submitEvent\` not \`onSubmit\`, \`actions\` not \`headerActions\`, \`fields\` not \`fieldNames\`
 
-**Step-by-step:**
-
-1. Call \`design_transition\` for the transition:
-\`\`\`json
-{
-  "from": "Browsing", "to": "Browsing", "event": "INIT",
-  "slot": "main", "entityName": "Task",
-  "entityFields": [{"name": "title", "type": "string"}, {"name": "status", "type": "enum", "values": ["pending", "active", "done"]}],
-  "domainCategory": "business"
-}
-\`\`\`
-Returns: \`{ "success": true, "effects": [["render-ui", "main", {...}], ...] }\`
-
-2. Extract the orbital chunk:
-\`\`\`json
-{ "file": "schema.json", "type": "orbital", "name": "Task Management" }
-\`\`\`
-
-3. Edit the chunk file: replace render-ui effects in the target transition with the designed effects. **Keep all non-render-ui effects** (persist, emit, set) — only replace the render-ui tuples.
-
-4. Apply the chunk back:
-\`\`\`json
-{ "chunkId": "<id from extract_chunk>" }
-\`\`\`
-
-**Splicing rule**: For a transition with mixed effects like:
-\`\`\`json
-[["persist", "create", "Task", "@payload.data"], ["render-ui", "modal", null], ["emit", "INIT"]]
-\`\`\`
-Keep \`persist\` and \`emit\`, replace \`render-ui\` with the designed effects.
-For INIT transitions (render-ui only), replace all effects.
-
-**Skip design_transition for**: SAVE, CANCEL, CONFIRM_DELETE transitions (they have persist/emit effects with simple slot-clearing — no UI to design).
+If any INIT transition is flat (just \`page-header\` + \`entity-table\`), redesign it as a composed VStack hierarchy before finishing.
 `;
 }
 
@@ -307,7 +278,7 @@ For INIT transitions (render-ui only), replace all effects.
 function getMinimalExample(): string {
     return `---
 
-## Example: Task Manager
+## Example: Task Manager (Atomic Composition)
 
 \`\`\`json
 {
@@ -339,9 +310,29 @@ function getMinimalExample(): string {
           {
             "from": "Browsing", "to": "Browsing", "event": "INIT",
             "effects": [
-              ["render-ui", "main", { "type": "page-header", "title": "Tasks", "subtitle": "Manage your tasks", "actions": [{ "label": "New Task", "event": "CREATE", "variant": "primary" }] }],
-              ["render-ui", "main", { "type": "stats", "entity": "Task", "metrics": [{ "label": "Total", "value": "@count", "icon": "clipboard" }, { "label": "Active", "value": "@count:status=active", "icon": "clock" }, { "label": "Done", "value": "@count:status=done", "icon": "check-circle" }] }],
-              ["render-ui", "main", { "type": "entity-table", "entity": "Task", "columns": ["title", "status"], "searchable": true, "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE" }] }]
+              ["render-ui", "main", {
+                "type": "stack", "direction": "vertical", "gap": "lg",
+                "children": [
+                  { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center",
+                    "children": [
+                      { "type": "typography", "variant": "h1", "text": "Tasks" },
+                      { "type": "button", "label": "New Task", "event": "CREATE", "variant": "primary" }
+                    ]
+                  },
+                  { "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
+                    "children": [
+                      { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+                        "children": [{ "type": "typography", "variant": "caption", "text": "Total" }, { "type": "typography", "variant": "h2", "text": "@count" }] },
+                      { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+                        "children": [{ "type": "typography", "variant": "caption", "text": "Active" }, { "type": "badge", "variant": "primary", "text": "@count:status=active" }] },
+                      { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+                        "children": [{ "type": "typography", "variant": "caption", "text": "Done" }, { "type": "badge", "variant": "success", "text": "@count:status=done" }] }
+                    ]
+                  },
+                  { "type": "entity-table", "entity": "Task", "columns": ["title", "status"], "searchable": true,
+                    "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE" }] }
+                ]
+              }]
             ]
           },
           {
@@ -396,19 +387,20 @@ function getMinimalExample(): string {
 }
 \`\`\`
 
-**Key points**:
-- ONE page (TasksPage) not four (list/create/edit/view)
-- INIT transition composes **multiple patterns**: page-header + stats + entity-table
-- States are OBJECTS with \`isInitial\` flag
-- **Actions are INSIDE patterns (use unified props)**:
-  - \`page-header\` has \`actions: [{label, event, variant}]\`
-  - \`entity-table\` has \`itemActions: [{label, event}]\` and \`searchable: true\`
-  - \`form-section\` has \`submitEvent\` and \`cancelEvent\` (NOT onSubmit/onCancel!)
-  - \`entity-detail\` has \`actions\` (NOT headerActions!)
-  - \`confirmation\` emits action events
-  - \`stats\` has \`metrics: [{label, value, icon}]\`
-- **NEVER use**: \`onSubmit\`, \`onCancel\`, \`headerActions\`, \`loading\` (use \`isLoading\`)
-- NO separate "form-actions" pattern - it doesn't exist!
+**Key points — Atomic Composition**:
+- **INIT uses a SINGLE \`render-ui\` call** with a top-level \`stack\` containing composed \`children\`
+- **3 sections composed**: header (HStack: title + button), metrics (HStack of Box stat cards), data (entity-table)
+- **Atoms used**: \`typography\` (h1, h2, caption), \`badge\` (status indicators), \`button\` (actions)
+- **Layout used**: \`stack\` (vertical page, horizontal rows), \`box\` (stat cards with bg/border/rounded)
+- **Organism used**: \`entity-table\` with searchable + itemActions
+
+**Prop rules** (MANDATORY):
+- \`form-section\`: use \`submitEvent\` and \`cancelEvent\` — NEVER \`onSubmit\`/\`onCancel\`
+- \`entity-detail\`: use \`actions\` — NEVER \`headerActions\`
+- \`entity-table\`: use \`itemActions\` with \`searchable: true\`
+- Events are flat strings: \`["INIT", "CREATE", ...]\` — NOT \`[{ "key": "INIT" }]\`
+- ONE page per entity, not four (list/create/edit/view)
+- NO separate "form-actions" pattern — it doesn't exist
 `;
 }
 

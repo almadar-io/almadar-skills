@@ -85,6 +85,7 @@ function getCriticalErrors(): string {
 ### 1. INIT Transition Required (CRITICAL)
 
 Every trait MUST have an INIT self-loop transition. The runtime fires \`INIT\` when page loads.
+The INIT render-ui MUST be a **single composed stack**, not flat calls:
 
 \`\`\`json
 {
@@ -92,8 +93,19 @@ Every trait MUST have an INIT self-loop transition. The runtime fires \`INIT\` w
   "to": "Browsing",
   "event": "INIT",
   "effects": [
-    ["render-ui", "main", { "type": "page-header", ... }],
-    ["render-ui", "main", { "type": "entity-table", ... }]
+    ["render-ui", "main", {
+      "type": "stack", "direction": "vertical", "gap": "lg",
+      "children": [
+        { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center",
+          "children": [
+            { "type": "typography", "variant": "h1", "text": "Title" },
+            { "type": "button", "label": "Create", "event": "CREATE", "variant": "primary" }
+          ]
+        },
+        { "type": "entity-table", "entity": "EntityName", "columns": ["..."], "searchable": true,
+          "itemActions": [{ "label": "View", "event": "VIEW" }] }
+      ]
+    }]
   ]
 }
 \`\`\`
@@ -194,10 +206,11 @@ WRONG: Two traits both render to "main" on page load
 CORRECT: ONE trait owns each slot
 \`\`\`
 
-### 9. Missing onSubmit in form-section
+### 9. Missing submitEvent in form-section
 \`\`\`
 WRONG: { "type": "form-section", "entity": "Task" }
-CORRECT: { "type": "form-section", "entity": "Task", "onSubmit": "SAVE" }
+ALSO WRONG: { "type": "form-section", "entity": "Task", "onSubmit": "SAVE" }
+CORRECT: { "type": "form-section", "entity": "Task", "submitEvent": "SAVE", "cancelEvent": "CANCEL" }
 \`\`\`
 
 ### 10. Duplicate Transitions (Same from+event)
@@ -221,7 +234,7 @@ CORRECT: { "pages": [{ "traits": [...] }] } - UI comes from render-ui effects
 ### 13. Using form-actions Pattern (DOES NOT EXIST!)
 \`\`\`
 WRONG: ["render-ui", "main", { "type": "form-actions", "actions": [...] }]
-CORRECT: Use form-section with onSubmit/onCancel props
+CORRECT: Use form-section with submitEvent/cancelEvent props
 \`\`\`
 Actions are INSIDE patterns, not separate patterns.
 
@@ -275,7 +288,7 @@ export function getValidationHintsSection(): string {
 | ORB_P_MISSING_TRAITS | Add \`traits\` array to page with at least one trait ref |
 | ORB_E_INVALID_FIELD_TYPE | Use valid type: string, number, boolean, date, enum, relation. NOT entity names! |
 | ORB_INIT_MISSING | Add INIT self-loop transition with render-ui effects |
-| ORB_FORM_SUBMIT | Add onSubmit event name to form-section pattern |
+| ORB_FORM_SUBMIT | Add submitEvent and cancelEvent to form-section pattern |
 | ORB_DUPE_TRANS | Add guards to differentiate same-event transitions |
 | ORB_SLOT_CONTENTION | Merge traits or use different slots |
 | ORB_DUPE_PAGE_TRAITS | Remove duplicate trait references from page |

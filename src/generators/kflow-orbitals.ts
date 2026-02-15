@@ -29,8 +29,8 @@ export function generateKflowOrbitalsSkill(compact = false): GeneratedSkill {
   const frontmatter = {
     name: 'kflow-orbitals',
     description: 'Generate KFlow schemas using the Orbitals composition model. Decomposes applications into atomic Orbital Units (Entity x Traits x Patterns) with structural caching for efficiency.',
-    allowedTools: ['Read', 'Write', 'Edit', 'generate_orbital', 'design_transition', 'finish_task', 'query_schema_structure', 'extract_chunk', 'apply_chunk'],
-    version: '4.1.0', // v4.1: design refinement workflow with design_transition
+    allowedTools: ['Read', 'Write', 'Edit', 'generate_orbital', 'finish_task', 'query_schema_structure', 'extract_chunk', 'apply_chunk'],
+    version: '5.0.0', // v5.0: atomic composition (removed design_transition, single-pass design)
   };
 
   // v4: Minimal skill with design guide (~15K).

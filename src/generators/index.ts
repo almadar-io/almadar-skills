@@ -1,13 +1,12 @@
 /**
  * Skill Generators for Builder Client
  *
- * Re-exports the 6 core skills used by the builder client:
- * 1. kflow-orbitals (standard JSON generation)
+ * Re-exports the 5 core skills used by the builder client:
+ * 1. kflow-orbitals (standard JSON generation with atomic composition)
  * 2. kflow-orbital-fixing (standard fixing)
  * 3. kflow-lean-orbitals (lean domain language generation)
  * 4. kflow-lean-fixing (lean fixing)
  * 5. domain-language (ODL understanding/summarization)
- * 6. kflow-design (render-ui design for transitions)
  *
  * @packageDocumentation
  */
@@ -23,9 +22,6 @@ export { generateKflowOrbitalsSkill } from './kflow-orbitals.js';
 export { generateKflowOrbitalFixingSkill } from './kflow-orbital-fixing.js';
 export { generateDomainLanguageSkill } from './domain-language.js';
 
-// Design skill (render-ui authoring for transitions)
-export { generateKflowDesignSkill, getDesignSkillStats } from './kflow-design.js';
-
 // Lean skills (domain language output)
 export { generateLeanOrbitalSkill } from '../orbitals-skills-generators/lean/lean-orbital-generator.js';
 export { generateLeanFixingSkill } from '../orbitals-skills-generators/lean/lean-fixing-generator.js';
@@ -39,13 +35,12 @@ import type { GeneratedSkill } from './types.js';
 import { generateKflowOrbitalsSkill } from './kflow-orbitals.js';
 import { generateKflowOrbitalFixingSkill } from './kflow-orbital-fixing.js';
 import { generateDomainLanguageSkill } from './domain-language.js';
-import { generateKflowDesignSkill } from './kflow-design.js';
 import { generateLeanOrbitalSkill } from '../orbitals-skills-generators/lean/lean-orbital-generator.js';
 import { generateLeanFixingSkill } from '../orbitals-skills-generators/lean/lean-fixing-generator.js';
 
 /**
  * Generate all builder client skills.
- * These are the 6 skills actually used by the builder UI.
+ * These are the 5 skills actually used by the builder UI.
  */
 export function generateAllBuilderSkills(): GeneratedSkill[] {
   return [
@@ -70,6 +65,5 @@ export function generateAllBuilderSkills(): GeneratedSkill[] {
       content: generateLeanFixingSkill(),
     },
     generateDomainLanguageSkill(),
-    generateKflowDesignSkill(),
   ];
 }

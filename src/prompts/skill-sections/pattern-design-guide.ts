@@ -1,11 +1,12 @@
 /**
- * Pattern Design Guide Section
+ * Atomic Composition Design Guide
  *
- * Replaces the 380-char getRenderUIQuickRef() with actionable guidance
- * on pattern selection, composition recipes, and slot strategy.
+ * Teaches the LLM to compose atoms, molecules, and organisms within
+ * VStack/HStack/Box layout primitives to produce rich, unique views.
  *
- * Target: ~2,500 chars — focused entirely on helping the LLM produce
- * rich, varied render-ui effects instead of defaulting to entity-table.
+ * Replaces the old pattern-selection-by-intent approach with atomic
+ * design composition — the same approach used by template authors in
+ * packages/almadar-ui/components/templates/.
  *
  * @packageDocumentation
  */
@@ -16,11 +17,11 @@ import {
 } from "@almadar/patterns";
 
 /**
- * Get the render-ui design guide.
- * Covers syntax, slot strategy, pattern-by-intent, and composition recipes.
+ * Get the render-ui atomic composition guide.
+ * Covers syntax, slot strategy, atomic hierarchy, composition rules, and domain recipes.
  */
 export function getRenderUIDesignGuide(): string {
-  return `## Render-UI Design Guide
+  return `## Render-UI Atomic Composition Guide
 
 ### Syntax
 \`["render-ui", slot, { "type": pattern, ...props }]\`
@@ -29,70 +30,63 @@ Clear slot: \`["render-ui", "modal", null]\`
 ### Slot Strategy
 | Slot | Use For | Composable? |
 |------|---------|-------------|
-| \`main\` | Primary content | **YES** — stack multiple render-ui calls |
+| \`main\` | Primary content | **YES** — use a single composed stack |
 | \`modal\` | Forms (create/edit), confirmations | One at a time |
 | \`drawer\` | Detail views, quick edits | One at a time |
 | \`sidebar\` | Navigation, persistent filters | One at a time |
 | \`overlay\` | Confirmations, alerts | One at a time |
 
-### Pattern Selection by Intent
-| Intent | Patterns | Key Props |
-|--------|----------|-----------|
-| List/browse data | \`entity-table\`, \`entity-cards\`, \`entity-list\` | columns, itemActions, searchable |
-| Show metrics/KPIs | \`stats\` | metrics: [{label, value, icon, trend}] |
-| Filter/search | \`filter-group\`, \`search-input\` | filters (from entity enum fields) |
-| Create/edit form | \`form-section\` | fields, submitEvent, cancelEvent |
-| View details | \`entity-detail\`, \`detail-panel\` | fields/fieldNames, actions |
-| Organize content | \`tabs\` | tabs: [{label, content}] |
-| Dashboard layout | \`dashboard-grid\` | columns (number) |
-| Charts | \`chart\` | chartType, data, xAxis, yAxis |
-| Progress | \`progress-bar\`, \`meter\` | value, max, label |
-| Timeline | \`timeline\` | items: [{date, title, description}] |
-| Page heading | \`page-header\` | title, subtitle, actions |
-| Confirmation | \`confirmation\` | title, message, onConfirm, onCancel |
-| Master/detail | \`master-detail\` | Split list + detail |
-| Cards grid | \`entity-cards\` | columns, itemActions, layout |
+---
 
-### Composition Recipes
+### MANDATORY: Atomic Composition (NOT Pattern Selection)
 
-**CRUD Browsing INIT** (most common — compose ALL of these in main slot):
-\`\`\`json
-["render-ui", "main", { "type": "page-header", "title": "Tasks", "subtitle": "Manage your tasks", "actions": [{ "label": "New Task", "event": "CREATE", "variant": "primary" }] }],
-["render-ui", "main", { "type": "stats", "entity": "Task", "metrics": [{ "label": "Total", "value": "@count", "icon": "clipboard" }, { "label": "Active", "value": "@count:status=active", "icon": "clock" }, { "label": "Done", "value": "@count:status=done", "icon": "check-circle" }] }],
-["render-ui", "main", { "type": "entity-table", "entity": "Task", "columns": ["title", "status", "createdAt"], "searchable": true, "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE" }] }]
-\`\`\`
+Every render-ui effect for \`main\` MUST be a **single composed hierarchy** using layout primitives + atomic components. NEVER use multiple flat \`render-ui\` calls to the same slot.
 
-**Dashboard INIT**:
-\`\`\`
-main: page-header → title + date range actions
-main: dashboard-grid → columns: 3
-main: stats → computed KPIs from entity counts
-main: chart → primary data visualization
-main: entity-cards → recent items (limit: 6)
-\`\`\`
+#### Layout Primitives (Structural Scaffolding)
+| Type | JSON | Use For |
+|------|------|---------|
+| **VStack** | \`{ "type": "stack", "direction": "vertical", "gap": "lg" }\` | Page layout, section stacking |
+| **HStack** | \`{ "type": "stack", "direction": "horizontal", "gap": "md" }\` | Side-by-side elements, header rows |
+| **Box** | \`{ "type": "box", "padding": "md", "bg": "card" }\` | Visual grouping, cards, panels |
+| **Grid** | \`{ "type": "grid", "cols": 3, "gap": "md" }\` | Equal-width columns, dashboard grids |
 
-**Detail View (drawer)**:
-\`\`\`
-drawer: entity-detail → all fields + [Edit, Delete] actions
-drawer: tabs → related collections (if entity has relation fields)
-\`\`\`
+#### Atoms (Visual Primitives — leaves of the tree)
+| Type | Key Props | Use For |
+|------|-----------|---------|
+| \`typography\` | \`variant\` (h1-h6, body, caption, label), \`text\`, \`color\` | All text content |
+| \`badge\` | \`variant\` (default, primary, success, warning, danger), \`text\` | Status labels, tags |
+| \`button\` | \`label\`, \`event\`, \`variant\` (primary, secondary, danger, ghost), \`icon\` | User actions |
+| \`avatar\` | \`src\`, \`alt\`, \`size\` (sm, md, lg) | User/entity images |
+| \`icon\` | \`name\` (lucide icon name) | Decorative icons |
+| \`progress-bar\` | \`value\`, \`max\`, \`label\`, \`variant\` | Progress/metrics |
+| \`divider\` | \`orientation\` (horizontal, vertical) | Visual separators |
 
-**Wizard Flow**:
-\`\`\`
-main: wizard-progress → steps array + currentStep
-main: wizard-container → current step content
-main: wizard-navigation → Back/Next/Submit buttons
-\`\`\`
+#### Molecules (Compound Components — containers with content)
+| Type | Key Props | Use For |
+|------|-----------|---------|
+| \`card\` | \`title\`, \`subtitle\`, \`actions\`, \`children\` | Grouped content containers |
+| \`modal\` | \`title\`, \`closeEvent\`, \`children\` | Dialog overlays |
+| \`drawer\` | \`title\`, \`closeEvent\`, \`children\` | Side panels |
+| \`tabs\` | \`tabs: [{label, event}]\`, \`activeTab\` | Content organization |
+| \`alert\` | \`variant\`, \`title\`, \`message\`, \`dismissEvent\` | Notifications |
+| \`accordion\` | \`items: [{title, children}]\` | Collapsible sections |
 
-### Layout Composition (stack, box, grid)
+#### Organisms (Data-Driven Sections — complex, self-contained)
+| Type | Key Props | Use For |
+|------|-----------|---------|
+| \`page-header\` | \`title\`, \`subtitle\`, \`actions: [{label, event, variant}]\` | Page titles with actions |
+| \`entity-table\` | \`entity\`, \`columns\`, \`searchable\`, \`itemActions: [{label, event}]\` | Data tables |
+| \`entity-cards\` | \`entity\`, \`columns\`, \`itemActions\`, \`layout\` | Card grid views |
+| \`form-section\` | \`entity\`, \`fields\`, \`submitEvent\`, \`cancelEvent\` | Forms |
+| \`entity-detail\` | \`entity\`, \`fields\`, \`actions: [{label, event}]\` | Detail views |
+| \`chart\` | \`chartType\`, \`data\`, \`xAxis\`, \`yAxis\` | Data visualization |
+| \`timeline\` | \`items: [{date, title, description}]\` | Chronological events |
+| \`stats\` | \`metrics: [{label, value, icon, trend}]\` | KPI metrics |
+| \`master-detail\` | Split list + detail | Two-panel views |
 
-Layout patterns wrap other patterns via \`children\` arrays for rich, structured views.
+---
 
-**VStack** (vertical stack): \`{ "type": "stack", "direction": "vertical", ... }\`
-**HStack** (horizontal stack): \`{ "type": "stack", "direction": "horizontal", ... }\`
-**Box** (styled container): \`{ "type": "box", ... }\`
-
-#### Stack Props
+### Stack Props Reference
 | Prop | Values | Default |
 |------|--------|---------|
 | \`direction\` | \`"vertical"\`, \`"horizontal"\` | \`"vertical"\` |
@@ -101,7 +95,7 @@ Layout patterns wrap other patterns via \`children\` arrays for rich, structured
 | \`justify\` | \`"start"\`, \`"center"\`, \`"end"\`, \`"between"\`, \`"around"\` | \`"start"\` |
 | \`wrap\` | \`true\`, \`false\` | \`false\` |
 
-#### Box Props
+### Box Props Reference
 | Prop | Values |
 |------|--------|
 | \`padding\` / \`paddingX\` / \`paddingY\` | \`"none"\`, \`"xs"\`, \`"sm"\`, \`"md"\`, \`"lg"\`, \`"xl"\` |
@@ -110,55 +104,187 @@ Layout patterns wrap other patterns via \`children\` arrays for rich, structured
 | \`rounded\` | \`"none"\`, \`"sm"\`, \`"md"\`, \`"lg"\`, \`"full"\` |
 | \`shadow\` | \`"none"\`, \`"sm"\`, \`"md"\`, \`"lg"\` |
 
-#### Grid Props
+### Grid Props Reference
 | Prop | Values |
 |------|--------|
 | \`cols\` | \`1\`–\`12\` or \`{ sm: 1, md: 2, lg: 3 }\` |
 | \`gap\` | \`"none"\`, \`"xs"\`, \`"sm"\`, \`"md"\`, \`"lg"\`, \`"xl"\` |
 
-#### Nesting Example — Page Header + Stats Row + Table
+---
+
+### COMPOSITION RULE (MANDATORY)
+
+Every INIT transition rendering to \`main\` MUST produce a **single render-ui call** with a top-level \`stack\` containing composed \`children\`:
+
+\`\`\`json
+["render-ui", "main", {
+  "type": "stack", "direction": "vertical", "gap": "lg",
+  "children": [
+    // 1. Header section — HStack with title + primary action
+    { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center",
+      "children": [
+        { "type": "typography", "variant": "h1", "text": "Page Title" },
+        { "type": "button", "label": "Primary Action", "event": "CREATE", "variant": "primary" }
+      ]
+    },
+    // 2. Metrics section — HStack of stat cards (Box + atoms)
+    { "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
+      "children": [
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [
+            { "type": "typography", "variant": "caption", "text": "Metric Label" },
+            { "type": "typography", "variant": "h2", "text": "@count" }
+          ]
+        }
+        // ... more stat cards
+      ]
+    },
+    // 3. Data section — organism (entity-table, entity-cards, etc.)
+    { "type": "entity-table", "entity": "EntityName", "columns": [...], "searchable": true,
+      "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }] }
+  ]
+}]
+\`\`\`
+
+**DO NOT** do this (flat sequential calls — WRONG):
+\`\`\`json
+["render-ui", "main", { "type": "page-header", ... }],
+["render-ui", "main", { "type": "entity-table", ... }]
+\`\`\`
+
+---
+
+### Domain-Specific Composition Recipes
+
+**Healthcare / Medical:**
 \`\`\`json
 ["render-ui", "main", {
   "type": "stack", "direction": "vertical", "gap": "lg",
   "children": [
     { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center",
       "children": [
-        { "type": "typography", "variant": "h1", "text": "Orders" },
-        { "type": "button", "label": "New Order", "event": "CREATE", "variant": "primary" }
+        { "type": "typography", "variant": "h1", "text": "Patients" },
+        { "type": "button", "label": "Register Patient", "event": "CREATE", "variant": "primary" }
       ]
     },
     { "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
       "children": [
         { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
-          "children": [{ "type": "stats", "metrics": [{ "label": "Total", "value": "@count" }] }]
-        },
+          "children": [{ "type": "typography", "variant": "caption", "text": "Total Patients" }, { "type": "typography", "variant": "h2", "text": "@count" }] },
         { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
-          "children": [{ "type": "stats", "metrics": [{ "label": "Pending", "value": "@count:status=pending" }] }]
-        }
+          "children": [{ "type": "typography", "variant": "caption", "text": "New This Week" }, { "type": "typography", "variant": "h2", "text": "@count:createdAt>7d" }] },
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "Critical" }, { "type": "badge", "variant": "danger", "text": "@count:status=critical" }] }
       ]
     },
-    { "type": "entity-table", "entity": "Order", "columns": ["customer", "total", "status"], "searchable": true }
+    { "type": "entity-table", "entity": "Patient", "columns": ["name", "dob", "insurance", "status"],
+      "searchable": true, "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE" }] }
   ]
 }]
 \`\`\`
 
-#### When to Use Layout Patterns
-- **VStack**: Default page layout — stack header, content sections, tables vertically
-- **HStack**: Side-by-side elements — stat cards, action buttons, header with controls
-- **Box**: Visual grouping — cards, panels, highlighted sections with borders/backgrounds
-- **Grid**: Equal-width columns — dashboard cards, stat grids, gallery layouts
+**E-commerce / Catalog:**
+\`\`\`json
+["render-ui", "main", {
+  "type": "stack", "direction": "vertical", "gap": "lg",
+  "children": [
+    { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center",
+      "children": [
+        { "type": "typography", "variant": "h1", "text": "Products" },
+        { "type": "button", "label": "Add Product", "event": "CREATE", "variant": "primary" }
+      ]
+    },
+    { "type": "grid", "cols": { "sm": 2, "md": 4 }, "gap": "md",
+      "children": [
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "Revenue" }, { "type": "typography", "variant": "h2", "text": "@sum:price" }] },
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "Products" }, { "type": "typography", "variant": "h2", "text": "@count" }] },
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "Low Stock" }, { "type": "badge", "variant": "warning", "text": "@count:stock<10" }] },
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "Avg Rating" }, { "type": "typography", "variant": "h2", "text": "@avg:rating" }] }
+      ]
+    },
+    { "type": "tabs", "tabs": [{ "label": "All", "event": "FILTER_ALL" }, { "label": "Active", "event": "FILTER_ACTIVE" }, { "label": "Draft", "event": "FILTER_DRAFT" }] },
+    { "type": "entity-cards", "entity": "Product", "columns": ["name", "price", "stock", "status"],
+      "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }] }
+  ]
+}]
+\`\`\`
 
-> **Tip**: A single \`render-ui\` call with a top-level \`stack\` containing nested children produces a more cohesive layout than multiple flat \`render-ui\` calls to the same slot.
+**Project Management / Workflow:**
+\`\`\`json
+["render-ui", "main", {
+  "type": "stack", "direction": "vertical", "gap": "lg",
+  "children": [
+    { "type": "stack", "direction": "horizontal", "justify": "between", "align": "center",
+      "children": [
+        { "type": "typography", "variant": "h1", "text": "Projects" },
+        { "type": "button", "label": "New Project", "event": "CREATE", "variant": "primary" }
+      ]
+    },
+    { "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
+      "children": [
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "Total" }, { "type": "typography", "variant": "h2", "text": "@count" }] },
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "In Progress" }, { "type": "badge", "variant": "primary", "text": "@count:status=active" }] },
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "Overdue" }, { "type": "badge", "variant": "danger", "text": "@count:dueDate<@now" }] },
+        { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+          "children": [{ "type": "typography", "variant": "caption", "text": "Completed" }, { "type": "badge", "variant": "success", "text": "@count:status=done" }] }
+      ]
+    },
+    { "type": "entity-table", "entity": "Project", "columns": ["name", "status", "priority", "dueDate", "assignee"],
+      "searchable": true, "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE" }] }
+  ]
+}]
+\`\`\`
 
-### Domain-Aware Pattern Selection
-| Domain | List Pattern | Extras |
-|--------|-------------|--------|
-| business/admin | \`entity-table\` (searchable) | \`stats\`, \`filter-group\` |
-| ecommerce | \`entity-cards\` | \`stats\` (revenue), \`chart\` |
-| content/CMS | \`entity-cards\` | \`tabs\`, \`media-gallery\` |
-| dashboard | \`dashboard-grid\` | \`stats\`, \`chart\`, \`meter\`, \`timeline\` |
-| workflow | \`entity-table\` | \`progress-bar\`, \`timeline\` |
+### Detail View Composition (drawer)
+\`\`\`json
+["render-ui", "drawer", {
+  "type": "stack", "direction": "vertical", "gap": "md",
+  "children": [
+    { "type": "entity-detail", "entity": "EntityName", "actions": [{ "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE", "variant": "danger" }] },
+    { "type": "tabs", "tabs": [{ "label": "History", "event": "TAB_HISTORY" }, { "label": "Notes", "event": "TAB_NOTES" }] }
+  ]
+}]
+\`\`\`
 
+---
+
+### BANNED PROPS (NEVER USE)
+
+| Wrong | Correct | Pattern |
+|-------|---------|---------|
+| \`onSubmit\` | \`submitEvent\` | \`form-section\` |
+| \`onCancel\` | \`cancelEvent\` | \`form-section\` |
+| \`headerActions\` | \`actions\` | \`entity-detail\` |
+| \`loading\` | \`isLoading\` | all patterns |
+| \`fieldNames\` | \`fields\` | \`entity-detail\`, \`form-section\` |
+| \`onConfirm\` | (use event transitions) | \`confirmation\` |
+
+### Event Format (MANDATORY)
+Events MUST be flat strings, NOT objects:
+\`\`\`json
+// CORRECT:
+"events": ["INIT", "CREATE", "VIEW", "EDIT", "DELETE", "SAVE", "CANCEL"]
+
+// WRONG — do NOT use objects:
+"events": [{ "key": "INIT" }, { "key": "CREATE" }]
+\`\`\`
+
+Events with payloads use this format:
+\`\`\`json
+"events": ["INIT", "CREATE", { "key": "VIEW", "payload": [{ "name": "id", "type": "string" }] }]
+\`\`\`
+Only use objects when the event has a payload declaration. Simple events are always strings.
+
+---
+
+### Pattern Props Reference
 ${getPatternPropsCompact()}
 
 ${getPatternActionsRef()}
