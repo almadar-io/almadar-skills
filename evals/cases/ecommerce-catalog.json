@@ -1,0 +1,33 @@
+{
+  "name": "ecommerce-product-catalog",
+  "description": "Generate an e-commerce product catalog",
+  "prompt": "Generate an Orbital schema for an e-commerce product catalog.\n\nEntities:\n- Product: name, price, category, stockLevel, rating, imageUrl\n- Category: name, description\n\nRequirements:\n1. Product grid with cards (use grid layout)\n2. Filters by category and price range\n3. Product detail view\n4. Visual design with appealing layout\n5. Use cards for product display\n6. Badge for stock status and ratings\n7. Theme variables for all styling",
+  "expectedPatterns": ["stack", "grid", "entity-cards", "filter-group", "badge", "card"],
+  "minScore": 75,
+  "domain": "ecommerce",
+  "rubric": {
+    "structure": {
+      "singleRenderUI": 5,
+      "layoutRoot": 5,
+      "nestingDepth": 5,
+      "validation": 5,
+      "closedCircuit": 5
+    },
+    "composition": {
+      "atoms": 10,
+      "molecules": 7,
+      "organisms": 8
+    },
+    "theme": {
+      "variableUsage": 15,
+      "noHardcodedColors": 5,
+      "noHardcodedSpacing": 5
+    },
+    "quality": {
+      "sections": 8,
+      "expectedPatterns": 8,
+      "domain": 5,
+      "actions": 4
+    }
+  }
+}

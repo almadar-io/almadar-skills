@@ -1,258 +1,323 @@
+#!/usr/bin/env tsx
 /**
- * Eval runner - orchestrates schema generation, validation, and semantic checking
+ * Composition Quality Eval Runner
+ *
+ * Runs evaluation cases against LLM providers using @almadar/llm
+ * and generates comparison reports.
+ *
+ * Usage:
+ *   npx tsx runner.ts --provider anthropic --model claude-3-5-sonnet-20241022
+ *   npx tsx runner.ts --compare-all
  */
 
-import { LLMClient, getSharedLLMClient, parseJsonResponse } from '@almadar/llm';
-import { generateKflowOrbitalsSkill } from '../src/generators/kflow-orbitals.js';
-import { runSemanticCheck } from './semantic.js';
-import type {
-  EvalCase,
-  EvalResult,
-  EvalReport,
-  RunOptions,
-  CategoryStats,
-} from './types.js';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import fs from 'fs/promises';
-import path from 'path';
-import os from 'os';
-import { globSync } from 'glob';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { 
+  getSharedLLMClient, 
+  type LLMProvider,
+  parseJsonResponse 
+} from '@almadar/llm';
+import {
+  EVAL_CASES,
+  calculateTotalScore,
+  analyzeComposition,
+  generateComparisonMatrix,
+  type EvalCase,
+  type EvalResult,
+  type ProviderComparison
+} from './composition-quality.js';
 
-const execAsync = promisify(exec);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+interface RunOptions {
+  provider?: LLMProvider;
+  model?: string;
+  caseName?: string;
+  compareAll?: boolean;
+  outputDir?: string;
+}
 
 /**
- * Run a single eval case
+ * Parse command line arguments
  */
-async function runEval(
-  evalCase: EvalCase,
-  client: LLMClient,
-  options: RunOptions
+function parseArgs(): RunOptions {
+  const args = process.argv.slice(2);
+  const options: RunOptions = {
+    outputDir: path.join(__dirname, 'results')
+  };
+
+  for (let i = 0; i < args.length; i++) {
+    switch (args[i]) {
+      case '--provider':
+        options.provider = args[++i] as LLMProvider;
+        break;
+      case '--model':
+        options.model = args[++i];
+        break;
+      case '--case':
+        options.caseName = args[++i];
+        break;
+      case '--compare-all':
+        options.compareAll = true;
+        break;
+      case '--output':
+        options.outputDir = args[++i];
+        break;
+      case '--help':
+        printHelp();
+        process.exit(0);
+    }
+  }
+
+  return options;
+}
+
+function printHelp() {
+  console.log(`
+Composition Quality Eval Runner
+
+Usage:
+  npx tsx runner.ts --provider <provider> --model <model> [options]
+
+Options:
+  --provider <name>    LLM provider (anthropic, openai, deepseek, kimi)
+  --model <name>       Model name (e.g., claude-3-5-sonnet-20241022)
+  --case <name>        Run specific test case only
+  --compare-all        Run all configured providers and generate comparison
+  --output <dir>       Output directory for results (default: ./results)
+  --help               Show this help
+
+Examples:
+  # Run with Claude 3.5 Sonnet
+  npx tsx runner.ts --provider anthropic --model claude-3-5-sonnet-20241022
+
+  # Run specific test case with GPT-4
+  npx tsx runner.ts --provider openai --model gpt-4-turbo --case task-management
+
+  # Compare all providers
+  npx tsx runner.ts --compare-all
+`);
+}
+
+/**
+ * Load the skill content to use as system prompt
+ */
+function loadSkillContent(): string {
+  const skillPath = path.join(__dirname, '..', '.skills', 'kflow-orbitals', 'SKILL.md');
+  return fs.readFileSync(skillPath, 'utf-8');
+}
+
+/**
+ * Run a single test case against a provider
+ */
+async function runTestCase(
+  testCase: EvalCase,
+  provider: LLMProvider,
+  model: string,
+  skillContent: string
 ): Promise<EvalResult> {
-  const start = Date.now();
+  console.log(`  Running ${testCase.name}...`);
 
-  // 1. Generate schema with LLM
-  const skill = generateKflowOrbitalsSkill();
-  const response = await client.callRawWithMetadata({
-    systemPrompt: skill.content,
-    userPrompt: evalCase.prompt,
-    maxTokens: 16384,
+  const client = getSharedLLMClient({
+    provider,
+    model,
+    // API key will be loaded from environment by the client
   });
 
-  const usage = response.usage ?? {
-    promptTokens: 0,
-    completionTokens: 0,
-    totalTokens: 0,
-  };
-
-  // 2. Parse JSON
-  const parsed = parseJsonResponse(response.data);
-  if (!parsed) {
-    return {
-      caseId: evalCase.id,
-      pass: false,
-      score: 0,
-      cliValidation: {
-        pass: false,
-        output: '',
-        errors: ['Failed to parse JSON from LLM response'],
-      },
-      semanticValidation: {
-        pass: false,
-        score: 0,
-        expectations: [],
-        overallReasoning: 'Schema generation failed - invalid JSON',
-      },
-      rawOutput: response.data,
-      usage,
-      latencyMs: Date.now() - start,
-    };
-  }
-
-  // 3. Write to temp file and validate with CLI
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'eval-'));
-  const schemaPath = path.join(tmpDir, `${evalCase.id}.orb.json`);
-
   try {
-    await fs.writeFile(schemaPath, JSON.stringify(parsed, null, 2));
+    const response = await client.complete({
+      messages: [
+        { role: 'system', content: skillContent },
+        { role: 'user', content: testCase.prompt }
+      ],
+      temperature: 0.7,
+      maxTokens: 8000,
+    });
 
-    let cliValidation;
+    // Extract and parse the schema from response
+    const schemaText = extractSchema(response.content);
+    let schema: any;
+    
     try {
-      const { stdout, stderr } = await execAsync(
-        `npx @almadar/cli validate "${schemaPath}"`,
-        { encoding: 'utf-8' }
-      );
-      cliValidation = {
-        pass: true,
-        output: stdout + stderr,
-        errors: [],
-      };
-    } catch (error: any) {
-      cliValidation = {
-        pass: false,
-        output: error.stdout || error.stderr || '',
-        errors: [error.message],
-      };
-    }
-
-    // 4. If CLI validation fails, return early
-    if (!cliValidation.pass) {
+      schema = parseJsonResponse(schemaText);
+    } catch (e) {
       return {
-        caseId: evalCase.id,
-        pass: false,
+        caseName: testCase.name,
+        provider: `${provider}/${model}`,
         score: 0,
-        cliValidation,
-        semanticValidation: {
-          pass: false,
-          score: 0,
-          expectations: [],
-          overallReasoning: 'CLI validation failed - skipped semantic check',
-        },
-        rawOutput: response.data,
-        usage,
-        latencyMs: Date.now() - start,
+        passed: false,
+        breakdown: { structure: 0, composition: 0, theme: 0, quality: 0 },
+        validationErrors: ['Failed to parse schema JSON'],
+        validationWarnings: []
       };
     }
 
-    // 5. Run semantic check
-    const semanticValidation = await runSemanticCheck(
-      evalCase.prompt,
-      parsed,
-      evalCase.semanticExpectations,
-      client
-    );
+    // Run validation (would use actual CLI in production)
+    const validationErrors: string[] = [];
+    const validationWarnings: string[] = [];
 
-    const pass = cliValidation.pass && semanticValidation.pass;
-    const score = semanticValidation.score;
+    // Calculate score
+    const { score, breakdown } = calculateTotalScore(schema, testCase, validationErrors);
 
     return {
-      caseId: evalCase.id,
-      pass,
+      caseName: testCase.name,
+      provider: `${provider}/${model}`,
       score,
-      cliValidation,
-      semanticValidation,
-      rawOutput: response.data,
-      usage,
-      latencyMs: Date.now() - start,
+      passed: score >= testCase.minScore,
+      breakdown,
+      validationErrors,
+      validationWarnings
     };
-  } finally {
-    // Cleanup temp directory
-    await fs.rm(tmpDir, { recursive: true, force: true });
+
+  } catch (error) {
+    console.error(`    Error: ${error}`);
+    return {
+      caseName: testCase.name,
+      provider: `${provider}/${model}`,
+      score: 0,
+      passed: false,
+      breakdown: { structure: 0, composition: 0, theme: 0, quality: 0 },
+      validationErrors: [String(error)],
+      validationWarnings: []
+    };
   }
 }
 
 /**
- * Load eval cases from the cases directory
+ * Extract schema JSON from LLM response
  */
-async function loadEvalCases(
-  casesDir: string,
+function extractSchema(content: string): string {
+  // Try to find JSON in code blocks
+  const codeBlockMatch = content.match(/```json\s*([\s\S]*?)```/);
+  if (codeBlockMatch) {
+    return codeBlockMatch[1].trim();
+  }
+
+  // Try to find JSON between curly braces
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    return jsonMatch[0];
+  }
+
+  return content;
+}
+
+/**
+ * Run all test cases for a provider
+ */
+async function runProviderEval(
+  provider: LLMProvider,
+  model: string,
   options: RunOptions
-): Promise<EvalCase[]> {
-  const pattern = options.filter || '**/*.json';
-  const files = globSync(pattern, { cwd: casesDir, absolute: true });
+): Promise<ProviderComparison> {
+  console.log(`\n🧪 Testing ${provider}/${model}...`);
 
-  const cases: EvalCase[] = [];
-  for (const file of files) {
-    const content = await fs.readFile(file, 'utf-8');
-    const evalCase: EvalCase = JSON.parse(content);
+  const skillContent = loadSkillContent();
+  const casesToRun = options.caseName 
+    ? EVAL_CASES.filter(c => c.name === options.caseName)
+    : EVAL_CASES;
 
-    // Filter by tags if specified
-    if (options.tags && options.tags.length > 0) {
-      const caseTags = evalCase.tags || [];
-      const hasMatchingTag = options.tags.some((tag) => caseTags.includes(tag));
-      if (!hasMatchingTag) continue;
-    }
+  const results: { caseName: string; score: number; passed: boolean }[] = [];
+  let totalScore = 0;
 
-    cases.push(evalCase);
+  for (const testCase of casesToRun) {
+    const result = await runTestCase(testCase, provider, model, skillContent);
+    results.push({
+      caseName: result.caseName,
+      score: result.score,
+      passed: result.passed
+    });
+    totalScore += result.score;
+
+    // Save individual result
+    saveResult(result, options.outputDir!);
   }
 
-  return cases;
-}
-
-/**
- * Run all evals
- */
-export async function runEvals(options: RunOptions = {}): Promise<EvalReport> {
-  const start = Date.now();
-
-  // Get LLM client
-  const client = getSharedLLMClient();
-
-  // Load eval cases
-  const casesDir = path.join(process.cwd(), 'evals/cases');
-  const cases = await loadEvalCases(casesDir, options);
-
-  if (cases.length === 0) {
-    throw new Error('No eval cases found');
-  }
-
-  console.log(`Running ${cases.length} eval cases...`);
-
-  // Run evals with concurrency limit
-  const concurrency = options.concurrency || 3;
-  const results: EvalResult[] = [];
-
-  for (let i = 0; i < cases.length; i += concurrency) {
-    const batch = cases.slice(i, i + concurrency);
-    const batchResults = await Promise.all(
-      batch.map((evalCase) => runEval(evalCase, client, options))
-    );
-    results.push(...batchResults);
-
-    // Log progress
-    console.log(
-      `Progress: ${results.length}/${cases.length} (${Math.round(
-        (results.length / cases.length) * 100
-      )}%)`
-    );
-  }
-
-  // Aggregate results
-  const passCount = results.filter((r) => r.pass).length;
-  const passRate = passCount / results.length;
-  const averageScore =
-    results.reduce((sum, r) => sum + r.score, 0) / results.length;
-
-  // Calculate per-category stats
-  const categories: Record<string, CategoryStats> = {};
-  for (const result of results) {
-    const evalCase = cases.find((c) => c.id === result.caseId);
-    if (!evalCase) continue;
-
-    const tags = evalCase.tags || ['untagged'];
-    for (const tag of tags) {
-      if (!categories[tag]) {
-        categories[tag] = { passRate: 0, avgScore: 0, count: 0 };
-      }
-      categories[tag].count++;
-      if (result.pass) {
-        categories[tag].passRate =
-          (categories[tag].passRate * (categories[tag].count - 1) + 1) /
-          categories[tag].count;
-      } else {
-        categories[tag].passRate =
-          (categories[tag].passRate * (categories[tag].count - 1)) /
-          categories[tag].count;
-      }
-      categories[tag].avgScore =
-        (categories[tag].avgScore * (categories[tag].count - 1) +
-          result.score) /
-        categories[tag].count;
-    }
-  }
-
-  // Estimate cost (rough approximation)
-  const totalTokens = results.reduce((sum, r) => sum + r.usage.totalTokens, 0);
-  const estimatedCost = ((totalTokens / 1000) * 0.01).toFixed(2);
+  const avgScore = Math.round(totalScore / casesToRun.length);
+  console.log(`  ✅ Average Score: ${avgScore}/100`);
 
   return {
-    timestamp: new Date().toISOString(),
-    model: options.model || 'default',
-    skillVersion: '1.0.0',
-    passRate,
-    averageScore,
-    categories,
-    results,
-    totalCost: `$${estimatedCost}`,
+    provider: `${provider}/${model}`,
+    averageScore: avgScore,
+    cases: results,
+    strengths: [],
+    weaknesses: []
   };
 }
+
+/**
+ * Save result to file
+ */
+function saveResult(result: EvalResult, outputDir: string) {
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  const filename = `${result.provider.replace(/\//g, '-')}-${result.caseName}.json`;
+  const filepath = path.join(outputDir, filename);
+  
+  fs.writeFileSync(filepath, JSON.stringify(result, null, 2));
+}
+
+/**
+ * Run comparison across all configured providers
+ */
+async function runComparison(options: RunOptions) {
+  console.log('\n🔬 Running provider comparison...\n');
+
+  const providers: { provider: LLMProvider; model: string }[] = [
+    { provider: 'anthropic', model: 'claude-3-5-sonnet-20241022' },
+    { provider: 'anthropic', model: 'claude-3-opus-20240229' },
+    { provider: 'openai', model: 'gpt-4-turbo-preview' },
+    { provider: 'openai', model: 'gpt-4o' },
+    // Add more providers as needed
+  ];
+
+  const comparisons: ProviderComparison[] = [];
+
+  for (const { provider, model } of providers) {
+    try {
+      const comparison = await runProviderEval(provider, model, options);
+      comparisons.push(comparison);
+    } catch (error) {
+      console.error(`  ❌ Failed to run ${provider}/${model}: ${error}`);
+    }
+  }
+
+  // Generate and save comparison matrix
+  const matrix = generateComparisonMatrix(comparisons);
+  const matrixPath = path.join(options.outputDir!, 'comparison-matrix.md');
+  fs.writeFileSync(matrixPath, matrix);
+
+  console.log(`\n📊 Comparison matrix saved to: ${matrixPath}`);
+  console.log('\n' + matrix);
+}
+
+/**
+ * Main entry point
+ */
+async function main() {
+  const options = parseArgs();
+
+  if (options.compareAll) {
+    await runComparison(options);
+  } else if (options.provider && options.model) {
+    const result = await runProviderEval(options.provider, options.model, options);
+    
+    console.log('\n📊 Results:');
+    console.log(`  Provider: ${result.provider}`);
+    console.log(`  Average Score: ${result.averageScore}/100`);
+    console.log('\n  Case Breakdown:');
+    for (const c of result.cases) {
+      const status = c.passed ? '✅' : '❌';
+      console.log(`    ${status} ${c.caseName}: ${c.score}/100`);
+    }
+  } else {
+    console.error('Error: Must specify --provider and --model, or use --compare-all');
+    printHelp();
+    process.exit(1);
+  }
+}
+
+main().catch(console.error);

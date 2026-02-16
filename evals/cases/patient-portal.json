@@ -1,0 +1,33 @@
+{
+  "name": "patient-portal-dashboard",
+  "description": "Generate a healthcare patient portal dashboard",
+  "prompt": "Generate an Orbital schema for a healthcare patient portal.\n\nEntities:\n- Patient: name, dateOfBirth, medicalRecordNumber, insuranceStatus\n- Appointment: date, time, doctor, status, notes\n\nRequirements:\n1. Dashboard with patient statistics (total, active, critical)\n2. Patient list with filters by insurance status\n3. Appointment scheduling view\n4. Use healthcare-appropriate layouts (calm, organized)\n5. Include tabs for different views (Patients, Appointments)\n6. Use theme variables throughout\n7. Sophisticated composition with multiple sections",
+  "expectedPatterns": ["stack", "grid", "page-header", "entity-table", "tabs", "badge", "card", "stats"],
+  "minScore": 75,
+  "domain": "healthcare",
+  "rubric": {
+    "structure": {
+      "singleRenderUI": 5,
+      "layoutRoot": 5,
+      "nestingDepth": 5,
+      "validation": 5,
+      "closedCircuit": 5
+    },
+    "composition": {
+      "atoms": 10,
+      "molecules": 7,
+      "organisms": 8
+    },
+    "theme": {
+      "variableUsage": 15,
+      "noHardcodedColors": 5,
+      "noHardcodedSpacing": 5
+    },
+    "quality": {
+      "sections": 8,
+      "expectedPatterns": 8,
+      "domain": 5,
+      "actions": 4
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "task-management-basic",
+  "description": "Generate a basic task management view with CRUD operations",
+  "prompt": "Generate an Orbital schema for a task management app.\n\nEntity: Task with fields:\n- title (string, required)\n- status (enum: pending/active/done)\n- priority (enum: low/medium/high)\n\nRequirements:\n1. List view with search and item actions (view, edit, delete)\n2. Modal form for creating/editing tasks\n3. Use atomic composition with stack layouts\n4. Include stats/overview section showing total, active, done counts\n5. Use theme variables for all visual properties\n6. Single render-ui effect per transition",
+  "expectedPatterns": ["stack", "page-header", "entity-table", "form-section", "box", "typography", "badge", "button"],
+  "minScore": 70,
+  "domain": "general",
+  "rubric": {
+    "structure": {
+      "singleRenderUI": 5,
+      "layoutRoot": 5,
+      "nestingDepth": 5,
+      "validation": 5,
+      "closedCircuit": 5
+    },
+    "composition": {
+      "atoms": 10,
+      "molecules": 7,
+      "organisms": 8
+    },
+    "theme": {
+      "variableUsage": 15,
+      "noHardcodedColors": 5,
+      "noHardcodedSpacing": 5
+    },
+    "quality": {
+      "sections": 8,
+      "expectedPatterns": 8,
+      "domain": 5,
+      "actions": 4
+    }
+  }
+}
