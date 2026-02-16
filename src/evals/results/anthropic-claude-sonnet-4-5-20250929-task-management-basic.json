@@ -1,0 +1,16 @@
+{
+  "caseName": "task-management-basic",
+  "provider": "anthropic/claude-sonnet-4-5-20250929",
+  "score": 0,
+  "passed": false,
+  "breakdown": {
+    "structure": 0,
+    "composition": 0,
+    "theme": 0,
+    "quality": 0
+  },
+  "validationErrors": [
+    "TypeError: schema.orbitals is not iterable"
+  ],
+  "validationWarnings": []
+}

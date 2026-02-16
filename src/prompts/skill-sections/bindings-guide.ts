@@ -43,8 +43,8 @@ export function getBindingsGuide(): string {
     '',
     '| ❌ Invalid | ✅ Correct |',
     '|------------|------------|',
-    '| `@count` | `@entity.count` or compute via trait state |',
-    '| `@count:status=pending` | Filter in entity query or use computed field |',
+    '| `@count` | Use `stats` pattern or static text (e.g., `"Total Tasks"`) |',
+    '| `@count:status=pending` | Use filtered entity-table or static labels |',
     '| `@entity.task.title` | `@entity.title` (entity type is implicit) |',
     '| `@payload.field` in `set` effect | `@entity.field` (set modifies entity only) |',
     ''

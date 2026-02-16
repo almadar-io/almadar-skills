@@ -225,6 +225,34 @@ Container (size: full, padding: lg)
       └── Box (stat card 4)
 \`\`\`
 
+#### Stats Cards - Static Text Only
+
+For stats/overview sections, use **static text labels**, NOT computed bindings:
+
+\`\`\`json
+// ✅ CORRECT: Static text for labels
+{
+  "type": "box",
+  "padding": "md",
+  "bg": "var(--color-card)",
+  "children": [
+    { "type": "typography", "variant": "caption", "text": "Total Tasks" },
+    { "type": "typography", "variant": "h2", "text": "--" }
+  ]
+}
+
+// ✅ CORRECT: Using stats pattern with entity
+{
+  "type": "stats",
+  "entity": "Task",
+  "label": "Total Tasks"
+}
+
+// ❌ WRONG: Invented computed bindings
+{ "text": "@count" }
+{ "text": "@count:status=pending" }
+\`\`\`
+
 ---
 
 ### Validated Example: Task Management

@@ -1,7 +1,7 @@
 {
   "name": "task-management-basic",
   "description": "Generate a basic task management view with CRUD operations",
-  "prompt": "Generate an Orbital schema for a task management app.\n\nEntity: Task with fields:\n- title (string, required)\n- status (enum: pending/active/done)\n- priority (enum: low/medium/high)\n\nRequirements:\n1. List view with search and item actions (view, edit, delete)\n2. Modal form for creating/editing tasks\n3. Use atomic composition with stack layouts\n4. Include stats/overview section showing total, active, done counts\n5. Use theme variables for all visual properties\n6. Single render-ui effect per transition",
+  "prompt": "Generate an Orbital schema for a task management app.\n\nEntity: Task with fields:\n- title (string, required)\n- status (enum: pending/active/done)\n- priority (enum: low/medium/high)\n\nRequirements:\n1. List view with search and item actions (view, edit, delete)\n2. Modal form for creating/editing tasks\n3. Use atomic composition with stack layouts\n4. Include stats/overview section with static labels (Total, Pending, Active, Done) - use static text only, NOT computed bindings\n5. Use theme variables for all visual properties\n6. Single render-ui effect per transition\n7. CRITICAL: Use ONLY valid bindings: @entity.field, @payload.field, @state, @now, @config. NEVER invent bindings like @count or @count:status=value",
   "expectedPatterns": ["stack", "page-header", "entity-table", "form-section", "box", "typography", "badge", "button"],
   "minScore": 70,
   "domain": "general",
