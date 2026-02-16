@@ -80,7 +80,7 @@ export function getCommonFixPatternsSection(): string {
 | \`entity-table\` | itemActions | \`"itemActions": [{ "label": "Edit", "event": "EDIT" }]\` |
 | \`form-section\` | onSubmit | \`"onSubmit": "SAVE"\` |
 | \`form-section\` | fields | \`"fields": ["field1", "field2"]\` |
-| \`entity-detail\` | fieldNames | \`"fieldNames": ["field1", "field2"]\` |
+| \`detail-panel\` | fields | \`"fields": ["field1", "field2"]\` |
 | \`page-header\` | actions | \`"actions": [{ "label": "New", "event": "CREATE" }]\` |`;
 }
 

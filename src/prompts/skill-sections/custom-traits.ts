@@ -88,7 +88,7 @@ Every \`interaction\` trait MUST have:
             "title": "In Review"
           }],
           ["render-ui", "main", {
-            "type": "entity-detail",
+            "type": "detail-panel",
             "entity": "Document",
             "fieldNames": ["title", "content"]
           }],
@@ -124,7 +124,7 @@ Every \`interaction\` trait MUST have:
             "title": "Published!"
           }],
           ["render-ui", "main", {
-            "type": "entity-detail",
+            "type": "detail-panel",
             "entity": "Document"
           }]
         ]
@@ -268,7 +268,7 @@ When traits need to communicate across orbitals, you MUST:
 | \`page-header\` | \`actions: [{label, event}]\` | Top-right buttons (New, Export) |
 | \`form-section\` | \`onSubmit\`, \`onCancel\` | Form submit/cancel buttons |
 | \`entity-table\` | \`itemActions: [{label, event}]\` | Row action buttons (Edit, Delete) |
-| \`entity-detail\` | \`headerActions: [{label, event}]\` | Detail view header buttons |
+| \`detail-panel\` | \`actions: [{label, event}]\` | Detail view header buttons |
 | \`confirmation\` | \`onConfirm\`, \`onCancel\` | Confirmation dialog buttons |
 `;
 }

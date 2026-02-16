@@ -233,9 +233,9 @@ export function getBannedProps(): string {
 |------------|--------------|---------|
 | \`onSubmit\` | \`submitEvent\` | form-section |
 | \`onCancel\` | \`cancelEvent\` | form-section |
-| \`headerActions\` | \`actions\` | entity-detail |
+| \`headerActions\` | \`actions\` | detail-panel |
 | \`loading\` | \`isLoading\` | all patterns |
-| \`fieldNames\` | \`fields\` | entity-detail, form-section |
+| \`fieldNames\` | \`fields\` | detail-panel, form-section |
 | \`onConfirm\` | (use event transitions) | confirmation |
 | \`placement\` | (remove) | itemActions |
 | \`isDestructive\` | (use variant: "danger") | itemActions |

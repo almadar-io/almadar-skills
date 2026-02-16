@@ -222,7 +222,7 @@ function analyzePattern(pattern: any, metrics: CompositionMetrics, depth: number
   // Categorize pattern types
   const atomTypes = ['typography', 'badge', 'button', 'avatar', 'icon', 'progress-bar', 'divider'];
   const moleculeTypes = ['card', 'modal', 'drawer', 'tabs', 'alert', 'accordion', 'box'];
-  const organismTypes = ['entity-table', 'form-section', 'entity-detail', 'page-header', 'chart', 'timeline', 'stats'];
+  const organismTypes = ['entity-table', 'form-section', 'detail-panel', 'page-header', 'chart', 'timeline', 'stats'];
 
   if (atomTypes.includes(pattern.type) && !metrics.atomTypes.includes(pattern.type)) {
     metrics.atomTypes.push(pattern.type);

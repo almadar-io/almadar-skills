@@ -203,7 +203,7 @@ Output the complete updated domain language text.
 2. **Follow naming conventions** - PascalCase for entities/pages, camelCase for fields
 3. **Include all required fields** - Every entity needs at least one field
 4. **Define page paths** - Use RESTful URL patterns
-5. **Match patterns to view types** - list→entity-list, detail→entity-detail, create/edit→form-section
+5. **Match patterns to view types** - list→entity-list/entity-table, detail→detail-panel, create/edit→form-section
 `.trim();
 
   return {

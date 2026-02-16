@@ -12,7 +12,9 @@
 import {
   getPatternPropsCompact,
   getPatternActionsRef,
+  getAllPatternTypes,
 } from "@almadar/patterns";
+import { getBindingsGuide } from "./bindings-guide.js";
 
 /**
  * Get the render-ui atomic composition guide with mandatory rules.
@@ -102,7 +104,7 @@ Every composition MUST contain ALL three levels:
 |------|---------|---------------|
 | \`entity-table\` | Data tables | List views |
 | \`form-section\` | Forms | Create/edit |
-| \`entity-detail\` | Detail views | View record |
+| \`detail-panel\` | Detail views | View record |
 | \`page-header\` | Page headers | Title + actions |
 | \`chart\` | Data visualization | Analytics |
 | \`timeline\` | Chronological events | Activity history |
@@ -338,6 +340,10 @@ This example has been validated with \`npx @almadar/cli validate\`:
   }]
 }
 \`\`\`
+
+---
+
+${getBindingsGuide()}
 
 ---
 

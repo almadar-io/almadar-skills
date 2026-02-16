@@ -73,7 +73,7 @@ Trait State Machine → render-ui → UI Component → User Action → Event →
 │ TaskManagement trait OWNS:                  │
 │   • main → entity-table, page-header        │
 │   • modal → form-section (create/edit)      │
-│   • drawer → entity-detail (view)           │
+│   • drawer → detail-panel (view)            │
 │                                             │
 │ NO other trait should render to these slots │
 └─────────────────────────────────────────────┘

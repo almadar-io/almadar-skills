@@ -70,3 +70,10 @@ export {
 
 // Uses Import System
 export { getUsesImportSection, getUsesImportCompact } from "./uses-imports.js";
+
+// Binding documentation (source of truth from @almadar/core)
+export {
+  getBindingsGuide,
+  getBindingsCompact,
+  getBindingContextRules,
+} from "./bindings-guide.js";

@@ -228,7 +228,7 @@ The tools handle proper prompting, caching, and S-Expression syntax. Writing dir
     { "name": "TasksPage", "path": "/tasks", "viewType": "list", "isInitial": true }
   ],
   "traits": ["TaskManager"],
-  "patterns": ["page-header", "entity-table", "form-section", "entity-detail"]
+  "patterns": ["page-header", "entity-table", "form-section", "detail-panel"]
 }
 \`\`\`
 
@@ -325,7 +325,7 @@ TaskManager behavior:
       then ["render-ui", "modal", null]
 
     - From Browsing to Viewing on VIEW
-      then ["render-ui", "drawer", {"type": "entity-detail", "entity": "Task", "fieldNames": ["title", "description", "status", "priority", "dueDate"], "actions": [{"label": "Edit", "event": "EDIT"}, {"label": "Delete", "event": "DELETE", "variant": "danger"}]}]
+      then ["render-ui", "drawer", {"type": "detail-panel", "entity": "Task", "fields": ["title", "description", "status", "priority", "dueDate"], "actions": [{"label": "Edit", "event": "EDIT"}, {"label": "Delete", "event": "DELETE", "variant": "danger"}]}]
 
     - From Viewing to Editing on EDIT
       then ["render-ui", "drawer", null]
