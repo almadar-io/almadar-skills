@@ -138,8 +138,11 @@ async function runTestCase(
 
     console.log('    Received response, parsing schema...');
     
+    // Ensure response is a string
+    const responseText = typeof response === 'string' ? response : JSON.stringify(response);
+    
     // Extract and parse the schema from response
-    const schemaText = extractSchema(response);
+    const schemaText = extractSchema(responseText);
     let schema: any;
     
     try {

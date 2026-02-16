@@ -16,6 +16,12 @@ export interface EvalCase {
   expectedPatterns: string[];
   minScore: number;
   domain: 'general' | 'healthcare' | 'ecommerce' | 'project-management';
+  rubric?: {
+    structure: Record<string, number>;
+    composition: Record<string, number>;
+    theme: Record<string, number>;
+    quality: Record<string, number>;
+  };
 }
 
 export interface EvalResult {

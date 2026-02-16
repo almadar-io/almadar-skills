@@ -10,7 +10,7 @@
     "quality": 0
   },
   "validationErrors": [
-    "Error: 401 Authentication Fails, Your api key: ****d241 is invalid\n\nTroubleshooting URL: https://docs.langchain.com/oss/javascript/langchain/errors/MODEL_AUTHENTICATION/\n"
+    "TypeError: content.match is not a function"
   ],
   "validationWarnings": []
 }
