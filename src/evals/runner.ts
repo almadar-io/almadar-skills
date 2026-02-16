@@ -175,7 +175,8 @@ async function runTestCase(
       passed: score >= testCase.minScore,
       breakdown,
       validationErrors,
-      validationWarnings
+      validationWarnings,
+      schema  // Include the generated schema for analysis
     };
 
   } catch (error) {
@@ -255,17 +256,25 @@ async function runProviderEval(
 }
 
 /**
- * Save result to file
+ * Save result to file (JSON report and .orb schema)
  */
 function saveResult(result: EvalResult, outputDir: string) {
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  const filename = `${result.provider.replace(/\//g, '-')}-${result.caseName}.json`;
-  const filepath = path.join(outputDir, filename);
+  const baseFilename = `${result.provider.replace(/\//g, '-')}-${result.caseName}`;
   
-  fs.writeFileSync(filepath, JSON.stringify(result, null, 2));
+  // Save JSON report
+  const jsonPath = path.join(outputDir, `${baseFilename}.json`);
+  fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2));
+  
+  // Save .orb schema if available
+  if (result.schema) {
+    const orbPath = path.join(outputDir, `${baseFilename}.orb`);
+    fs.writeFileSync(orbPath, JSON.stringify(result.schema, null, 2));
+    console.log(`    📄 Saved schema to: ${orbPath}`);
+  }
 }
 
 /**

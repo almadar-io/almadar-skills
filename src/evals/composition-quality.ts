@@ -32,6 +32,7 @@ export interface EvalResult {
   breakdown: ScoreBreakdown;
   validationErrors: string[];
   validationWarnings: string[];
+  schema?: OrbitalSchema;
 }
 
 export interface ScoreBreakdown {
