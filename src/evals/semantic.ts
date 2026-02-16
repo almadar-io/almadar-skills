@@ -53,7 +53,7 @@ Return JSON only:
       maxTokens: 4096,
     });
 
-    const parsed = parseJsonResponse(response.data) as JudgeResponse | null;
+    const parsed = parseJsonResponse(response.raw || String(response)) as JudgeResponse | null;
     if (!parsed || typeof parsed.overall_score !== 'number') {
       return {
         pass: false,

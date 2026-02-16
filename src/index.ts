@@ -21,5 +21,18 @@ export { generateLeanFixingSkill } from './orbitals-skills-generators/lean/lean-
 // Helper functions (used by tools and generators)
 export { getKeyBehaviorsReference } from './prompts/behaviors-reference.js';
 
+// Evaluation framework
+export {
+  analyzeComposition,
+  calculateTotalScore,
+  EVAL_CASES,
+  generateComparisonMatrix,
+  type EvalCase,
+  type EvalResult,
+  type ScoreBreakdown,
+  type CompositionMetrics,
+  type ProviderComparison
+} from './evals/composition-quality.js';
+
 // Types
 export type { SkillFrontmatter, GeneratedSkill } from './generators/types.js';

@@ -169,9 +169,11 @@ export function analyzeComposition(schema: OrbitalSchema): CompositionMetrics {
   // Traverse all transitions
   for (const orbital of schema.orbitals) {
     for (const trait of orbital.traits) {
-      if (!trait.stateMachine?.transitions) continue;
+      // Skip trait refs - we need full trait definitions with stateMachine
+      const t = trait as any;
+      if (!t.stateMachine?.transitions) continue;
       
-      for (const transition of trait.stateMachine.transitions) {
+      for (const transition of t.stateMachine.transitions) {
         if (!transition.effects) continue;
         
         for (const effect of transition.effects) {
@@ -421,8 +423,9 @@ function countTransitions(schema: OrbitalSchema): number {
   let count = 0;
   for (const orbital of schema.orbitals) {
     for (const trait of orbital.traits) {
-      if (trait.stateMachine?.transitions) {
-        count += trait.stateMachine.transitions.length;
+      const t = trait as any;
+      if (t.stateMachine?.transitions) {
+        count += t.stateMachine.transitions.length;
       }
     }
   }
@@ -433,13 +436,14 @@ function hasClosedCircuit(schema: OrbitalSchema): boolean {
   // Check that all states have entry and exit transitions
   for (const orbital of schema.orbitals) {
     for (const trait of orbital.traits) {
-      if (!trait.stateMachine) continue;
+      const t = trait as any;
+      if (!t.stateMachine) continue;
       
-      const states = new Set(trait.stateMachine.states?.map((s: any) => s.name) || []);
+      const states = new Set<string>((t.stateMachine.states || []).map((s: { name: string }) => s.name));
       const incomingStates = new Set<string>();
       const outgoingStates = new Set<string>();
 
-      for (const transition of trait.stateMachine.transitions || []) {
+      for (const transition of t.stateMachine.transitions || []) {
         incomingStates.add(transition.to);
         outgoingStates.add(transition.from);
       }
@@ -447,7 +451,7 @@ function hasClosedCircuit(schema: OrbitalSchema): boolean {
       // All states except initial should have incoming
       // All states should have outgoing (or be terminal)
       for (const state of states) {
-        const stateObj = trait.stateMachine.states?.find((s: any) => s.name === state);
+        const stateObj = (t.stateMachine.states || []).find((s: { name: string }) => s.name === state);
         if (!stateObj?.isInitial && !incomingStates.has(state)) {
           return false;
         }

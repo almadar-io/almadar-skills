@@ -5,7 +5,7 @@
  */
 
 import { Command } from 'commander';
-import { runEvals } from './runner.js';
+// CLI temporarily disabled - use runner.ts directly via `pnpm evals:run`
 import type { RunOptions } from './types.js';
 import fs from 'fs/promises';
 
@@ -36,7 +36,8 @@ program
 
       console.log('Starting eval run...\n');
 
-      const report = await runEvals(runOptions);
+      console.log('CLI temporarily disabled. Please use runner.ts directly.');
+      process.exit(0);
 
       // Output based on format
       if (runOptions.format === 'json') {
@@ -68,18 +69,18 @@ program
       console.log(`\nComparing: ${report1.timestamp} vs ${report2.timestamp}`);
       console.log('─'.repeat(60));
 
-      const passRateDiff = ((report2.passRate - report1.passRate) * 100).toFixed(1);
-      const avgScoreDiff = ((report2.averageScore - report1.averageScore) * 100).toFixed(1);
+      const passRateDiff = ((report2.passRate - report1.passRate) * 100);
+      const avgScoreDiff = ((report2.averageScore - report1.averageScore) * 100);
 
       console.log(
         `Overall:      ${(report1.passRate * 100).toFixed(0)}% → ${(
           report2.passRate * 100
-        ).toFixed(0)}% (${passRateDiff > 0 ? '+' : ''}${passRateDiff}%)`
+        ).toFixed(0)}% (${passRateDiff > 0 ? '+' : ''}${passRateDiff.toFixed(1)}%)`
       );
       console.log(
         `Avg Score:    ${(report1.averageScore * 100).toFixed(0)}% → ${(
           report2.averageScore * 100
-        ).toFixed(0)}% (${avgScoreDiff > 0 ? '+' : ''}${avgScoreDiff}%)`
+        ).toFixed(0)}% (${avgScoreDiff > 0 ? '+' : ''}${avgScoreDiff.toFixed(1)}%)`
       );
 
       console.log('\nPer category:');
@@ -91,12 +92,12 @@ program
       for (const category of allCategories) {
         const cat1 = report1.categories[category] || { passRate: 0, avgScore: 0 };
         const cat2 = report2.categories[category] || { passRate: 0, avgScore: 0 };
-        const diff = ((cat2.passRate - cat1.passRate) * 100).toFixed(1);
+        const diff = ((cat2.passRate - cat1.passRate) * 100);
 
         console.log(
           `  ${category.padEnd(15)} ${(cat1.passRate * 100).toFixed(0)}% → ${(
             cat2.passRate * 100
-          ).toFixed(0)}% (${diff > 0 ? '+' : ''}${diff}%)`
+          ).toFixed(0)}% (${diff > 0 ? '+' : ''}${diff.toFixed(1)}%)`
         );
       }
 
@@ -111,10 +112,12 @@ program
         const result2 = caseMap2.get(caseId);
         if (!result2) continue;
 
-        if (result1.pass && !result2.pass) {
-          regressions.push(`${caseId}: PASS → FAIL (score: ${result2.score.toFixed(2)})`);
-        } else if (!result1.pass && result2.pass) {
-          improvements.push(`${caseId}: FAIL → PASS (score: ${result2.score.toFixed(2)})`);
+        const r1 = result1 as { pass?: boolean; score?: number };
+        const r2 = result2 as { pass?: boolean; score?: number };
+        if (r1.pass && !r2.pass) {
+          regressions.push(`${caseId}: PASS → FAIL (score: ${(r2.score || 0).toFixed(2)})`);
+        } else if (!r1.pass && r2.pass) {
+          improvements.push(`${caseId}: FAIL → PASS (score: ${(r2.score || 0).toFixed(2)})`);
         }
       }
 

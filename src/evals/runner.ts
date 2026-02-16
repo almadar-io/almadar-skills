@@ -1,4 +1,6 @@
 #!/usr/bin/env tsx
+import 'dotenv/config';
+
 /**
  * Composition Quality Eval Runner
  *
@@ -126,29 +128,32 @@ async function runTestCase(
   });
 
   try {
-    const response = await client.complete({
-      messages: [
-        { role: 'system', content: skillContent },
-        { role: 'user', content: testCase.prompt }
-      ],
+    console.log('    Sending request to LLM...');
+    const response = await client.call<string>({
+      systemPrompt: skillContent,
+      userPrompt: testCase.prompt,
       temperature: 0.7,
       maxTokens: 8000,
     });
 
+    console.log('    Received response, parsing schema...');
+    
     // Extract and parse the schema from response
-    const schemaText = extractSchema(response.content);
+    const schemaText = extractSchema(response);
     let schema: any;
     
     try {
       schema = parseJsonResponse(schemaText);
+      console.log('    Schema parsed successfully');
     } catch (e) {
+      console.log('    Failed to parse schema:', e);
       return {
         caseName: testCase.name,
         provider: `${provider}/${model}`,
         score: 0,
         passed: false,
         breakdown: { structure: 0, composition: 0, theme: 0, quality: 0 },
-        validationErrors: ['Failed to parse schema JSON'],
+        validationErrors: [`Failed to parse schema JSON: ${e}`],
         validationWarnings: []
       };
     }
