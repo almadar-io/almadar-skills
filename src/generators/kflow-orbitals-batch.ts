@@ -118,7 +118,7 @@ Call \`finish_task\` to auto-combine and validate:
 
 \`\`\`
 finish_task({ appName: "App" })
-# Reads generated orbitals → schema.json → orbital validate
+# Reads generated orbitals -> schema.json -> orbital validate
 \`\`\`
 
 ### Phase 4: VERIFY COMPOSITION QUALITY
@@ -135,24 +135,24 @@ Before calling \`finish_task\`, verify each INIT transition:
 ## Comparison: Sequential vs Batch
 
 ### Sequential (Old Way)
-```
+\`\`\`
 Main Agent
-  → generate_orbital(Products) → Wait (50s)
-  → generate_orbital(Orders) → Wait (50s)
-  → generate_orbital(Customers) → Wait (50s)
-  → generate_orbital(Dashboard) → Wait (50s)
+  -> generate_orbital(Products) -> Wait (50s)
+  -> generate_orbital(Orders) -> Wait (50s)
+  -> generate_orbital(Customers) -> Wait (50s)
+  -> generate_orbital(Dashboard) -> Wait (50s)
 Total: ~200s (3.3 minutes)
-```
+\`\`\`
 
 ### Batch (New Way)
-```
+\`\`\`
 Main Agent
-  → generate_orbitals_batch([Products, Orders, Customers, Dashboard])
-      → Parallel generation (max 3 concurrent)
-      → Batch 1: [Products, Orders, Customers] (60s)
-      → Batch 2: [Dashboard] (50s)
+  -> generate_orbitals_batch([Products, Orders, Customers, Dashboard])
+      -> Parallel generation (max 3 concurrent)
+      -> Batch 1: [Products, Orders, Customers] (60s)
+      -> Batch 2: [Dashboard] (50s)
 Total: ~110s (1.8 minutes) - **1.8x faster!**
-```
+\`\`\`
 
 ---
 
