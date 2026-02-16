@@ -141,6 +141,12 @@ async function runTestCase(
     // Ensure response is a string
     const responseText = typeof response === 'string' ? response : JSON.stringify(response);
     
+    // DEBUG: Save raw response for analysis
+    const debugDir = path.join(process.cwd(), 'src', 'evals', 'results');
+    if (!fs.existsSync(debugDir)) fs.mkdirSync(debugDir, { recursive: true });
+    const debugPath = path.join(debugDir, `${provider}-${model.replace(/\//g, '-')}-${testCase.name}-raw.txt`);
+    fs.writeFileSync(debugPath, responseText);
+    
     // Extract and parse the schema from response
     const schemaText = extractSchema(responseText);
     let schema: any;

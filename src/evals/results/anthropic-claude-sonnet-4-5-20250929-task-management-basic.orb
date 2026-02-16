@@ -7,6 +7,7 @@
       "entity": {
         "name": "Task",
         "collection": "tasks",
+        "persistence": "persistent",
         "fields": [
           {
             "name": "title",
@@ -20,7 +21,8 @@
               "pending",
               "active",
               "done"
-            ]
+            ],
+            "default": "pending"
           },
           {
             "name": "priority",
@@ -29,7 +31,8 @@
               "low",
               "medium",
               "high"
-            ]
+            ],
+            "default": "medium"
           }
         ]
       },
@@ -54,10 +57,10 @@
                 "name": "Creating"
               },
               {
-                "name": "Editing"
+                "name": "Viewing"
               },
               {
-                "name": "Viewing"
+                "name": "Editing"
               },
               {
                 "name": "Deleting"
@@ -123,16 +126,16 @@
                 ]
               },
               {
+                "key": "CONFIRM_DELETE",
+                "name": "Confirm Delete"
+              },
+              {
                 "key": "CANCEL",
                 "name": "Cancel"
               },
               {
                 "key": "CLOSE",
                 "name": "Close"
-              },
-              {
-                "key": "CONFIRM_DELETE",
-                "name": "Confirm Delete"
               }
             ],
             "transitions": [
@@ -177,90 +180,89 @@
                           "children": [
                             {
                               "type": "box",
-                              "padding": "md",
+                              "padding": "lg",
                               "bg": "var(--color-card)",
                               "border": true,
                               "borderColor": "var(--color-border)",
-                              "rounded": "var(--radius-md)",
+                              "rounded": "var(--radius-lg)",
                               "shadow": "var(--shadow-sm)",
                               "children": [
                                 {
-                                  "type": "typography",
-                                  "variant": "caption",
-                                  "text": "Total Tasks",
-                                  "color": "var(--color-muted-foreground)"
-                                },
-                                {
-                                  "type": "typography",
-                                  "variant": "h2",
-                                  "text": "--",
-                                  "color": "var(--color-foreground)"
+                                  "type": "stack",
+                                  "direction": "vertical",
+                                  "gap": "sm",
+                                  "children": [
+                                    {
+                                      "type": "typography",
+                                      "variant": "caption",
+                                      "text": "Total Tasks",
+                                      "color": "var(--color-muted-foreground)"
+                                    },
+                                    {
+                                      "type": "typography",
+                                      "variant": "h2",
+                                      "text": "--",
+                                      "color": "var(--color-foreground)"
+                                    }
+                                  ]
                                 }
                               ]
                             },
                             {
                               "type": "box",
-                              "padding": "md",
+                              "padding": "lg",
                               "bg": "var(--color-card)",
                               "border": true,
                               "borderColor": "var(--color-border)",
-                              "rounded": "var(--radius-md)",
+                              "rounded": "var(--radius-lg)",
                               "shadow": "var(--shadow-sm)",
                               "children": [
                                 {
-                                  "type": "typography",
-                                  "variant": "caption",
-                                  "text": "Pending",
-                                  "color": "var(--color-muted-foreground)"
-                                },
-                                {
-                                  "type": "badge",
-                                  "text": "--",
-                                  "variant": "warning"
+                                  "type": "stack",
+                                  "direction": "vertical",
+                                  "gap": "sm",
+                                  "children": [
+                                    {
+                                      "type": "typography",
+                                      "variant": "caption",
+                                      "text": "Active",
+                                      "color": "var(--color-muted-foreground)"
+                                    },
+                                    {
+                                      "type": "badge",
+                                      "variant": "primary",
+                                      "text": "--"
+                                    }
+                                  ]
                                 }
                               ]
                             },
                             {
                               "type": "box",
-                              "padding": "md",
+                              "padding": "lg",
                               "bg": "var(--color-card)",
                               "border": true,
                               "borderColor": "var(--color-border)",
-                              "rounded": "var(--radius-md)",
+                              "rounded": "var(--radius-lg)",
                               "shadow": "var(--shadow-sm)",
                               "children": [
                                 {
-                                  "type": "typography",
-                                  "variant": "caption",
-                                  "text": "Active",
-                                  "color": "var(--color-muted-foreground)"
-                                },
-                                {
-                                  "type": "badge",
-                                  "text": "--",
-                                  "variant": "primary"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "box",
-                              "padding": "md",
-                              "bg": "var(--color-card)",
-                              "border": true,
-                              "borderColor": "var(--color-border)",
-                              "rounded": "var(--radius-md)",
-                              "shadow": "var(--shadow-sm)",
-                              "children": [
-                                {
-                                  "type": "typography",
-                                  "variant": "caption",
-                                  "text": "Completed",
-                                  "color": "var(--color-muted-foreground)"
-                                },
-                                {
-                                  "type": "badge",
-                                  "text": "--",
-                                  "variant": "success"
+                                  "type": "stack",
+                                  "direction": "vertical",
+                                  "gap": "sm",
+                                  "children": [
+                                    {
+                                      "type": "typography",
+                                      "variant": "caption",
+                                      "text": "Completed",
+                                      "color": "var(--color-muted-foreground)"
+                                    },
+                                    {
+                                      "type": "badge",
+                                      "variant": "success",
+                                      "text": "--"
+                                    }
+                                  ]
                                 }
                               ]
                             }
@@ -353,87 +355,6 @@
                 ]
               },
               {
-                "from": "Creating",
-                "to": "Browsing",
-                "event": "CLOSE",
-                "effects": [
-                  [
-                    "render-ui",
-                    "modal",
-                    null
-                  ]
-                ]
-              },
-              {
-                "from": "Browsing",
-                "to": "Editing",
-                "event": "EDIT",
-                "effects": [
-                  [
-                    "render-ui",
-                    "modal",
-                    {
-                      "type": "form-section",
-                      "entity": "Task",
-                      "fields": [
-                        "title",
-                        "status",
-                        "priority"
-                      ],
-                      "submitEvent": "UPDATE",
-                      "cancelEvent": "CANCEL"
-                    }
-                  ]
-                ]
-              },
-              {
-                "from": "Editing",
-                "to": "Browsing",
-                "event": "UPDATE",
-                "effects": [
-                  [
-                    "persist",
-                    "update",
-                    "Task",
-                    "@payload.id",
-                    "@payload.data"
-                  ],
-                  [
-                    "render-ui",
-                    "modal",
-                    null
-                  ],
-                  [
-                    "emit",
-                    "INIT"
-                  ]
-                ]
-              },
-              {
-                "from": "Editing",
-                "to": "Browsing",
-                "event": "CANCEL",
-                "effects": [
-                  [
-                    "render-ui",
-                    "modal",
-                    null
-                  ]
-                ]
-              },
-              {
-                "from": "Editing",
-                "to": "Browsing",
-                "event": "CLOSE",
-                "effects": [
-                  [
-                    "render-ui",
-                    "modal",
-                    null
-                  ]
-                ]
-              },
-              {
                 "from": "Browsing",
                 "to": "Viewing",
                 "event": "VIEW",
@@ -478,6 +399,90 @@
               },
               {
                 "from": "Viewing",
+                "to": "Editing",
+                "event": "EDIT",
+                "effects": [
+                  [
+                    "render-ui",
+                    "drawer",
+                    null
+                  ],
+                  [
+                    "render-ui",
+                    "modal",
+                    {
+                      "type": "form-section",
+                      "entity": "Task",
+                      "fields": [
+                        "title",
+                        "status",
+                        "priority"
+                      ],
+                      "submitEvent": "UPDATE",
+                      "cancelEvent": "CANCEL"
+                    }
+                  ]
+                ]
+              },
+              {
+                "from": "Browsing",
+                "to": "Editing",
+                "event": "EDIT",
+                "effects": [
+                  [
+                    "render-ui",
+                    "modal",
+                    {
+                      "type": "form-section",
+                      "entity": "Task",
+                      "fields": [
+                        "title",
+                        "status",
+                        "priority"
+                      ],
+                      "submitEvent": "UPDATE",
+                      "cancelEvent": "CANCEL"
+                    }
+                  ]
+                ]
+              },
+              {
+                "from": "Editing",
+                "to": "Browsing",
+                "event": "UPDATE",
+                "effects": [
+                  [
+                    "persist",
+                    "update",
+                    "Task",
+                    "@entity.id",
+                    "@payload.data"
+                  ],
+                  [
+                    "render-ui",
+                    "modal",
+                    null
+                  ],
+                  [
+                    "emit",
+                    "INIT"
+                  ]
+                ]
+              },
+              {
+                "from": "Editing",
+                "to": "Browsing",
+                "event": "CANCEL",
+                "effects": [
+                  [
+                    "render-ui",
+                    "modal",
+                    null
+                  ]
+                ]
+              },
+              {
+                "from": "Browsing",
                 "to": "Deleting",
                 "event": "DELETE",
                 "effects": [
@@ -487,9 +492,36 @@
                     {
                       "type": "confirm-dialog",
                       "title": "Delete Task",
-                      "message": "Are you sure you want to delete this task?",
+                      "message": "Are you sure you want to delete this task? This action cannot be undone.",
+                      "confirmLabel": "Delete",
                       "confirmEvent": "CONFIRM_DELETE",
-                      "cancelEvent": "CANCEL"
+                      "cancelEvent": "CANCEL",
+                      "variant": "danger"
+                    }
+                  ]
+                ]
+              },
+              {
+                "from": "Viewing",
+                "to": "Deleting",
+                "event": "DELETE",
+                "effects": [
+                  [
+                    "render-ui",
+                    "drawer",
+                    null
+                  ],
+                  [
+                    "render-ui",
+                    "overlay",
+                    {
+                      "type": "confirm-dialog",
+                      "title": "Delete Task",
+                      "message": "Are you sure you want to delete this task? This action cannot be undone.",
+                      "confirmLabel": "Delete",
+                      "confirmEvent": "CONFIRM_DELETE",
+                      "cancelEvent": "CANCEL",
+                      "variant": "danger"
                     }
                   ]
                 ]
@@ -502,16 +534,12 @@
                   [
                     "persist",
                     "delete",
-                    "Task"
+                    "Task",
+                    "@entity.id"
                   ],
                   [
                     "render-ui",
                     "overlay",
-                    null
-                  ],
-                  [
-                    "render-ui",
-                    "drawer",
                     null
                   ],
                   [
@@ -553,15 +581,13 @@
       "emits": [],
       "listens": [],
       "domainContext": {
-        "request": "Generate an Orbital schema for a task management app with Task entity having title, status, and priority fields",
-        "requestFragment": "Task management app with list view, search, modal forms, and stats overview",
+        "request": "Generate an Orbital schema for a task management app with title, status (pending/active/done), priority (low/medium/high). List view with search and actions (view, edit, delete). Modal form for creating tasks. Use atomic composition with stack layouts. Include stats/overview section showing counts.",
+        "requestFragment": "Task management app with CRUD operations, search, stats overview",
         "category": "business",
         "vocabulary": {
           "item": "Task",
           "create": "Create Task",
-          "edit": "Edit Task",
-          "delete": "Delete Task",
-          "view": "View Task"
+          "delete": "Delete"
         }
       },
       "design": {
@@ -569,8 +595,7 @@
         "uxHints": {
           "flowPattern": "crud-cycle",
           "listPattern": "entity-table",
-          "formPattern": "modal",
-          "detailPattern": "drawer"
+          "formPattern": "modal"
         }
       }
     }
