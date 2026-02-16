@@ -106,7 +106,7 @@ Examples:
  * Load the skill content to use as system prompt
  */
 function loadSkillContent(): string {
-  const skillPath = path.join(__dirname, '..', '.skills', 'kflow-orbitals', 'SKILL.md');
+  const skillPath = path.join(__dirname, '..', '..', '.skills', 'kflow-orbitals', 'SKILL.md');
   return fs.readFileSync(skillPath, 'utf-8');
 }
 

@@ -36,22 +36,9 @@ program
 
       console.log('Starting eval run...\n');
 
-      console.log('CLI temporarily disabled. Please use runner.ts directly.');
+      console.log('CLI temporarily disabled. Please use runner.ts directly via `pnpm evals:run`.');
+      console.log('Options received:', runOptions);
       process.exit(0);
-
-      // Output based on format
-      if (runOptions.format === 'json') {
-        console.log(JSON.stringify(report, null, 2));
-      } else if (runOptions.format === 'markdown') {
-        printMarkdownReport(report);
-      } else {
-        printTextReport(report);
-      }
-
-      // Exit with error code if pass rate is too low
-      if (report.passRate < 0.7) {
-        process.exit(1);
-      }
     } catch (error: any) {
       console.error('Error running evals:', error.message);
       process.exit(1);
