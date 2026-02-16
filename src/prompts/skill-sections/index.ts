@@ -24,6 +24,7 @@ export {
 
 // Pattern design guide (render-ui design guide)
 export { getRenderUIDesignGuide } from "./pattern-design-guide.js";
+export { getThemeGuide, getBannedProps } from "./theme-guide.js";
 export {
   getCustomTraitSection,
   getCustomTraitCompact,

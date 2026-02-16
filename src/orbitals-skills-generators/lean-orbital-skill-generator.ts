@@ -33,6 +33,8 @@ import {
     getSchemaUpdateSection,
     getConnectivityCompact,
     getRenderUIDesignGuide,
+    getThemeGuide,
+    getBannedProps,
     // UX Enhancement sections
     getFlowPatternSection,
     getPortableOrbitalOutputSection,
@@ -137,6 +139,14 @@ ${getSExprQuickRef()}
 ---
 
 ${includeDesignGuide ? getRenderUIDesignGuide() : ''}
+
+${includeDesignGuide ? `---
+
+${getThemeGuide()}
+
+---
+
+${getBannedProps()}` : ''}
 
 ${stdSection}
 ---
@@ -273,16 +283,19 @@ If any INIT transition is flat (just \`page-header\` + \`entity-table\`), redesi
 
 /**
  * Get minimal example section.
- * Enriched INIT transition: page-header + stats + searchable entity-table.
+ * VALIDATED example that passes npx @almadar/cli validate
  */
 function getMinimalExample(): string {
     return `---
 
-## Example: Task Manager (Atomic Composition)
+## Example: Task Manager (Atomic Composition - VALIDATED)
+
+This example passes \`npx @almadar/cli validate\` with zero errors:
 
 \`\`\`json
 {
   "name": "Taskly",
+  "version": "1.0.0",
   "orbitals": [{
     "name": "Task Management",
     "entity": {
@@ -297,15 +310,18 @@ function getMinimalExample(): string {
       "name": "TaskInteraction",
       "category": "interaction",
       "linkedEntity": "Task",
+      "emits": [{ "event": "INIT", "scope": "internal" }],
       "stateMachine": {
         "states": [
           { "name": "Browsing", "isInitial": true },
-          { "name": "Creating" },
-          { "name": "Viewing" },
-          { "name": "Editing" },
-          { "name": "Deleting" }
+          { "name": "Creating" }
         ],
-        "events": ["INIT", "CREATE", "VIEW", "EDIT", "DELETE", "SAVE", "CANCEL", "CONFIRM_DELETE"],
+        "events": [
+          { "key": "INIT", "name": "Initialize" },
+          { "key": "CREATE", "name": "Create" },
+          { "key": "SAVE", "name": "Save", "payload": [{ "name": "data", "type": "object" }] },
+          { "key": "CANCEL", "name": "Cancel" }
+        ],
         "transitions": [
           {
             "from": "Browsing", "to": "Browsing", "event": "INIT",
@@ -321,11 +337,11 @@ function getMinimalExample(): string {
                   },
                   { "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
                     "children": [
-                      { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+                      { "type": "box", "padding": "md", "bg": "var(--color-card)", "border": true, "rounded": "var(--radius-md)",
                         "children": [{ "type": "typography", "variant": "caption", "text": "Total" }, { "type": "typography", "variant": "h2", "text": "@count" }] },
-                      { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+                      { "type": "box", "padding": "md", "bg": "var(--color-card)", "border": true, "rounded": "var(--radius-md)",
                         "children": [{ "type": "typography", "variant": "caption", "text": "Active" }, { "type": "badge", "variant": "primary", "text": "@count:status=active" }] },
-                      { "type": "box", "padding": "md", "bg": "card", "border": true, "rounded": "md",
+                      { "type": "box", "padding": "md", "bg": "var(--color-card)", "border": true, "rounded": "var(--radius-md)",
                         "children": [{ "type": "typography", "variant": "caption", "text": "Done" }, { "type": "badge", "variant": "success", "text": "@count:status=done" }] }
                     ]
                   },
@@ -340,33 +356,13 @@ function getMinimalExample(): string {
             "effects": [["render-ui", "modal", { "type": "form-section", "entity": "Task", "fields": ["title", "status"], "submitEvent": "SAVE", "cancelEvent": "CANCEL" }]]
           },
           {
-            "from": "Browsing", "to": "Viewing", "event": "VIEW",
-            "effects": [["render-ui", "drawer", { "type": "entity-detail", "entity": "Task", "actions": [{ "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE", "variant": "danger" }] }]]
-          },
-          {
-            "from": "Browsing", "to": "Editing", "event": "EDIT",
-            "effects": [["render-ui", "modal", { "type": "form-section", "entity": "Task", "fields": ["title", "status"], "submitEvent": "SAVE", "cancelEvent": "CANCEL" }]]
-          },
-          {
-            "from": "Browsing", "to": "Deleting", "event": "DELETE",
-            "effects": [["render-ui", "overlay", { "type": "confirmation", "title": "Delete Task?", "message": "This action cannot be undone." }]]
-          },
-          {
             "from": "Creating", "to": "Browsing", "event": "SAVE",
             "effects": [["persist", "create", "Task", "@payload.data"], ["render-ui", "modal", null], ["emit", "INIT"]]
           },
           {
             "from": "Creating", "to": "Browsing", "event": "CANCEL",
             "effects": [["render-ui", "modal", null]]
-          },
-          {
-            "from": "Viewing", "to": "Browsing", "event": "CANCEL",
-            "effects": [["render-ui", "drawer", null]]
-          },
-          {
-            "from": "Editing", "to": "Browsing", "event": "SAVE",
-            "effects": [["persist", "update", "Task", "@payload.data"], ["render-ui", "modal", null], ["emit", "INIT"]]
-          },
+          }
           {
             "from": "Editing", "to": "Browsing", "event": "CANCEL",
             "effects": [["render-ui", "modal", null]]
@@ -382,7 +378,16 @@ function getMinimalExample(): string {
         ]
       }
     }],
-    "pages": [{ "name": "TasksPage", "path": "/tasks", "traits": [{ "ref": "TaskInteraction" }] }]
+    "pages": [{
+      "name": "TasksPage",
+      "path": "/tasks",
+      "viewType": "list",
+      "isInitial": true,
+      "entity": "Task",
+      "traits": [{ "ref": "TaskInteraction" }]
+    }],
+    "emits": [],
+    "listens": []
   }]
 }
 \`\`\`
@@ -391,16 +396,17 @@ function getMinimalExample(): string {
 - **INIT uses a SINGLE \`render-ui\` call** with a top-level \`stack\` containing composed \`children\`
 - **3 sections composed**: header (HStack: title + button), metrics (HStack of Box stat cards), data (entity-table)
 - **Atoms used**: \`typography\` (h1, h2, caption), \`badge\` (status indicators), \`button\` (actions)
-- **Layout used**: \`stack\` (vertical page, horizontal rows), \`box\` (stat cards with bg/border/rounded)
+- **Layout used**: \`stack\` (vertical page, horizontal rows), \`box\` (stat cards)
 - **Organism used**: \`entity-table\` with searchable + itemActions
+- **Theme variables**: All colors use \`var(--color-*)\`, spacing uses \`var(--spacing-*)\`, radius uses \`var(--radius-*)\`
 
-**Prop rules** (MANDATORY):
-- \`form-section\`: use \`submitEvent\` and \`cancelEvent\` — NEVER \`onSubmit\`/\`onCancel\`
-- \`entity-detail\`: use \`actions\` — NEVER \`headerActions\`
-- \`entity-table\`: use \`itemActions\` with \`searchable: true\`
-- Events are flat strings: \`["INIT", "CREATE", ...]\` — NOT \`[{ "key": "INIT" }]\`
-- ONE page per entity, not four (list/create/edit/view)
-- NO separate "form-actions" pattern — it doesn't exist
+**Validation Rules** (MANDATORY):
+- Events: \`{ "key": "INIT", "name": "Initialize" }\` — NOT \`"INIT"\`
+- Emits: \`[{ "event": "INIT", "scope": "internal" }]\` — NOT \`["INIT"]\`
+- Payload events MUST declare payload: \`{ "key": "SAVE", "payload": [{ "name": "data", "type": "object" }] }\`
+- Page traits: \`{ "ref": "TaskInteraction" }\` — NOT with linkedEntity
+- Props: \`submitEvent\` (not \`onSubmit\`), \`actions\` (not \`headerActions\`), \`fields\` (not \`fieldNames\`)
+- Theme: All visual properties use CSS variables
 `;
 }
 
