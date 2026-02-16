@@ -1,16 +1,14 @@
 {
   "caseName": "task-management-basic",
   "provider": "deepseek/deepseek-chat",
-  "score": 0,
-  "passed": false,
+  "score": 84,
+  "passed": true,
   "breakdown": {
-    "structure": 0,
-    "composition": 0,
-    "theme": 0,
-    "quality": 0
+    "structure": 20,
+    "composition": 18,
+    "theme": 25,
+    "quality": 21
   },
-  "validationErrors": [
-    "TypeError: content.match is not a function"
-  ],
+  "validationErrors": [],
   "validationWarnings": []
 }
