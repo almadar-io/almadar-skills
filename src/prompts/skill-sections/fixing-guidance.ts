@@ -102,27 +102,45 @@ export function getCommonFixPatternsSection(): string {
 
 ### Binding Format Fixes (CRITICAL)
 
-Binding format errors like \`@count:status=pending\` are INVALID. Use proper format:
+Validator error: \`ORB_BINDING_INVALID_FORMAT\` - "Invalid binding format: '@count:status=pending'"
+Suggestion: "Use @root.field.nested format" means \`@entity.fieldName\`, NOT literal "root".
 
-| Invalid Format | Valid Format | Purpose |
-|----------------|--------------|---------|
-| \`@count\` | \`@entity.count\` or \`@tasks.length\` | Count of items |
-| \`@count:status=pending\` | \`@entity.pendingCount\` | Filtered count |
-| \`@entity.field.nested\` | \`@entity.field?.nested\` | Optional chaining |
+**Common Invalid Patterns from Validator:**
+| Invalid Binding | Validator Message | Fix |
+|-----------------|-------------------|-----|
+| \`@count\` | Invalid binding format | Remove OR use \`@entity.count\` with computed field |
+| \`@count:status=pending\` | Invalid binding format | \`@entity.pendingCount\` + add computed field |
+| \`@count:status=active\` | Invalid binding format | \`@entity.activeCount\` + add computed field |
+| \`@count:status=done\` | Invalid binding format | \`@entity.doneCount\` + add computed field |
 
-**Example fix:**
+**Step-by-Step Fix Process:**
+
+Given error: \`ORB_BINDING_INVALID_FORMAT\` at path \`orbitals[0].traits[0]...children[1].text\`
+
+1. **Extract orbital index** from path (e.g., \`orbitals[0]\` -> index 0)
+2. **Find the invalid binding** (e.g., \`"@count:status=pending"\`)
+3. **Add computed fields** to orbital's entity:
 \`\`\`json
-// WRONG - invalid binding format
+// In orbitals[0].entity.fields array, ADD:
+{ "name": "pendingCount", "type": "number", "default": 0 },
+{ "name": "activeCount", "type": "number", "default": 0 },
+{ "name": "doneCount", "type": "number", "default": 0 }
+\`\`\`
+4. **Replace ALL invalid bindings** in render-ui:
+\`\`\`json
+// BEFORE:
 { "type": "badge", "text": "@count:status=pending", "variant": "warning" }
-
-// CORRECT - use proper entity reference
+// AFTER:
 { "type": "badge", "text": "@entity.pendingCount", "variant": "warning" }
-
-// OR add computed field in entity
-{ "name": "pendingCount", "type": "number" }
 \`\`\`
 
-**Note:** Stats/metrics should use computed fields on entity, not inline bindings.`;
+**Validator Error Code Reference:**
+| Code | Meaning | Action |
+|------|---------|--------|
+| \`ORB_BINDING_INVALID_FORMAT\` | Binding syntax wrong | Use \`@entity.field\` format |
+| \`ORB_BINDING_UNKNOWN_ROOT\` | Wrong root prefix | Use \`@entity\`, \`@payload\`, \`@state\`, \`@now\` |
+| \`ORB_BINDING_INVALID_PATH\` | Field doesn't exist | Add field to entity OR correct name |
+| \`ORB_BINDING_STATE_NO_PATH\` | \`@state\` needs no path | Use \`@state\` alone, not \`@state.field\` |`;
 }
 
 /**

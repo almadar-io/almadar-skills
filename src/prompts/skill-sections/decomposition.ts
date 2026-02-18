@@ -28,7 +28,9 @@ export function getDecompositionSection(): string {
 ### Step 1: Identify Entities (ONE Orbital Per Entity)
 - What are the core data objects?
 - persistent (DB), runtime (memory), or singleton (config)?
-- **CRITICAL: Create exactly ONE orbital per entity** - do NOT split CRUD operations into separate orbitals
+- **CRITICAL: Create exactly ONE orbital per entity**
+- **CRITICAL: If the prompt mentions N entities, create N orbitals** (e.g., "Product, Category, Order" → 3 orbitals)
+- **NEVER** collapse multiple entities into a single dashboard orbital
 
 ### Step 2: Select Interaction Model
 | Domain | Create | View | Edit | Delete |
@@ -136,6 +138,8 @@ export function getDecompositionCompact(): string {
 - What are the core data objects?
 - persistent (DB), runtime (memory), or singleton (config)?
 - **CRITICAL: Create exactly ONE orbital per entity**
+- **CRITICAL: If the prompt mentions N entities, create N orbitals** (e.g., "Product, Category, Order" → 3 orbitals)
+- **NEVER** collapse multiple entities into a single dashboard orbital
 
 ### Step 2: Select Interaction Model
 | Domain | Create | View | Edit | Delete |
