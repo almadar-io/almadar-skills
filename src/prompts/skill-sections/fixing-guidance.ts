@@ -12,6 +12,23 @@
 export function getFixingWorkflowSection(): string {
     return `## Fixing Workflow
 
+### Understanding Validation Errors
+
+Validation output format:
+\`\`\`
+❌ [ERROR_CODE] path.to.error: Description
+   💡 Fix hint
+\`\`\`
+
+**The path tells you exactly where to edit.**
+
+| Error Path | What to Edit |
+|------------|--------------|
+| \`orbitals[0].entity.fields\` | Add/modify entity fields |
+| \`orbitals[0].traits[0].stateMachine.transitions[1]\` | Add/modify transition |
+| \`orbitals[0].traits[0].stateMachine.states\` | Add state or mark isTerminal |
+| \`...effects[0][2].children[1].children[0].children[1].text\` | Fix binding in render-ui |
+
 ### Step 1: Validate and Analyze
 
 \`\`\`
@@ -81,7 +98,31 @@ export function getCommonFixPatternsSection(): string {
 | \`form-section\` | onSubmit | \`"onSubmit": "SAVE"\` |
 | \`form-section\` | fields | \`"fields": ["field1", "field2"]\` |
 | \`detail-panel\` | fields | \`"fields": ["field1", "field2"]\` |
-| \`page-header\` | actions | \`"actions": [{ "label": "New", "event": "CREATE" }]\` |`;
+| \`page-header\` | actions | \`"actions": [{ "label": "New", "event": "CREATE" }]\` |
+
+### Binding Format Fixes (CRITICAL)
+
+Binding format errors like \`@count:status=pending\` are INVALID. Use proper format:
+
+| Invalid Format | Valid Format | Purpose |
+|----------------|--------------|---------|
+| \`@count\` | \`@entity.count\` or \`@tasks.length\` | Count of items |
+| \`@count:status=pending\` | \`@entity.pendingCount\` | Filtered count |
+| \`@entity.field.nested\` | \`@entity.field?.nested\` | Optional chaining |
+
+**Example fix:**
+\`\`\`json
+// WRONG - invalid binding format
+{ "type": "badge", "text": "@count:status=pending", "variant": "warning" }
+
+// CORRECT - use proper entity reference
+{ "type": "badge", "text": "@entity.pendingCount", "variant": "warning" }
+
+// OR add computed field in entity
+{ "name": "pendingCount", "type": "number" }
+\`\`\`
+
+**Note:** Stats/metrics should use computed fields on entity, not inline bindings.`;
 }
 
 /**
@@ -119,16 +160,57 @@ The trait's render-ui effects handle all UI (modals for create/edit, drawers for
 export function getEfficiencySection(): string {
     return `## Efficiency Guidelines
 
-Target: **30-50 tool calls** for most fixes.
+Target: **3-5 tool calls** for most fixes.
+
+### For Small Schemas (< 15KB)
+
+\`\`\`
+Step 1: Read schema.orb (1 call)
+Step 2: Edit to fix ALL errors at once (1 call)
+Step 3: Validate if needed (1 call)
+Total: 3 tool calls
+\`\`\`
+
+### For Large Schemas (> 15KB) - MANDATORY CHUNKING
+
+**⚠️ WARNING: For schemas larger than 15KB, you MUST use chunking tools.**
+
+Direct edit_file on large schemas will fail or consume excessive tokens. ALWAYS use this workflow:
+
+\`\`\`
+MANDATORY Step 1: query_schema_structure("schema.orb")
+                   → Check totalSize field
+
+MANDATORY Step 2: extract_chunk({
+                     file: "schema.orb",
+                     type: "orbital", 
+                     name: "TargetOrbitalName"
+                   })
+                   → Returns: { chunkId: "abc123", chunkFile: ".chunks/chunk-abc123.json" }
+
+MANDATORY Step 3: edit_file({
+                     path: ".chunks/chunk-abc123.json",
+                     old_string: ...,
+                     new_string: ...
+                   })
+
+MANDATORY Step 4: apply_chunk({ chunkId: "abc123" })
+                   → Merges back to schema.orb
+\`\`\`
+
+**NEVER** use Read/Edit directly on schema files > 15KB. **ALWAYS** use chunking.
 
 **DO:**
-- Batch related changes (read once, edit all, write once)
-- Fix all same-type errors together
-- Run validation once after all changes
+- **Target 3 tool calls** for simple fixes (read → edit → done)
+- Fix ONLY what the user asked for (don't over-fix)
+- Batch related changes in ONE edit
+- Use chunking for schemas > 15KB
 
 **DON'T:**
+- Fix errors the user didn't ask about
+- Add missing transitions/states unless explicitly requested
 - Read schema multiple times without changes
-- Make one small change per tool call
+- Make multiple small edits - do ONE comprehensive edit
 - Re-verify after validation passes
 - Create documentation files`;
 }
