@@ -35,29 +35,93 @@ Validation output format:
 validate_schema()
 \`\`\`
 
-Group errors by orbital component:
+**CRITICAL: Before fixing, you MUST understand the full scope of errors.**
+
+Parse and categorize all errors:
 - **Entity errors**: Field types, relations, collection names
 - **Trait errors**: State machine, events, transitions
 - **Page errors**: Missing traits, invalid references
 - **Pattern errors**: Missing required fields in render-ui
 
-### Step 2: Apply Batched Fixes
+**Count errors by orbital and severity.**
 
-Fix ALL errors of the same type in one edit. Priority order:
+### Step 2: Create Fix Plan
 
-1. **Entity fixes** (field types, enums, relations)
-2. **State machine fixes** (initial state, orphan states)
-3. **Transition fixes** (missing INIT, unreachable states)
-4. **Pattern fixes** (missing props in render-ui effects)
+**BEFORE making any edits, write out your fix plan:**
 
-### Step 3: Re-validate
+\`\`\`
+## Fix Plan
+
+### Summary
+- Total errors: X (Y critical, Z warnings)
+- Affected orbitals: [list]
+- Estimated complexity: simple|medium|complex
+
+### Execution Order
+1. **Fix [ID]**: [Description] -> [Target location]
+2. **Fix [ID]**: [Description] -> [Target location]
+3. ...
+
+### Dependencies
+- Fix X must happen before Fix Y
+- Group A fixes can be batched
+\`\`\`
+
+**Planning Rules:**
+- Group related fixes (same orbital, same component)
+- Identify dependencies (entity fields before bindings)
+- Prioritize critical errors first
+- Estimate if fix is simple (1 edit) or needs multiple steps
+
+### Step 3: Execute Fixes
+
+**Execute your plan systematically:**
+
+For each fix in your plan:
+1. **Apply the fix** using Edit tool
+2. **Verify the fix** - check the specific error is resolved
+3. **Track progress** - note which fixes are done
+
+**Execution Order (Priority):**
+1. **Entity structure fixes** (add missing entity, fields, persistence)
+2. **Event/state fixes** (add missing events, states, transitions)
+3. **Effect fixes** (render-ui effects, bindings)
+4. **Pattern property fixes** (missing columns, fields, actions)
+5. **Minor syntax fixes** (enum values, type corrections)
+
+**Batching Strategy:**
+- Fix ALL errors of the same type in one orbital per edit
+- If errors span multiple orbitals, create separate edits
+- Document what each edit fixes
+
+### Step 4: Re-validate and Verify
 
 \`\`\`
 validate_schema()
 \`\`\`
 
-**STOP when "valid": true** - do not add more tasks or re-verify.`;
+**After each batch of fixes, re-validate to confirm progress.**
+
+Compare results with your plan:
+- Expected errors resolved
+- New errors appeared (unintended side effects)
+- Errors still present (fix did not work)
+
+**If new errors appear:**
+1. Analyze the new error
+2. Update your fix plan
+3. Continue execution
+
+### Step 5: Final Summary
+
+**Call finish_task with:**
+- Summary of what was fixed
+- Number of edits made
+- Any warnings or notes
+`;
 }
+
+/**
 
 /**
  * Get common fix patterns section.
