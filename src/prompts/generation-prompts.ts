@@ -98,14 +98,34 @@ ${getCommonErrorsSection()}
 
 Return ONLY valid JSON matching the FullOrbitalUnit structure. No markdown, no explanations.
 
+**CRITICAL: The entity field is REQUIRED at the orbital level:**
+
 \`\`\`json
 {
-  "name": "EntityName",
-  "entity": { ... },
+  "name": "Product Management",
+  "entity": {          // ← REQUIRED: Must have this field
+    "name": "Product",
+    "collection": "products",
+    "persistence": "persistent",
+    "fields": [
+      { "name": "name", "type": "string", "required": true },
+      { "name": "price", "type": "number" }
+    ]
+  },
   "traits": [ ... ],
   "pages": [ ... ]
 }
 \`\`\`
+
+**Validation Rules:**
+- MUST include "entity" field at orbital level (NOT just linkedEntity in traits)
+- entity.name must match the orbital's primary entity
+- entity.collection must be plural lowercase (e.g., "products", not "Product")
+- entity.fields must have at least one field
+
+**Common Mistake:**
+- ❌ WRONG: Only putting entity reference in trait.linkedEntity
+- ✅ CORRECT: Full entity object in orbital.entity field
 `.trim();
 }
 

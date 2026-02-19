@@ -30,7 +30,26 @@ export function getDecompositionSection(): string {
 - persistent (DB), runtime (memory), or singleton (config)?
 - **CRITICAL: Create exactly ONE orbital per entity**
 - **CRITICAL: If the prompt mentions N entities, create N orbitals** (e.g., "Product, Category, Order" → 3 orbitals)
+- **CRITICAL: EVERY orbital MUST have an entity field** - no exceptions
 - **NEVER** collapse multiple entities into a single dashboard orbital
+
+**Entity Field is REQUIRED in every orbital:**
+\`\`\`json
+{
+  "name": "Product Management",
+  "entity": {          // ← REQUIRED: Every orbital needs this
+    "name": "Product",
+    "collection": "products",
+    "fields": [...]
+  },
+  "traits": [...],
+  "pages": [...]
+}
+\`\`\`
+
+**Common mistake to avoid:**
+- ❌ WRONG: Creating an orbital with no entity field
+- ✅ CORRECT: Every orbital has its entity defined inline
 
 ### Step 2: Select Interaction Model
 | Domain | Create | View | Edit | Delete |
@@ -139,6 +158,7 @@ export function getDecompositionCompact(): string {
 - persistent (DB), runtime (memory), or singleton (config)?
 - **CRITICAL: Create exactly ONE orbital per entity**
 - **CRITICAL: If the prompt mentions N entities, create N orbitals** (e.g., "Product, Category, Order" → 3 orbitals)
+- **CRITICAL: EVERY orbital MUST have an entity field**
 - **NEVER** collapse multiple entities into a single dashboard orbital
 
 ### Step 2: Select Interaction Model

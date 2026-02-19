@@ -17,6 +17,7 @@ export { generateKflowOrbitalFixingSkill } from './generators/kflow-orbital-fixi
 export { generateDomainLanguageSkill } from './generators/domain-language.js';
 export { generateLeanOrbitalSkill } from './orbitals-skills-generators/lean/lean-orbital-generator.js';
 export { generateLeanFixingSkill } from './orbitals-skills-generators/lean/lean-fixing-generator.js';
+export { getSubagentSystemPrompt } from './orbitals-skills-generators/lean-orbital-skill-generator.js';
 
 // Helper functions (used by tools and generators)
 export { getKeyBehaviorsReference } from './prompts/behaviors-reference.js';
