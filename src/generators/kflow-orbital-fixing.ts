@@ -28,7 +28,7 @@ export function generateKflowOrbitalFixingSkill(): GeneratedSkill {
     const frontmatter = {
         name: metadata.name,
         description: metadata.description,
-        allowedTools: ['Read', 'Edit', 'Bash', 'query_schema_structure', 'extract_chunk', 'apply_chunk'],
+        allowedTools: ['Read', 'Edit', 'Bash', 'fix_schema_orchestrated', 'query_schema_structure', 'extract_chunk', 'apply_chunk'],
         version: metadata.version,
     };
 

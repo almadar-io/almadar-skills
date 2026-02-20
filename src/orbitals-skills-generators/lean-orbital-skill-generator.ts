@@ -289,6 +289,21 @@ function getToolWorkflowSection(): string {
 Break requirements into OrbitalUnits (pure reasoning, no tools).
 
 ### Phase 2: GENERATE
+
+**Option A: Orchestrated Generation (RECOMMENDED for 3+ orbitals)**
+Use \`generate_schema_orchestrated\` for automatic complexity-based routing:
+
+\`\`\`
+generate_schema_orchestrated({ prompt: "Full app description with all entities and features" })
+\`\`\`
+
+This tool automatically:
+- Decomposes your requirements
+- Routes simple/medium (1-3 orbitals) to fast single-provider
+- Routes complex (4+ orbitals) to parallel multi-provider
+- Returns a complete schema with all orbitals
+
+**Option B: Per-Orbital Generation (for simple cases or fine-grained control)**
 Call \`generate_orbital\` for each orbital:
 
 \`\`\`
