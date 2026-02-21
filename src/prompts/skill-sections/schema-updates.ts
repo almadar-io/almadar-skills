@@ -146,7 +146,7 @@ For schemas exceeding 40KB, use the **chunking tools** instead of direct editing
 | \`extract_chunk\` | Extract orbital/trait to \`.chunks/chunk-{id}.json\` |
 | \`apply_chunk\` | Merge edited chunk back into schema |
 
-**Note**: These tools work with both \`schema.json\` and \`schema.orb\` files. Changes are auto-persisted.
+**Note**: These tools work with \`schema.orb\` files. Changes are auto-persisted.
 
 ### Chunking Workflow
 

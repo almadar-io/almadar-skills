@@ -128,14 +128,14 @@ ${getCompletionRulesSection()}
 
 \`\`\`
 ┌─────────────────────────────────────────────────────────────────────┐
-│  ALWAYS write to: schema.json                                        │
+│  ALWAYS write to: schema.orb                                         │
 │                                                                      │
 │  NEVER use other file names like:                                   │
-│  - schema_with_fixes.json  ❌                                        │
-│  - new_schema.json         ❌                                        │
-│  - updated_schema.json     ❌                                        │
+│  - schema_with_fixes.orb   ❌                                        │
+│  - new_schema.orb          ❌                                        │
+│  - updated_schema.orb      ❌                                        │
 │                                                                      │
-│  The persistence system ONLY reads from schema.json                 │
+│  The persistence system ONLY reads from schema.orb                  │
 └─────────────────────────────────────────────────────────────────────┘
 \`\`\`
 `;

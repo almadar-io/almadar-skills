@@ -314,8 +314,16 @@ generate_orbital({ orbital: {...}, orbitalIndex: 1, totalOrbitals: N })
 
 Each orbital is written to \`.orbitals/<name>.json\` with ALL effects (render-ui, persist, emit, set, etc.).
 
-### Phase 3: VALIDATE (CRITICAL)
-After generating ALL orbitals, validate BEFORE calling finish_task:
+### Phase 3: COMBINE
+Call \`finish_task\` to auto-combine orbitals into schema.orb:
+
+\`\`\`
+finish_task({ appName: "App" })
+# Reads .orbitals/*.json → schema.orb → orbital validate
+\`\`\`
+
+### Phase 4: VALIDATE (CRITICAL)
+After combining, validate the schema:
 
 \`\`\`
 validate_schema()
@@ -328,21 +336,13 @@ validate_schema()
 
 **Common errors to fix:**
 - ORB_E_MISSING_NAME → Add entity name
-- ORB_E_NO_FIELDS → Add entity fields  
+- ORB_E_NO_FIELDS → Add entity fields
 - Missing entity field → Add entity object with name and fields
 
 **CRITICAL: Check EACH orbital file in .orbitals/ directory:**
 Use Read tool to check each orbital file has entity field.
 
-### Phase 4: COMBINE
-Call \`finish_task\` to auto-combine:
-
-\`\`\`
-finish_task({ appName: "App" })
-# Reads .orbitals/*.json → schema.json → orbital validate
-\`\`\`
-
-### Phase 4: VERIFY COMPOSITION QUALITY
+### Phase 5: VERIFY COMPOSITION QUALITY
 
 Before calling \`finish_task\`, verify each INIT transition:
 

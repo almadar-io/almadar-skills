@@ -313,5 +313,5 @@ export function getCompletionRulesSection(): string {
 4. Do NOT "verify" or "confirm"
 5. Do NOT validate again
 
-The validated schema.json IS your only deliverable.`;
+The validated schema.orb IS your only deliverable.`;
 }

@@ -8,39 +8,7 @@
  */
 
 import type { GeneratedSkill } from './types.js';
-
-// Inline domain language constants (TODO: move to separate domain-language package)
-const ODL_SYNTAX_REFERENCE = `
-## Domain Language Syntax
-
-Entity: \`A [Name] is a [persistent] entity that: - has [field] as [type]\`
-Page: \`[PageName] at /[path]: - shows [Entity] using [Behavior]\`
-`;
-
-const ODL_EXAMPLES = `
-## Examples
-
-\`\`\`
-A Task is a persistent entity that:
-  - has title as text (required)
-  - has status as enum [pending, active, done]
-
-TasksPage at /tasks:
-  - shows Task using List behavior
-\`\`\`
-`;
-
-const ODL_PATTERNS = `
-## Patterns
-
-Use patterns like entity-table, form-section in domain language.
-`;
-
-const ODL_TO_SCHEMA_MAPPING = `
-## Mapping
-
-Domain language converts to OrbitalSchema JSON via compiler.
-`;
+import { generateDomainLanguageReference } from '@almadar/core/domain-language';
 
 /**
  * Generate the domain-language skill.
@@ -79,21 +47,9 @@ Create human-readable summaries of existing domain language definitions.
 
 Make targeted edits to existing domain language text.
 
-## Domain Language Syntax Reference
+## Domain Language Reference
 
-${ODL_SYNTAX_REFERENCE}
-
-## Patterns Reference
-
-${ODL_PATTERNS}
-
-## Full Examples
-
-${ODL_EXAMPLES}
-
-## Mapping to Schema
-
-${ODL_TO_SCHEMA_MAPPING}
+${generateDomainLanguageReference()}
 
 ## Generation Workflow
 

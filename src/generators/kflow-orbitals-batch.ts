@@ -118,7 +118,7 @@ Call \`finish_task\` to auto-combine and validate:
 
 \`\`\`
 finish_task({ appName: "App" })
-# Reads generated orbitals -> schema.json -> orbital validate
+# Reads generated orbitals -> schema.orb -> orbital validate
 \`\`\`
 
 ### Phase 4: VERIFY COMPOSITION QUALITY
