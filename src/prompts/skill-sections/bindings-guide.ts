@@ -43,10 +43,16 @@ export function getBindingsGuide(): string {
     '',
     '| ❌ Invalid | ✅ Correct |',
     '|------------|------------|',
-    '| `@count` | Use `stats` pattern or static text (e.g., `"Total Tasks"`) |',
+    '| `@count(tasks)` | Use `stats` pattern or static text `"Total Tasks"` |',
+    '| `@length(items)` | Use static text or `@entity.itemCount` field |',
+    '| `@filter(...)` | No function-call syntax exists in bindings |',
+    '| `@sum(...)` | No aggregation functions — use entity fields |',
+    '| `@count` | Use `stats` pattern or static text |',
     '| `@count:status=pending` | Use filtered entity-table or static labels |',
     '| `@entity.task.title` | `@entity.title` (entity type is implicit) |',
     '| `@payload.field` in `set` effect | `@entity.field` (set modifies entity only) |',
+    '',
+    '**Rule**: Bindings are ONLY `@root.path` (e.g., `@entity.name`). No function calls like `@fn(...)` exist.',
     ''
   );
 
