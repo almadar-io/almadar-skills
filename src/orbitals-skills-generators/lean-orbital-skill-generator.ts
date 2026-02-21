@@ -663,8 +663,11 @@ Every orbital MUST have this exact structure:
 - ❌ WRONG: Using \`actions\` array on form-section — use \`submitEvent\`/\`cancelEvent\` strings
 - ❌ WRONG: Modal state without CANCEL/CLOSE transitions
 - ❌ WRONG: Bare \`@entity\` without a field path — use \`@entity.fieldName\`
+- ❌ WRONG: \`@Product.name\`, \`@Order.status\`, \`@Customer.email\` — NEVER use entity TYPE as binding root
+- ❌ WRONG: \`@count(orders)\`, \`@sum(orders, total)\`, \`@avg(...)\` — NO aggregate functions exist
 - ✅ CORRECT: Full entity object with name, collection, persistence, fields
-- ✅ CORRECT: Bindings are ONLY \`@root.path\` (e.g., \`@entity.name\`, \`@payload.data\`)
+- ✅ CORRECT: \`@entity.name\`, \`@entity.status\`, \`@entity.email\` — ALWAYS use \`@entity\` as the root
+- ✅ CORRECT: Only valid binding roots: \`@entity\`, \`@payload\`, \`@state\`, \`@now\`, \`@config\`
 - ✅ CORRECT: Every state rendering to modal/drawer has CANCEL + CLOSE transitions back
 
 ## Field Types
