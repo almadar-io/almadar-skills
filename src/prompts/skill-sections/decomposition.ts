@@ -58,10 +58,11 @@ export function getDecompositionSection(): string {
 | game | none | none | none | none |
 | form | wizard | drawer | page | confirm |
 
-### Step 3: Choose Traits
-- Business: EntityManagement (handles CRUD via render-ui)
+### Step 3: Choose Traits (UNIQUE NAMES REQUIRED)
+- Business: \`{Entity}Management\` naming — e.g., \`ProductManagement\`, \`OrderManagement\`, \`CustomerManagement\`
 - Game: Physics2D, Health, Score, Collision
 - Form: Wizard (multi-step) or FormSubmission (single)
+- **NEVER reuse the same trait name across orbitals. Each trait name MUST be globally unique.**
 
 ### Step 4: Define State Machine
 \`\`\`
@@ -168,10 +169,11 @@ export function getDecompositionCompact(): string {
 | game | none | none | none | none |
 | form | wizard | drawer | page | confirm |
 
-### Step 3: Choose Traits
-- Business: EntityManagement (handles CRUD via render-ui)
+### Step 3: Choose Traits (UNIQUE NAMES REQUIRED)
+- Business: \`{Entity}Management\` naming — e.g., \`ProductManagement\`, \`OrderManagement\`, \`CustomerManagement\`
 - Game: Physics2D, Health, Score, Collision
 - Form: Wizard (multi-step) or FormSubmission (single)
+- **NEVER reuse the same trait name across orbitals. Each trait name MUST be globally unique.**
 
 ### Step 4: Define State Machine
 \`\`\`

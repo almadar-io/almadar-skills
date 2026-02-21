@@ -165,22 +165,35 @@ Field types MUST be one of: \`string\`, \`number\`, \`boolean\`, \`date\`, \`tim
 { "name": "author", "type": "relation", "relation": { "entity": "User", "cardinality": "one" } }
 \`\`\`
 
-### 6. Modal State Machine Pattern
+### 6. Modal/Drawer Exit Transitions (CRITICAL — MOST COMMON ERROR)
 
-When a transition opens a modal/drawer, the target state MUST have CLOSE and CANCEL transitions:
+**EVERY state that renders to \`"modal"\` or \`"drawer"\` MUST have CANCEL and CLOSE transitions.**
+Without these, the validator rejects the schema with \`CIRCUIT_NO_OVERLAY_EXIT\`.
 
 \`\`\`json
+// Opening the modal: Browsing → Creating
 { "from": "Browsing", "to": "Creating", "event": "CREATE",
-  "effects": [["render-ui", "modal", { "type": "form-section", "cancelEvent": "CANCEL", ... }]] },
+  "effects": [["render-ui", "modal", { "type": "form-section", "entity": "Task", "submitEvent": "SAVE", "cancelEvent": "CANCEL" }]] },
+
+// REQUIRED: CANCEL exit (form cancel button)
 { "from": "Creating", "to": "Browsing", "event": "CANCEL",
   "effects": [["render-ui", "modal", null]] },
+
+// REQUIRED: CLOSE exit (click outside / press Escape)
 { "from": "Creating", "to": "Browsing", "event": "CLOSE",
   "effects": [["render-ui", "modal", null]] },
+
+// SAVE also dismisses modal
 { "from": "Creating", "to": "Browsing", "event": "SAVE",
-  "effects": [["persist", "create", "Entity", "@payload.data"], ["render-ui", "modal", null], ["emit", "INIT"]] }
+  "effects": [["persist", "create", "Task", "@payload.data"], ["render-ui", "modal", null], ["emit", "INIT"]] }
 \`\`\`
 
-**CLOSE** = user clicks outside modal/presses Escape. **CANCEL** = form cancel button. Both needed.
+**Checklist for EVERY modal/drawer state:**
+- [ ] Has \`CANCEL\` transition → previous state with \`["render-ui", "modal", null]\`
+- [ ] Has \`CLOSE\` transition → previous state with \`["render-ui", "modal", null]\`
+- [ ] Has \`SAVE\` (or other action) transition that also dismisses with \`["render-ui", "modal", null]\`
+
+**This applies to ALL states**: Creating, Editing, Viewing, Deleting — any state that renders to modal/drawer.
 `;
 }
 
@@ -206,12 +219,15 @@ WRONG: Two traits both render to "main" on page load
 CORRECT: ONE trait owns each slot
 \`\`\`
 
-### 9. Missing submitEvent in form-section
+### 9. Missing submitEvent / Wrong Action Pattern in form-section
 \`\`\`
 WRONG: { "type": "form-section", "entity": "Task" }
 ALSO WRONG: { "type": "form-section", "entity": "Task", "onSubmit": "SAVE" }
+ALSO WRONG: { "type": "form-section", "actions": [{"label": "Save", "event": "SAVE"}] }
 CORRECT: { "type": "form-section", "entity": "Task", "submitEvent": "SAVE", "cancelEvent": "CANCEL" }
 \`\`\`
+**form-section does NOT use \`actions\` array** — it uses \`submitEvent\` and \`cancelEvent\` strings.
+The \`actions\` prop is for \`page-header\`, \`entity-detail\`, NOT for forms.
 
 ### 10. Duplicate Transitions (Same from+event)
 \`\`\`

@@ -659,7 +659,13 @@ Every orbital MUST have this exact structure:
 - ❌ WRONG: Missing entity field at orbital level
 - ❌ WRONG: Only linkedEntity in trait, no orbital.entity
 - ❌ WRONG: Empty fields array
+- ❌ WRONG: Using \`@count(tasks)\`, \`@find(...)\`, \`@sum(...)\` — NO function-call bindings exist
+- ❌ WRONG: Using \`actions\` array on form-section — use \`submitEvent\`/\`cancelEvent\` strings
+- ❌ WRONG: Modal state without CANCEL/CLOSE transitions
+- ❌ WRONG: Bare \`@entity\` without a field path — use \`@entity.fieldName\`
 - ✅ CORRECT: Full entity object with name, collection, persistence, fields
+- ✅ CORRECT: Bindings are ONLY \`@root.path\` (e.g., \`@entity.name\`, \`@payload.data\`)
+- ✅ CORRECT: Every state rendering to modal/drawer has CANCEL + CLOSE transitions back
 
 ## Field Types
 
@@ -679,10 +685,21 @@ Every orbital MUST have this exact structure:
 - INIT effect: render-ui with stack containing header, metrics, entity-table
 
 **Transitions:**
-- Browsing → Creating: on CREATE
-- Creating → Browsing: on SAVE or CANCEL
-- Browsing → Editing: on EDIT
-- Editing → Browsing: on SAVE or CANCEL
+- Browsing → Creating: on CREATE (render modal with form-section using submitEvent/cancelEvent)
+- Creating → Browsing: on SAVE (persist + dismiss modal + emit INIT)
+- Creating → Browsing: on CANCEL (dismiss modal: ["render-ui", "modal", null])
+- Creating → Browsing: on CLOSE (dismiss modal: ["render-ui", "modal", null])
+- Browsing → Editing: on EDIT (render modal with form-section)
+- Editing → Browsing: on SAVE, CANCEL, CLOSE (same pattern as Creating)
+
+**CRITICAL: Every state that renders to "modal" or "drawer" MUST have CANCEL and CLOSE transitions.**
+
+## form-section Props (NOT actions)
+
+form-section uses \`submitEvent\`/\`cancelEvent\`, NOT \`actions\` array:
+\`\`\`json
+{ "type": "form-section", "entity": "Task", "fields": ["title", "status"], "submitEvent": "SAVE", "cancelEvent": "CANCEL" }
+\`\`\`
 
 ## Effects Reference
 
