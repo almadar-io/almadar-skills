@@ -12,6 +12,23 @@
 export function getFixingWorkflowSection(): string {
     return `## Fixing Workflow
 
+### Step 0: Read the Existing Schema
+
+**BEFORE anything else, read schema.orb:**
+
+\`\`\`
+Read("schema.orb")
+\`\`\`
+
+You are FIXING an existing schema, NOT creating a new one.
+
+**Rules:**
+- The schema already exists at \`schema.orb\` — READ it first
+- Understand the current entities, traits, and pages before making changes
+- NEVER generate new orbitals or entities — only fix validation errors in what exists
+- NEVER overwrite schema.orb with a new schema — only apply targeted edits
+- If schema.orb does not exist, STOP and report the issue (do not create a new schema)
+
 ### Understanding Validation Errors
 
 Validation output format:
