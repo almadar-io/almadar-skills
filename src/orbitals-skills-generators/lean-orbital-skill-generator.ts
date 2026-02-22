@@ -726,11 +726,20 @@ NEVER use: \`"modal-close"\`, \`"notification"\`, \`"confirm-modal"\`, \`"header
 
 EVERY pattern object in render-ui MUST have a \`"type"\` field. This includes the top-level pattern AND every child in a stack's children array.
 
+## FINAL CHECKLIST (read before generating)
+
+1. **NO aggregate bindings**: \`@count(...)\`, \`@sum(...)\`, \`@avg(...)\` DO NOT EXIST. Use static text or add a count field to the entity instead.
+2. **form-section uses submitEvent/cancelEvent**: \`{ "type": "form-section", "entity": "X", "submitEvent": "SAVE", "cancelEvent": "CANCEL" }\`. NEVER put \`"actions"\` array on form-section — \`actions\` is for page-header and entity-detail only.
+3. **Arrays not objects**: \`fields\`, \`states\`, \`events\`, \`transitions\`, \`children\` MUST be arrays \`[]\`, NEVER objects \`{}\`.
+4. **Every render-ui child needs "type"**: \`{ "type": "typography", "text": "..." }\` not \`{ "text": "..." }\`
+5. **Valid slots only**: \`"main"\`, \`"modal"\`, \`"drawer"\`, \`"sidebar"\` — nothing else.
+6. **Binding roots**: ONLY \`@entity.field\`, \`@payload.field\`, \`@state\`, \`@now\`, \`@config\`. NEVER \`@Order.field\` or \`@count()\`.
+7. **Trait naming**: Name the trait \`{Entity}Interaction\` (e.g., \`CustomerInteraction\`, \`OrderInteraction\`). The page ref MUST match: \`"traits": [{ "ref": "CustomerInteraction" }]\`.
+
 ## Output Requirements
 
 Return ONLY valid JSON. No markdown, no explanations.
 The JSON must be a complete FullOrbitalUnit with all required fields.
-All \`fields\`, \`states\`, \`events\`, \`transitions\`, \`children\` MUST be arrays \`[]\`, NEVER objects \`{}\`.
 `;
 }
 
