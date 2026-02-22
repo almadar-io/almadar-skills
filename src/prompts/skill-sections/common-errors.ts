@@ -194,11 +194,45 @@ Without these, the validator rejects the schema with \`CIRCUIT_NO_OVERLAY_EXIT\`
 - [ ] Has \`SAVE\` (or other action) transition that also dismisses with \`["render-ui", "modal", null]\`
 
 **This applies to ALL states**: Creating, Editing, Viewing, Deleting — any state that renders to modal/drawer.
+
+### 7. Valid Slots ONLY
+
+render-ui slots MUST be one of: \`"main"\`, \`"modal"\`, \`"drawer"\`, \`"sidebar"\`
+
+\`\`\`json
+// WRONG - invented slots:
+["render-ui", "modal-close", null]
+["render-ui", "notification", { ... }]
+["render-ui", "confirm-modal", { ... }]
+
+// CORRECT:
+["render-ui", "modal", null]
+["render-ui", "main", { ... }]
+\`\`\`
+
+### 8. Every render-ui Pattern MUST Have "type"
+
+Every pattern object in render-ui MUST include a \`"type"\` field. This applies to the top-level pattern AND every child in a stack.
+
+\`\`\`json
+// WRONG - missing type:
+["render-ui", "main", { "entity": "Product", "columns": ["name"] }]
+
+// CORRECT:
+["render-ui", "main", { "type": "entity-table", "entity": "Product", "columns": ["name"] }]
+
+// WRONG - child missing type:
+{ "type": "stack", "children": [{ "text": "Hello" }] }
+
+// CORRECT:
+{ "type": "stack", "children": [{ "type": "typography", "text": "Hello" }] }
+\`\`\`
 `;
+
 }
 
 /**
- * Edge case errors 7-16 — less frequent, validator catches most of these.
+ * Edge case errors 9-20 — less frequent, validator catches most of these.
  * ~4,000 chars. Used by the fixing skill.
  */
 function getEdgeCaseErrors(): string {

@@ -710,15 +710,27 @@ form-section uses \`submitEvent\`/\`cancelEvent\`, NOT \`actions\` array:
 |--------|--------|---------|
 | render-ui | ["render-ui", "main", { ... }] | Render UI pattern |
 | render-ui | ["render-ui", "modal", { ... }] | Render modal |
+| render-ui | ["render-ui", "modal", null] | Dismiss modal |
 | persist | ["persist", "create", "Entity", "@payload.data"] | Save to DB |
 | set | ["set", "@entity.field", value] | Update field |
 | emit | ["emit", "EVENT", payload] | Emit event |
 | navigate | ["navigate", "/path"] | Navigate |
 
+## Valid Slots (ONLY these exist)
+
+\`"main"\`, \`"modal"\`, \`"drawer"\`, \`"sidebar"\`
+
+NEVER use: \`"modal-close"\`, \`"notification"\`, \`"confirm-modal"\`, \`"header"\`, \`"footer"\`
+
+## Pattern Type Required
+
+EVERY pattern object in render-ui MUST have a \`"type"\` field. This includes the top-level pattern AND every child in a stack's children array.
+
 ## Output Requirements
 
 Return ONLY valid JSON. No markdown, no explanations.
 The JSON must be a complete FullOrbitalUnit with all required fields.
+All \`fields\`, \`states\`, \`events\`, \`transitions\`, \`children\` MUST be arrays \`[]\`, NEVER objects \`{}\`.
 `;
 }
 
