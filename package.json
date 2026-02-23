@@ -1,6 +1,6 @@
 {
   "name": "@almadar/skills",
-  "version": "1.4.2",
+  "version": "2.0.0",
   "description": "AI skill generators and prompts for Orbital schema generation",
   "type": "module",
   "main": "./dist/index.js",
@@ -47,10 +47,10 @@
     "eval:compare": "tsx evals/cli.ts compare"
   },
   "dependencies": {
-    "@almadar/core": "workspace:*",
-    "@almadar/llm": "workspace:*",
-    "@almadar/patterns": "workspace:*",
-    "@almadar/std": "workspace:*",
+    "@almadar/core": ">=2.0.0",
+    "@almadar/llm": ">=2.0.0",
+    "@almadar/patterns": ">=2.0.0",
+    "@almadar/std": ">=2.0.0",
     "commander": "^12.0.0",
     "glob": "^10.3.10"
   },
@@ -62,8 +62,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/almadar-io/almadar.git",
-    "directory": "packages/almadar-skills"
+    "url": "https://github.com/almadar-io/almadar-skills.git"
   },
   "license": "MIT",
   "keywords": [
