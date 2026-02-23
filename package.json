@@ -1,6 +1,6 @@
 {
   "name": "@almadar/skills",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "AI skill generators and prompts for Orbital schema generation",
   "type": "module",
   "main": "./dist/index.js",
@@ -30,7 +30,6 @@
     "build": "tsup",
     "build:watch": "tsup --watch",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm run build",
     "generate": "pnpm build && tsx scripts/generate.ts",
     "generate:list": "pnpm build && tsx scripts/generate.ts list",
     "generate:preview": "pnpm build && tsx scripts/generate.ts preview",
@@ -58,7 +57,8 @@
     "dotenv": "^16.4.0",
     "tsup": "^8.0.0",
     "tsx": "^4.7.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "@types/node": "^22.0.0"
   },
   "repository": {
     "type": "git",
