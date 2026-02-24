@@ -6,7 +6,7 @@
 
 import { Command } from 'commander';
 // CLI temporarily disabled - use runner.ts directly via `pnpm evals:run`
-import type { RunOptions } from './types.js';
+import type { RunOptions, CategoryStats } from './types.js';
 import fs from 'fs/promises';
 
 const program = new Command();
@@ -137,7 +137,7 @@ function printTextReport(report: any): void {
 
   console.log('\nCategory Breakdown:');
   for (const [category, stats] of Object.entries(report.categories)) {
-    const s = stats as any;
+    const s = stats as CategoryStats;
     console.log(
       `  ${category.padEnd(15)} Pass: ${(s.passRate * 100).toFixed(0)}%  Score: ${(
         s.avgScore * 100
@@ -180,7 +180,7 @@ function printMarkdownReport(report: any): void {
   console.log('| Category | Pass Rate | Avg Score | Count |');
   console.log('|----------|-----------|-----------|-------|');
   for (const [category, stats] of Object.entries(report.categories)) {
-    const s = stats as any;
+    const s = stats as CategoryStats;
     console.log(
       `| ${category} | ${(s.passRate * 100).toFixed(0)}% | ${(s.avgScore * 100).toFixed(
         0

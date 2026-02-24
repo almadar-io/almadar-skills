@@ -37,3 +37,6 @@ export {
 
 // Types
 export type { SkillFrontmatter, GeneratedSkill } from './generators/types.js';
+
+// Service contract
+export type { SkillsServiceActions, SkillsServiceContract } from './contracts.js';

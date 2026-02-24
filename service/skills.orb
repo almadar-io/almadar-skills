@@ -1,0 +1,205 @@
+{
+  "name": "Skills Service",
+  "description": "Orbital schema generation — generates orbital schemas from natural language prompts, fixes validation errors, generates domain language definitions, and batch-generates multiple skills.",
+  "version": "2.0.0",
+  "orbitals": [
+    {
+      "name": "SkillGenerator",
+      "entity": {
+        "name": "SkillGeneration",
+        "persistence": "persistent",
+        "collection": "skill_generations",
+        "fields": [
+          { "name": "id", "type": "string", "required": true, "primaryKey": true },
+          { "name": "skill", "type": "string", "default": "" },
+          { "name": "prompt", "type": "string", "default": "" },
+          { "name": "status", "type": "string", "default": "idle" },
+          { "name": "generatedContent", "type": "string", "default": "" },
+          { "name": "validationPassed", "type": "boolean", "default": false },
+          { "name": "errors", "type": "array", "default": [] },
+          { "name": "durationMs", "type": "number", "default": 0 }
+        ]
+      },
+      "traits": [
+        {
+          "name": "SkillGenerationLifecycle",
+          "category": "interaction",
+          "linkedEntity": "SkillGeneration",
+          "emits": [
+            {
+              "event": "SKILL_GENERATION_STARTED",
+              "scope": "external",
+              "payload": [
+                { "name": "skill", "type": "string" },
+                { "name": "prompt", "type": "string" }
+              ]
+            },
+            {
+              "event": "SKILL_GENERATION_COMPLETED",
+              "scope": "external",
+              "payload": [
+                { "name": "skill", "type": "string" },
+                { "name": "durationMs", "type": "number" }
+              ]
+            },
+            {
+              "event": "SKILL_GENERATION_FAILED",
+              "scope": "external",
+              "payload": [
+                { "name": "skill", "type": "string" },
+                { "name": "error", "type": "string" }
+              ]
+            },
+            {
+              "event": "SKILL_VALIDATION_PASSED",
+              "scope": "external",
+              "payload": [
+                { "name": "skill", "type": "string" },
+                { "name": "schemaSize", "type": "number" }
+              ]
+            },
+            {
+              "event": "SKILL_VALIDATION_FAILED",
+              "scope": "external",
+              "payload": [
+                { "name": "skill", "type": "string" },
+                { "name": "errors", "type": "array" }
+              ]
+            }
+          ],
+          "stateMachine": {
+            "states": [
+              { "name": "Idle", "isInitial": true },
+              { "name": "Generating" },
+              { "name": "Validating" },
+              { "name": "Complete", "isTerminal": true },
+              { "name": "Failed", "isTerminal": true }
+            ],
+            "events": [
+              { "key": "INIT", "name": "Initialize" },
+              { "key": "GENERATE", "name": "Generate Orbital", "payload": [
+                { "name": "prompt", "type": "string" },
+                { "name": "skill", "type": "string" }
+              ]},
+              { "key": "GENERATION_DONE", "name": "Generation Done", "payload": [
+                { "name": "content", "type": "string" },
+                { "name": "durationMs", "type": "number" }
+              ]},
+              { "key": "VALIDATION_PASSED", "name": "Validation Passed" },
+              { "key": "VALIDATION_FAILED", "name": "Validation Failed", "payload": [
+                { "name": "errors", "type": "array" }
+              ]},
+              { "key": "FAIL", "name": "Generation Failed", "payload": [
+                { "name": "error", "type": "string" }
+              ]}
+            ],
+            "transitions": [
+              {
+                "from": "Idle",
+                "to": "Idle",
+                "event": "INIT",
+                "effects": [
+                  ["set", "@entity.status", "idle"],
+                  ["render-ui", "main", {
+                    "type": "page-header",
+                    "title": "Skill Generator"
+                  }],
+                  ["fetch", "SkillGeneration"],
+                  ["render-ui", "main", {
+                    "type": "entity-table",
+                    "entity": "SkillGeneration",
+                    "columns": ["skill", "prompt", "status", "validationPassed", "durationMs"]
+                  }]
+                ]
+              },
+              {
+                "from": "Idle",
+                "to": "Generating",
+                "event": "GENERATE",
+                "effects": [
+                  ["set", "@entity.skill", "@payload.skill"],
+                  ["set", "@entity.prompt", "@payload.prompt"],
+                  ["set", "@entity.status", "generating"],
+                  ["emit", "SKILL_GENERATION_STARTED", {
+                    "skill": "@payload.skill",
+                    "prompt": "@payload.prompt"
+                  }],
+                  ["render-ui", "main", {
+                    "type": "loading-state",
+                    "message": "Generating orbital schema..."
+                  }]
+                ]
+              },
+              {
+                "from": "Generating",
+                "to": "Validating",
+                "event": "GENERATION_DONE",
+                "effects": [
+                  ["set", "@entity.generatedContent", "@payload.content"],
+                  ["set", "@entity.durationMs", "@payload.durationMs"],
+                  ["set", "@entity.status", "validating"]
+                ]
+              },
+              {
+                "from": "Validating",
+                "to": "Complete",
+                "event": "VALIDATION_PASSED",
+                "effects": [
+                  ["set", "@entity.validationPassed", true],
+                  ["set", "@entity.status", "complete"],
+                  ["emit", "SKILL_GENERATION_COMPLETED", {
+                    "skill": "@entity.skill",
+                    "durationMs": "@entity.durationMs"
+                  }],
+                  ["emit", "SKILL_VALIDATION_PASSED", {
+                    "skill": "@entity.skill",
+                    "schemaSize": 0
+                  }]
+                ]
+              },
+              {
+                "from": "Validating",
+                "to": "Failed",
+                "event": "VALIDATION_FAILED",
+                "effects": [
+                  ["set", "@entity.validationPassed", false],
+                  ["set", "@entity.errors", "@payload.errors"],
+                  ["set", "@entity.status", "failed"],
+                  ["emit", "SKILL_VALIDATION_FAILED", {
+                    "skill": "@entity.skill",
+                    "errors": "@payload.errors"
+                  }]
+                ]
+              },
+              {
+                "from": "Generating",
+                "to": "Failed",
+                "event": "FAIL",
+                "effects": [
+                  ["set", "@entity.status", "failed"],
+                  ["emit", "SKILL_GENERATION_FAILED", {
+                    "skill": "@entity.skill",
+                    "error": "@payload.error"
+                  }],
+                  ["render-ui", "main", {
+                    "type": "alert",
+                    "variant": "danger",
+                    "title": "Generation Failed",
+                    "message": "@payload.error"
+                  }]
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "pages": [
+        {
+          "name": "SkillGeneratorDashboard",
+          "path": "/admin/skills",
+          "traits": [{ "ref": "SkillGenerationLifecycle" }]
+        }
+      ]
+    }
+  ]
+}

@@ -6,7 +6,8 @@
  */
 
 import { getAllBehaviors, getAllStdOperators, generateBehaviorsDocs, generateModulesDocs } from '@almadar/std';
-import { PATTERN_TYPES } from '@almadar/core/types';
+import { PATTERN_TYPES, isInlineTrait } from '@almadar/core/types';
+import type { Trait, State, Event as OrbitalEvent } from '@almadar/core';
 import { getPatternsGroupedByCategory } from '@almadar/patterns';
 
 /**
@@ -123,20 +124,22 @@ export function getStdBehaviorsWithStateMachines(): string {
   const behaviors = getAllBehaviors();
   const nonGameBehaviors = behaviors.filter(b => {
     const traits = b.orbitals?.[0]?.traits ?? [];
-    const hasGameCategory = traits.some((t: any) => t.category?.includes('game'));
-    const hasStateMachine = traits.some((t: any) => t.stateMachine);
+    const inlineTraits = traits.filter(isInlineTrait);
+    const hasGameCategory = inlineTraits.some((t: Trait) => t.category?.includes('game'));
+    const hasStateMachine = inlineTraits.some((t: Trait) => t.stateMachine);
     return !hasGameCategory && hasStateMachine;
   });
 
   return `## Standard Behaviors
 
 ${nonGameBehaviors.map(behavior => {
-    const trait = (behavior.orbitals?.[0]?.traits ?? []).find((t: any) => t.stateMachine) as any;
+    const inlineTraits = (behavior.orbitals?.[0]?.traits ?? []).filter(isInlineTrait);
+    const trait: Trait | undefined = inlineTraits.find((t: Trait) => t.stateMachine);
     const sm = trait?.stateMachine;
     return `### ${behavior.name}
 
-**States**: ${sm?.states?.map((s: any) => s.name).join(', ') ?? 'N/A'}
-**Events**: ${sm?.events?.map((e: any) => e.key ?? e.name ?? e).join(', ') ?? 'N/A'}
+**States**: ${sm?.states?.map((s: State) => s.name).join(', ') ?? 'N/A'}
+**Events**: ${sm?.events?.map((e: OrbitalEvent) => e.key ?? e.name).join(', ') ?? 'N/A'}
 
 \`\`\`json
 ${JSON.stringify(behavior, null, 2)}

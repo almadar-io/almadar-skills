@@ -8,6 +8,7 @@
  */
 
 import type { OrbitalSchema } from '@almadar/core';
+import { isInlineTrait } from '@almadar/core';
 
 export interface EvalCase {
   name: string;
@@ -177,10 +178,10 @@ export function analyzeComposition(schema: OrbitalSchema): CompositionMetrics {
   for (const orbital of schema.orbitals) {
     for (const trait of orbital.traits) {
       // Skip trait refs - we need full trait definitions with stateMachine
-      const t = trait as any;
-      if (!t.stateMachine?.transitions) continue;
-      
-      for (const transition of t.stateMachine.transitions) {
+      if (!isInlineTrait(trait)) continue;
+      if (!trait.stateMachine?.transitions) continue;
+
+      for (const transition of trait.stateMachine.transitions) {
         if (!transition.effects) continue;
         
         for (const effect of transition.effects) {
@@ -430,9 +431,9 @@ function countTransitions(schema: OrbitalSchema): number {
   let count = 0;
   for (const orbital of schema.orbitals) {
     for (const trait of orbital.traits) {
-      const t = trait as any;
-      if (t.stateMachine?.transitions) {
-        count += t.stateMachine.transitions.length;
+      if (!isInlineTrait(trait)) continue;
+      if (trait.stateMachine?.transitions) {
+        count += trait.stateMachine.transitions.length;
       }
     }
   }
@@ -443,14 +444,14 @@ function hasClosedCircuit(schema: OrbitalSchema): boolean {
   // Check that all states have entry and exit transitions
   for (const orbital of schema.orbitals) {
     for (const trait of orbital.traits) {
-      const t = trait as any;
-      if (!t.stateMachine) continue;
-      
-      const states = new Set<string>((t.stateMachine.states || []).map((s: { name: string }) => s.name));
+      if (!isInlineTrait(trait)) continue;
+      if (!trait.stateMachine) continue;
+
+      const states = new Set<string>((trait.stateMachine.states || []).map(s => s.name));
       const incomingStates = new Set<string>();
       const outgoingStates = new Set<string>();
 
-      for (const transition of t.stateMachine.transitions || []) {
+      for (const transition of trait.stateMachine.transitions || []) {
         incomingStates.add(transition.to);
         outgoingStates.add(transition.from);
       }
@@ -458,7 +459,7 @@ function hasClosedCircuit(schema: OrbitalSchema): boolean {
       // All states except initial should have incoming
       // All states should have outgoing (or be terminal)
       for (const state of states) {
-        const stateObj = (t.stateMachine.states || []).find((s: { name: string }) => s.name === state);
+        const stateObj = (trait.stateMachine.states || []).find(s => s.name === state);
         if (!stateObj?.isInitial && !incomingStates.has(state)) {
           return false;
         }
