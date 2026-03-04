@@ -43,7 +43,8 @@
     "eval": "tsx evals/cli.ts",
     "eval:basic": "tsx evals/cli.ts --tags basic",
     "eval:edge": "tsx evals/cli.ts --tags edge-case",
-    "eval:compare": "tsx evals/cli.ts compare"
+    "eval:compare": "tsx evals/cli.ts compare",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@almadar/core": ">=2.1.0",
