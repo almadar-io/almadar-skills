@@ -595,6 +595,7 @@ Every orbital MUST have this exact structure:
       "name": "TraitName",
       "category": "interaction",
       "linkedEntity": "EntityName",
+      "emits": [{ "event": "INIT", "scope": "internal" }],
       "stateMachine": {
         "states": [
           { "name": "Browsing", "isInitial": true },
@@ -653,6 +654,9 @@ Every orbital MUST have this exact structure:
 2. **Entity Name**: Must match the orbital's primary entity
 3. **Collection**: Plural lowercase version of entity name (e.g., "products" for Product)
 4. **Fields**: At minimum, include id, name, and relevant fields from input
+5. **Emits format**: \`"emits": [{ "event": "EVENT_NAME", "scope": "internal" }]\`. NOT \`{ "key": "...", "name": "..." }\`. The emits array declares which events the trait emits via \`["emit", "X"]\` effects.
+6. **@state is bare**: \`@state\` has NO field paths. Never write \`@state.field\`. Use \`@entity.field\` instead.
+7. **set targets @entity.field**: \`["set", "@entity.fieldName", value]\`. Never \`["set", "@state", ...]\` or \`["set", "@entity", ...]\` without a field path.
 
 ## Common Mistakes to Avoid
 
@@ -665,10 +669,17 @@ Every orbital MUST have this exact structure:
 - ❌ WRONG: Bare \`@entity\` without a field path — use \`@entity.fieldName\`
 - ❌ WRONG: \`@Product.name\`, \`@Order.status\`, \`@Customer.email\` — NEVER use entity TYPE as binding root
 - ❌ WRONG: \`@count(orders)\`, \`@sum(orders, total)\`, \`@avg(...)\` — NO aggregate functions exist
+- ❌ WRONG: \`["fetch", "load", "Product"]\` or \`["fetch", "get", "Product"]\` — fetch takes entity name directly, NOT an action verb
+- ❌ WRONG: \`"emits": [{ "key": "INIT", "name": "Initialize" }]\` — this is the EVENTS format, not emits
+- ❌ WRONG: \`@state.fieldName\` — \`@state\` is bare, it has NO field paths
+- ❌ WRONG: \`["set", "@state.field", value]\` or \`["set", "@state", value]\` — set target must be \`@entity.field\`
 - ✅ CORRECT: Full entity object with name, collection, persistence, fields
 - ✅ CORRECT: \`@entity.name\`, \`@entity.status\`, \`@entity.email\` — ALWAYS use \`@entity\` as the root
 - ✅ CORRECT: Only valid binding roots: \`@entity\`, \`@payload\`, \`@state\`, \`@now\`, \`@config\`
 - ✅ CORRECT: Every state rendering to modal/drawer has CANCEL + CLOSE transitions back
+- ✅ CORRECT: \`"emits": [{ "event": "INIT", "scope": "internal" }]\` — emits uses "event"+"scope" keys
+- ✅ CORRECT: \`@state\` is used bare (no path) — it refers to the current state name
+- ✅ CORRECT: \`["set", "@entity.status", "active"]\` — set ALWAYS targets @entity.fieldName
 
 ## Field Types
 
@@ -711,7 +722,11 @@ form-section uses \`submitEvent\`/\`cancelEvent\`, NOT \`actions\` array:
 | render-ui | ["render-ui", "main", { ... }] | Render UI pattern |
 | render-ui | ["render-ui", "modal", { ... }] | Render modal |
 | render-ui | ["render-ui", "modal", null] | Dismiss modal |
+| fetch | ["fetch", "EntityName"] | Fetch all entities |
+| fetch | ["fetch", "EntityName", "@payload.id"] | Fetch one by ID |
 | persist | ["persist", "create", "Entity", "@payload.data"] | Save to DB |
+| persist | ["persist", "update", "Entity", "@payload.id", "@payload.data"] | Update entity |
+| persist | ["persist", "delete", "Entity", "@payload.id"] | Delete entity |
 | set | ["set", "@entity.field", value] | Update field |
 | emit | ["emit", "EVENT", payload] | Emit event |
 | navigate | ["navigate", "/path"] | Navigate |
@@ -733,8 +748,9 @@ EVERY pattern object in render-ui MUST have a \`"type"\` field. This includes th
 3. **Arrays not objects**: \`fields\`, \`states\`, \`events\`, \`transitions\`, \`children\` MUST be arrays \`[]\`, NEVER objects \`{}\`.
 4. **Every render-ui child needs "type"**: \`{ "type": "typography", "text": "..." }\` not \`{ "text": "..." }\`
 5. **Valid slots only**: \`"main"\`, \`"modal"\`, \`"drawer"\`, \`"sidebar"\` — nothing else.
-6. **Binding roots**: ONLY \`@entity.field\`, \`@payload.field\`, \`@state\`, \`@now\`, \`@config\`. NEVER \`@Order.field\` or \`@count()\`.
+6. **Binding roots**: ONLY \`@entity.field\`, \`@payload.field\`, \`@state\`, \`@now\`, \`@config\`. NEVER \`@Order.field\` or \`@count()\`. \`@state\` is bare (no field path). \`set\` targets MUST be \`@entity.fieldName\`.
 7. **Trait naming**: Name the trait \`{Entity}Interaction\` (e.g., \`CustomerInteraction\`, \`OrderInteraction\`). The page ref MUST match: \`"traits": [{ "ref": "CustomerInteraction" }]\`.
+8. **Emits format**: \`"emits": [{ "event": "INIT", "scope": "internal" }]\`. Every event used in \`["emit", "X"]\` effects MUST appear in the trait's emits array. The emits format uses \`"event"\`+\`"scope"\` keys, NOT \`"key"\`+\`"name"\`+\`"payload"\` (that's the stateMachine.events format).
 
 ## Output Requirements
 

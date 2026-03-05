@@ -378,6 +378,7 @@ Use a singleton entity for filter state + \`query\` prop on entity-table:
     "fields": [{ "name": "status", "type": "string" }, { "name": "search", "type": "string" }] } }
 \`\`\`
 Reference: \`["render-ui", "main", { "type": "entity-table", "entity": "Task", "query": "@TaskQuery" }]\`
+
 `;
 }
 
@@ -402,5 +403,11 @@ export function getValidationHintsSection(): string {
 | ORB_EFF_SET_REQUIRES_ENTITY | Change @payload.field to @entity.field in set effects |
 | ORB_RUI_UNKNOWN_ITEM_ACTION_PROP | Remove invalid props (like \`condition\`), use \`showWhen\` |
 | ORB_MODAL_NO_CLOSE | Add CLOSE/CANCEL transitions from modal states with \`["render-ui", "modal", null]\` |
+| ORB_T_EVT_UNDECLARED | Event emitted via ["emit","X"] but not in trait's emits array. Add \`{ "event": "X", "scope": "internal" }\` to emits. Use "event"+"scope" format, NOT "key"+"name". |
+| ORB_BINDING_SET_TARGET_MISSING_PATH | set target like \`@entity\` or \`@state\` has no field path. Use \`@entity.fieldName\` |
+| ORB_BINDING_STATE_NO_PATH | \`@state\` used with a field path like \`@state.field\`. \`@state\` is bare, no paths allowed. Use \`@entity.field\` instead. |
+| ORB_BINDING_ENTITY_FIELD_NOT_FOUND | Binding references \`@entity.field\` but that field doesn't exist on the entity. Add the field to entity.fields or fix the binding. |
+| ORB_T_UNDEFINED_TRAIT | Trait name in page refs doesn't match any trait definition. Often caused by malformed emits (using events format instead of emits format). |
+| ORB_EFF_FETCH_INVALID_ENTITY | fetch effect has wrong syntax. Use \`["fetch", "EntityName"]\` or \`["fetch", "EntityName", "@payload.id"]\`. NOT \`["fetch", "load", "Entity"]\`. |
 `;
 }
