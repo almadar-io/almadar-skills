@@ -227,6 +227,62 @@ Every pattern object in render-ui MUST include a \`"type"\` field. This applies 
 // CORRECT:
 { "type": "stack", "children": [{ "type": "typography", "text": "Hello" }] }
 \`\`\`
+
+### 9. Form Actions on Non-Form Patterns (CIRCUIT_ACTION_COMPONENT_MISMATCH)
+
+**CANCEL, SAVE, SUBMIT, RESET are FORM actions.** They are ONLY valid in states that render form patterns (\`form-section\`, \`form\`).
+
+Delete confirmation dialogs use \`alert\` or \`confirmation\` patterns, NOT \`form-section\`. So they must NOT use \`CANCEL\` as an action event.
+
+\`\`\`json
+// WRONG - CANCEL is a form action, but alert is NOT a form pattern:
+{ "from": "Browsing", "to": "Deleting", "event": "DELETE",
+  "effects": [["render-ui", "modal", {
+    "type": "alert", "variant": "danger", "title": "Delete?",
+    "actions": [
+      { "label": "Cancel", "event": "CANCEL" },
+      { "label": "Delete", "event": "CONFIRM_DELETE" }
+    ]
+  }]] }
+
+// CORRECT - use CLOSE (not CANCEL) to dismiss non-form modals:
+{ "from": "Browsing", "to": "Deleting", "event": "DELETE",
+  "effects": [["render-ui", "modal", {
+    "type": "alert", "variant": "danger", "title": "Delete?",
+    "actions": [
+      { "label": "Cancel", "event": "CLOSE" },
+      { "label": "Delete", "event": "CONFIRM_DELETE" }
+    ]
+  }]] }
+\`\`\`
+
+**Rule:** In non-form modal states (alert, confirmation, detail-panel), use \`CLOSE\` to dismiss. Reserve \`CANCEL\` for \`form-section\` states only.
+
+### 10. Dead Handler: Action Fires Event With No Transition From Current State (CIRCUIT_DEAD_HANDLER)
+
+If a render-ui pattern in state X has an action that fires event E, there MUST be a transition \`from: X, event: E\`. A transition handling E from a DIFFERENT state does not count.
+
+\`\`\`json
+// WRONG - detail-panel in "Viewing" has Edit action firing EDIT,
+// but only Browsing handles EDIT:
+{ "from": "Browsing", "to": "Viewing", "event": "VIEW",
+  "effects": [["render-ui", "drawer", {
+    "type": "detail-panel", "entity": "Todo",
+    "actions": [{ "label": "Edit", "event": "EDIT" }]
+  }]] }
+{ "from": "Browsing", "to": "Editing", "event": "EDIT", ... }
+// No transition from: "Viewing", event: "EDIT" -> CIRCUIT_DEAD_HANDLER!
+
+// CORRECT - add transition from Viewing state:
+{ "from": "Viewing", "to": "Editing", "event": "EDIT",
+  "effects": [
+    ["render-ui", "drawer", null],
+    ["fetch", "Todo", "@payload.id"],
+    ["render-ui", "modal", { "type": "form-section", "entity": "Todo", "submitEvent": "SAVE", "cancelEvent": "CANCEL" }]
+  ] }
+\`\`\`
+
+**Rule:** For every action \`{ "event": "X" }\` in a render-ui effect of state S, verify there is a transition \`from: S, event: X\`.
 `;
 
 }
