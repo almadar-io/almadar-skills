@@ -13,7 +13,7 @@ importers:
         version: 2.1.3
       '@almadar/llm':
         specifier: '>=2.0.0'
-        version: 2.0.3(@almadar/core@2.1.3)
+        version: 2.2.0(@almadar/core@2.1.3)
       '@almadar/patterns':
         specifier: '>=2.0.0'
         version: 2.6.0
@@ -62,8 +62,8 @@ packages:
     peerDependencies:
       eslint: '>=8.0.0'
 
-  '@almadar/llm@2.0.3':
-    resolution: {integrity: sha512-rCubiAlvPWa9lNnW/5wcvjudWt6fN1GdxXrbEHcWd0h5E73PQYKD1g2Kn9KRoq7YdS3nDaLNfZsuxh6Uzm3eVA==}
+  '@almadar/llm@2.2.0':
+    resolution: {integrity: sha512-csd/aRGJ6fJnbqne0QNfiuBUEwqd1mycNReT54tKd85UHistrVD8zeFcuaxLfpNZJ6bihEL2cE2OFOznewnfdQ==}
     peerDependencies:
       '@almadar/core': '>=2.0.0'
     peerDependenciesMeta:
@@ -318,21 +318,21 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@langchain/anthropic@1.3.22':
-    resolution: {integrity: sha512-P/XpLzZlaCU7qba+cgHIO2IKk9EeJwA1OLUJh9+iSRr0peLiZ1ssZeBPNLjBU28MuSDvDtUJt1fFYUYGD4Km1g==}
+  '@langchain/anthropic@1.3.23':
+    resolution: {integrity: sha512-iHCUWKXMZcbjdLZ+mohJMo+tH4HXcZXYktEM02xetpwiqi2vaoDeZsiK/A2kEN24b9QbpG0sLueRNtJHn/fAFA==}
     engines: {node: '>=20'}
     peerDependencies:
-      '@langchain/core': ^1.1.30
+      '@langchain/core': ^1.1.32
 
-  '@langchain/core@1.1.31':
-    resolution: {integrity: sha512-FxsgIUONjKaRpjx59sISgmb0OMCbAetPGyhzjGa2kX0y1f8LZ5xm9VB2db7W9HYWyLvzRWcMA51Uu4OSTJmtZQ==}
+  '@langchain/core@1.1.32':
+    resolution: {integrity: sha512-ZZNiER5tceFXqZOghfrxNHzM60gcQL5XK/8Ow5+o4OuKHrP1p/RUQBDM9Y1nddi/VmKQj+ncaXXM5KovXTEGGQ==}
     engines: {node: '>=20'}
 
-  '@langchain/openai@1.2.12':
-    resolution: {integrity: sha512-Im6PPNujrfkZk4vpc9JAjbeERg+RbNtWRe3KSFOP7aNGa/yZ+XD69lxXwbsZGaZkbiUN/hwe9RYeisUfThb5wg==}
+  '@langchain/openai@1.2.13':
+    resolution: {integrity: sha512-zyspKSBnyxICxZyGYMxsSkCUJR09Uj1omMGBrUsvpSu9j+zIbfNg4+NQTIRmnzULoKB+keaioOdLGHxOQru3+w==}
     engines: {node: '>=20'}
     peerDependencies:
-      '@langchain/core': ^1.1.30
+      '@langchain/core': ^1.1.32
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -1174,12 +1174,12 @@ snapshots:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.0.3(@almadar/core@2.1.3)':
+  '@almadar/llm@2.2.0(@almadar/core@2.1.3)':
     dependencies:
       '@anthropic-ai/sdk': 0.52.0
-      '@langchain/anthropic': 1.3.22(@langchain/core@1.1.31(openai@6.27.0(zod@3.25.76)))
-      '@langchain/core': 1.1.31(openai@6.27.0(zod@3.25.76))
-      '@langchain/openai': 1.2.12(@langchain/core@1.1.31(openai@6.27.0(zod@3.25.76)))
+      '@langchain/anthropic': 1.3.23(@langchain/core@1.1.32(openai@6.27.0(zod@3.25.76)))
+      '@langchain/core': 1.1.32(openai@6.27.0(zod@3.25.76))
+      '@langchain/openai': 1.2.13(@langchain/core@1.1.32(openai@6.27.0(zod@3.25.76)))
       openai: 6.27.0(zod@3.25.76)
       zod: 3.25.76
     optionalDependencies:
@@ -1353,13 +1353,13 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@langchain/anthropic@1.3.22(@langchain/core@1.1.31(openai@6.27.0(zod@3.25.76)))':
+  '@langchain/anthropic@1.3.23(@langchain/core@1.1.32(openai@6.27.0(zod@3.25.76)))':
     dependencies:
       '@anthropic-ai/sdk': 0.74.0(zod@3.25.76)
-      '@langchain/core': 1.1.31(openai@6.27.0(zod@3.25.76))
+      '@langchain/core': 1.1.32(openai@6.27.0(zod@3.25.76))
       zod: 3.25.76
 
-  '@langchain/core@1.1.31(openai@6.27.0(zod@3.25.76))':
+  '@langchain/core@1.1.32(openai@6.27.0(zod@3.25.76))':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       '@standard-schema/spec': 1.1.0
@@ -1378,9 +1378,9 @@ snapshots:
       - '@opentelemetry/sdk-trace-base'
       - openai
 
-  '@langchain/openai@1.2.12(@langchain/core@1.1.31(openai@6.27.0(zod@3.25.76)))':
+  '@langchain/openai@1.2.13(@langchain/core@1.1.32(openai@6.27.0(zod@3.25.76)))':
     dependencies:
-      '@langchain/core': 1.1.31(openai@6.27.0(zod@3.25.76))
+      '@langchain/core': 1.1.32(openai@6.27.0(zod@3.25.76))
       js-tiktoken: 1.0.21
       openai: 6.27.0(zod@3.25.76)
       zod: 3.25.76
