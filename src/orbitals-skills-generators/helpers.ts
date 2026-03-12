@@ -123,7 +123,7 @@ ${mod.operators.map(op => `- **${op.name}**: ${op.description}`).join('\n')}
 export function getStdBehaviorsWithStateMachines(): string {
   const behaviors = getAllBehaviors();
   const nonGameBehaviors = behaviors.filter(b => {
-    const traits = b.orbitals?.[0]?.traits ?? [];
+    const traits = (b.orbitals?.[0]?.traits ?? []) as Trait[];
     const inlineTraits = traits.filter(isInlineTrait);
     const hasGameCategory = inlineTraits.some((t: Trait) => t.category?.includes('game'));
     const hasStateMachine = inlineTraits.some((t: Trait) => t.stateMachine);
@@ -133,7 +133,7 @@ export function getStdBehaviorsWithStateMachines(): string {
   return `## Standard Behaviors
 
 ${nonGameBehaviors.map(behavior => {
-    const inlineTraits = (behavior.orbitals?.[0]?.traits ?? []).filter(isInlineTrait);
+    const inlineTraits = ((behavior.orbitals?.[0]?.traits ?? []) as Trait[]).filter(isInlineTrait);
     const trait: Trait | undefined = inlineTraits.find((t: Trait) => t.stateMachine);
     const sm = trait?.stateMachine;
     return `### ${behavior.name}
