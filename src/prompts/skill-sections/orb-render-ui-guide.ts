@@ -138,8 +138,8 @@ The most-used patterns (by frequency across all behaviors):
     {
       "type": "stack", "direction": "horizontal", "gap": "md",
       "children": [
-        { "type": "stat-display", "label": "Total", "value": "--" },
-        { "type": "stat-display", "label": "Active", "value": "--" }
+        { "type": "stat-display", "label": "Total", "value": "@entity.total", "icon": "package" },
+        { "type": "stat-display", "label": "Price", "value": "@entity.price", "icon": "dollar-sign" }
       ]
     },
     {
