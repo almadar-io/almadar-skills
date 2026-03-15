@@ -23,6 +23,7 @@ export { generateKflowOrbitalsSkill } from './kflow-orbitals.js';
 export { generateKflowOrbitalFixingSkill } from './kflow-orbital-fixing.js';
 export { generateDomainLanguageSkill } from './domain-language.js';
 export { generateAlmadarAssistantSkill } from './almadar-assistant.js';
+export { generateConverterSkill } from './converter.js';
 
 // Orb skill (molecule-first, for Masar pipeline and LLM generation)
 export { generateOrbSkill } from './orb.js';
@@ -42,6 +43,7 @@ import { generateKflowOrbitalFixingSkill } from './kflow-orbital-fixing.js';
 import { generateDomainLanguageSkill } from './domain-language.js';
 import { generateAlmadarAssistantSkill } from './almadar-assistant.js';
 import { generateOrbSkill } from './orb.js';
+import { generateConverterSkill } from './converter.js';
 import { generateLeanOrbitalSkill } from '../orbitals-skills-generators/lean/lean-orbital-generator.js';
 import { generateLeanFixingSkill } from '../orbitals-skills-generators/lean/lean-fixing-generator.js';
 
