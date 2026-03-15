@@ -32,8 +32,7 @@ import {
     getCustomTraitSection,
     getSchemaUpdateSection,
     getConnectivityCompact,
-    getRenderUIDesignGuide,
-    getThemeGuide,
+    getOrbRenderUIGuide,
     getBannedProps,
     // UX Enhancement sections
     getFlowPatternSection,
@@ -138,13 +137,9 @@ ${getSExprQuickRef()}
 
 ---
 
-${includeDesignGuide ? getRenderUIDesignGuide() : ''}
+${includeDesignGuide ? getOrbRenderUIGuide() : ''}
 
 ${includeDesignGuide ? `---
-
-${getThemeGuide()}
-
----
 
 ${getBannedProps()}` : ''}
 

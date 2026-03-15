@@ -171,11 +171,8 @@ These are the ONLY patterns you may use. They are derived from 104 production be
 | Pattern | Purpose | Key Props |
 |---------|---------|-----------|
 | \`stat-display\` | Single KPI display | \`label\`, \`value\`, \`icon\` |
-| \`stats\` | Multiple stat cards | \`entity\`, \`items\` |
 | \`stat-badge\` | Stat with badge | \`label\`, \`value\`, \`variant\` |
 | \`meter\` | Metric gauge | \`value\`, \`max\`, \`label\` |
-| \`line-chart\` | Line chart | \`entity\`, \`xField\`, \`yField\` |
-| \`chart\` | Generic chart | \`entity\`, \`type\`, \`fields\` |
 | \`trend-indicator\` | Trend up/down | \`value\`, \`direction\` |
 | \`score-display\` | Score/count | \`value\`, \`label\` |
 
@@ -306,9 +303,9 @@ Instead of \`page-header\`, compose with atoms:
 {
   "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
   "children": [
-    { "type": "stat-display", "label": "Total", "value": "--", "icon": "list" },
-    { "type": "stat-display", "label": "Active", "value": "--", "icon": "activity" },
-    { "type": "stat-display", "label": "Done", "value": "--", "icon": "check-circle" }
+    { "type": "stat-display", "label": "Total", "value": "@entity.count", "icon": "list" },
+    { "type": "stat-display", "label": "Active", "value": "@entity.activeCount", "icon": "activity" },
+    { "type": "stat-display", "label": "Done", "value": "@entity.doneCount", "icon": "check-circle" }
   ]
 }
 \`\`\`
@@ -337,6 +334,26 @@ Instead of \`page-header\`, compose with atoms:
 | **Payload events** | \`{ "key": "SAVE", "payload": [...] }\` | No payload | ORB_BINDING_PAYLOAD_FIELD_UNDECLARED |
 | **Page traits** | \`{ "ref": "TraitName" }\` | With linkedEntity | ORB_P_INVALID_TRAIT_REF |
 | **Category** | \`"category": "interaction"\` | Missing | ORB_T_MISSING_CATEGORY |
+| **Page traits array** | \`"traits": [{ "ref": "TraitName" }]\` | Missing traits | Page renders blank |
+| **Entity names** | \`"Task"\`, \`"CartItem"\` | \`"Form"\`, \`"Button"\`, \`"Card"\` | Name collision with UI component |
+
+### Effect Operators (Use ONLY These)
+
+| Operator | Purpose | Example |
+|----------|---------|---------|
+| \`set\` | Set entity field | \`["set", "@entity.status", "active"]\` |
+| \`fetch\` | Load entity data | \`["fetch", "Task"]\` |
+| \`persist\` | Create/update/delete | \`["persist", "create", "Task", "@payload.data"]\` |
+| \`notify\` | Show notification | \`["notify", "Saved!", "success"]\` |
+
+**BANNED**: \`call-service\` (external integrations only), \`emit\` (handled separately), \`log\`, \`navigate\`
+
+### Binding Rules for Prop Values
+
+- Each prop value can have at most ONE binding: \`"value": "@entity.price"\`
+- NEVER concatenate bindings: \`"@entity.price @entity.currency"\` is INVALID
+- NEVER use inline expressions: \`"@entity.quantity <= 0"\` is INVALID
+- For conditional logic, use guards on transitions, not prop expressions
 
 ---
 
@@ -538,9 +555,9 @@ Uses only atoms and molecules. No organisms.
                   {
                     "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
                     "children": [
-                      { "type": "stat-display", "label": "Total Tasks", "value": "--", "icon": "list" },
-                      { "type": "stat-display", "label": "In Progress", "value": "--", "icon": "clock" },
-                      { "type": "stat-display", "label": "Completed", "value": "--", "icon": "check-circle" }
+                      { "type": "stat-display", "label": "Total Tasks", "value": "@entity.count", "icon": "list" },
+                      { "type": "stat-display", "label": "In Progress", "value": "@entity.inProgressCount", "icon": "clock" },
+                      { "type": "stat-display", "label": "Completed", "value": "@entity.completedCount", "icon": "check-circle" }
                     ]
                   },
                   {
@@ -607,7 +624,7 @@ Uses only atoms and molecules. No organisms.
             "effects": [
               ["persist", "create", "Task", "@payload.data"],
               ["render-ui", "modal", null],
-              ["emit", "INIT"]
+              ["fetch", "Task"]
             ]
           },
           {
@@ -615,7 +632,7 @@ Uses only atoms and molecules. No organisms.
             "effects": [
               ["persist", "update", "Task", "@entity.id", "@payload.data"],
               ["render-ui", "modal", null],
-              ["emit", "INIT"]
+              ["fetch", "Task"]
             ]
           },
           {
@@ -656,7 +673,7 @@ Uses only atoms and molecules. No organisms.
             "from": "Browsing", "to": "Browsing", "event": "DELETE",
             "effects": [
               ["persist", "delete", "Task", "@payload.id"],
-              ["emit", "INIT"]
+              ["fetch", "Task"]
             ]
           }
         ]
