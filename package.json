@@ -1,6 +1,6 @@
 {
   "name": "@almadar/skills",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "description": "AI skill generators and prompts for Orbital schema generation",
   "type": "module",
   "main": "./dist/index.js",
@@ -49,7 +49,7 @@
   "dependencies": {
     "@almadar/core": ">=2.1.0",
     "@almadar/llm": ">=2.0.0",
-    "@almadar/patterns": "workspace:^",
+    "@almadar/patterns": ">=2.7.0",
     "@almadar/std": ">=2.0.0",
     "commander": "^12.0.0",
     "glob": "^10.3.10"
