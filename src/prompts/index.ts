@@ -14,6 +14,9 @@
 
 export * from './skill-sections/index.js';
 
+// Behavior Sections (for behaviors skill)
+export * from './behavior-sections/index.js';
+
 // ============================================================================
 // Generation Prompts (Composed from Skill Sections)
 // ============================================================================
