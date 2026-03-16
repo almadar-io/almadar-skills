@@ -25,7 +25,7 @@ export {
 // Pattern design guide (render-ui design guide)
 export { getRenderUIDesignGuide } from "./pattern-design-guide.js";
 // .orb-specific render-ui guide (atoms/molecules only, derived from registry)
-export { getOrbRenderUIGuide } from "./orb-render-ui-guide.js";
+export { getOrbRenderUIGuide, getOrbRenderUIGuideFiltered } from "./orb-render-ui-guide.js";
 export { getThemeGuide, getBannedProps } from "./theme-guide.js";
 export {
   getCustomTraitSection,

@@ -11,7 +11,7 @@
  * @packageDocumentation
  */
 
-import { getOrbAllowedPatternsCompact } from '@almadar/patterns';
+import { getOrbAllowedPatternsCompact, getOrbAllowedPatternsFiltered } from '@almadar/patterns';
 import { getBindingsGuide } from './bindings-guide.js';
 
 /**
@@ -185,6 +185,145 @@ ${getBindingsGuide()}
 ---
 
 ### Available Patterns (derived from registry)
+
+${patternsRef}
+
+---
+
+### BANNED Patterns
+
+| Wrong | Correct |
+|-------|---------|
+| \`entity-table\` | \`data-list\` or \`data-grid\` |
+| \`page-header\` | \`stack\` with \`icon\` + \`typography\` + \`button\` |
+| \`detail-panel\` | \`stack\` with field \`typography\` rows |
+| \`stats\` | \`stat-display\` atoms in a \`stack\` |
+| Multiple flat render-ui calls | Single composed render-ui |
+| Hex colors / pixels | Theme CSS variables |
+| \`onSubmit\` / \`onCancel\` | \`submitEvent\` / \`cancelEvent\` |
+`;
+}
+
+/**
+ * Get a filtered version of the render-ui guide with only the matched patterns.
+ * Used after Gate 3.5 selects the relevant patterns.
+ */
+export function getOrbRenderUIGuideFiltered(patternNames: string[]): string {
+  const patternsRef = getOrbAllowedPatternsFiltered(patternNames);
+
+  return `## .orb Render-UI Composition Guide
+
+### Golden Behavior Pattern
+
+Every render-ui tree in .orb follows the same structure observed across all 107 golden behaviors:
+
+\`\`\`
+stack (vertical, gap: lg)            ← root wrapper, ALWAYS
+  ├── stack (horizontal)             ← header row (icon + title + actions)
+  │     ├── icon
+  │     ├── typography (h2/h3)
+  │     └── button (primary action)
+  ├── divider                        ← visual separation
+  ├── stat-display / badge row       ← optional summary stats
+  └── data-list / data-grid          ← main content
+        OR form-section              ← for create/edit states
+\`\`\`
+
+---
+
+### Composition Rules
+
+| Rule | Requirement |
+|------|-------------|
+| **1** | Root element MUST be \`stack\` (vertical) or \`box\` |
+| **2** | Use ONLY the patterns listed below |
+| **3** | Single \`render-ui\` per transition (compose children, never multiple flat calls) |
+| **4** | ALL visual props use CSS theme variables (no hex colors, no pixels) |
+| **5** | Every action button's \`event\` must match a state machine event key |
+
+---
+
+### Layout Reference
+
+**Stack** (use for ALL layout):
+\`\`\`json
+{
+  "type": "stack",
+  "direction": "vertical" | "horizontal",
+  "gap": "xs" | "sm" | "md" | "lg" | "xl",
+  "align": "start" | "center" | "end" | "stretch",
+  "justify": "start" | "center" | "end" | "between"
+}
+\`\`\`
+
+**Box** (styled container):
+\`\`\`json
+{
+  "type": "box",
+  "padding": "sm" | "md" | "lg",
+  "bg": "var(--color-card)",
+  "border": true,
+  "borderColor": "var(--color-border)",
+  "rounded": "var(--radius-md)",
+  "shadow": "var(--shadow-sm)"
+}
+\`\`\`
+
+---
+
+### Theme Variables (MANDATORY)
+
+| Property | Use | Never |
+|----------|-----|-------|
+| Colors | \`var(--color-primary)\` | \`#3b82f6\` |
+| Backgrounds | \`var(--color-card)\` | \`white\` |
+| Text | \`var(--color-foreground)\` | \`black\` |
+| Muted text | \`var(--color-muted-foreground)\` | \`gray\` |
+| Borders | \`var(--color-border)\` | \`#e5e7eb\` |
+| Radius | \`var(--radius-md)\` | \`8px\` |
+| Shadows | \`var(--shadow-sm)\` | \`0 2px 4px...\` |
+
+---
+
+### Example: Browsing State (from golden behaviors)
+
+\`\`\`json
+["render-ui", "main", {
+  "type": "stack", "direction": "vertical", "gap": "lg",
+  "children": [
+    {
+      "type": "stack", "direction": "horizontal", "gap": "md",
+      "justify": "between", "align": "center",
+      "children": [
+        {
+          "type": "stack", "direction": "horizontal", "gap": "sm", "align": "center",
+          "children": [
+            { "type": "icon", "name": "list", "size": "lg" },
+            { "type": "typography", "variant": "h2", "content": "Items" }
+          ]
+        },
+        { "type": "button", "label": "Create", "event": "CREATE", "variant": "primary" }
+      ]
+    },
+    { "type": "divider" },
+    {
+      "type": "data-list", "entity": "Item",
+      "itemActions": [
+        { "label": "Edit", "event": "EDIT" },
+        { "label": "Delete", "event": "DELETE", "variant": "danger" }
+      ]
+    }
+  ]
+}]
+\`\`\`
+
+---
+
+${getBindingsGuide()}
+
+---
+
+### Available Patterns (selected for this application)
 
 ${patternsRef}
 
