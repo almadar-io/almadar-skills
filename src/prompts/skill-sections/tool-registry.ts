@@ -71,6 +71,9 @@ const TOOL_REGISTRY: Array<{ name: string; category: string; description: string
 
   // Quality
   { name: 'lint_files', category: 'quality', description: 'MANDATORY before declaring done. Run on every file you touched. Zero tolerance.' },
+
+  // Publish
+  { name: 'publish_package', category: 'build', description: 'Bump version, commit, push tag to trigger CI publish. Use dependency order: operators -> patterns -> core -> evaluator -> std -> ui.' },
 ];
 
 /**
