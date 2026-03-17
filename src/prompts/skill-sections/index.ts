@@ -79,3 +79,13 @@ export {
   getBindingsCompact,
   getBindingContextRules,
 } from "./bindings-guide.js";
+
+// Tool registry sections (for tooling skills)
+export {
+  getToolRegistrySection,
+  getToolsByCategorySection,
+  getSchemaLifecycleSection,
+  getPatternPipelineSection,
+  getVerificationSection,
+  getProjectStructureSection,
+} from "./tool-registry.js";

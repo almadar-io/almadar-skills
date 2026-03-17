@@ -31,6 +31,14 @@ export { generateOrbSkill } from './orb.js';
 // Behaviors skill (compose standard library behaviors into apps)
 export { generateBehaviorsSkill } from './behaviors.js';
 
+// Tooling skills (teach agents to use @almadar/tools effectively)
+export { generateAlmadarSchemaSkill } from './almadar-schema.js';
+export { generateAlmadarVerifySkill } from './almadar-verify.js';
+export { generateAlmadarComponentSkill } from './almadar-component.js';
+export { generateAlmadarBehaviorSkill } from './almadar-behavior.js';
+export { generateAlmadarProjectSkill } from './almadar-project.js';
+export { generateAlmadarCodebaseSkill } from './almadar-codebase.js';
+
 // Lean skills (domain language output)
 export { generateLeanOrbitalSkill } from '../orbitals-skills-generators/lean/lean-orbital-generator.js';
 export { generateLeanFixingSkill } from '../orbitals-skills-generators/lean/lean-fixing-generator.js';
@@ -50,6 +58,12 @@ import { generateConverterSkill } from './converter.js';
 import { generateBehaviorsSkill } from './behaviors.js';
 import { generateLeanOrbitalSkill } from '../orbitals-skills-generators/lean/lean-orbital-generator.js';
 import { generateLeanFixingSkill } from '../orbitals-skills-generators/lean/lean-fixing-generator.js';
+import { generateAlmadarSchemaSkill } from './almadar-schema.js';
+import { generateAlmadarVerifySkill } from './almadar-verify.js';
+import { generateAlmadarComponentSkill } from './almadar-component.js';
+import { generateAlmadarBehaviorSkill } from './almadar-behavior.js';
+import { generateAlmadarProjectSkill } from './almadar-project.js';
+import { generateAlmadarCodebaseSkill } from './almadar-codebase.js';
 
 /**
  * Generate all builder client skills.
@@ -81,5 +95,12 @@ export function generateAllBuilderSkills(): GeneratedSkill[] {
     generateDomainLanguageSkill(),
     generateAlmadarAssistantSkill(),
     generateBehaviorsSkill(),
+    // Tooling skills
+    generateAlmadarSchemaSkill(),
+    generateAlmadarVerifySkill(),
+    generateAlmadarComponentSkill(),
+    generateAlmadarBehaviorSkill(),
+    generateAlmadarProjectSkill(),
+    generateAlmadarCodebaseSkill(),
   ];
 }
