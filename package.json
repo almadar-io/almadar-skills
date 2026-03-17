@@ -55,7 +55,7 @@
     "glob": "^10.3.10"
   },
   "devDependencies": {
-    "@almadar/eslint-plugin": ">=2.5.0",
+    "@almadar/eslint-plugin": ">=2.3.0",
     "@types/node": "^22.0.0",
     "@typescript-eslint/parser": "8.56.0",
     "dotenv": "^16.4.0",
