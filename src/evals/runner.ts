@@ -19,7 +19,7 @@ import {
   getSharedLLMClient, 
   type LLMProvider,
   parseJsonResponse 
-} from '@almadar-io/llm';
+} from '@almadar/llm';
 import {
   EVAL_CASES,
   calculateTotalScore,

@@ -2,8 +2,8 @@
  * Semantic validation using LLM-as-judge
  */
 
-import type { LLMClient } from '@almadar-io/llm';
-import { parseJsonResponse } from '@almadar-io/llm';
+import type { LLMClient } from '@almadar/llm';
+import { parseJsonResponse } from '@almadar/llm';
 import type { SemanticValidationResult } from './types.js';
 
 interface JudgeResponse {
