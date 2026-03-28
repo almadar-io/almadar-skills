@@ -277,7 +277,7 @@ If a render-ui pattern in state X has an action that fires event E, there MUST b
 { "from": "Viewing", "to": "Editing", "event": "EDIT",
   "effects": [
     ["render-ui", "drawer", null],
-    ["fetch", "Todo", "@payload.id"],
+    ["fetch", "Todo", { "id": "@payload.id" }],
     ["render-ui", "modal", { "type": "form-section", "entity": "Todo", "submitEvent": "SAVE", "cancelEvent": "CANCEL" }]
   ] }
 \`\`\`
@@ -408,6 +408,6 @@ export function getValidationHintsSection(): string {
 | ORB_BINDING_STATE_NO_PATH | \`@state\` used with a field path like \`@state.field\`. \`@state\` is bare, no paths allowed. Use \`@entity.field\` instead. |
 | ORB_BINDING_ENTITY_FIELD_NOT_FOUND | Binding references \`@entity.field\` but that field doesn't exist on the entity. Add the field to entity.fields or fix the binding. |
 | ORB_T_UNDEFINED_TRAIT | Trait name in page refs doesn't match any trait definition. Often caused by malformed emits (using events format instead of emits format). |
-| ORB_EFF_FETCH_INVALID_ENTITY | fetch effect has wrong syntax. Use \`["fetch", "EntityName"]\` or \`["fetch", "EntityName", "@payload.id"]\`. NOT \`["fetch", "load", "Entity"]\`. |
+| ORB_EFF_FETCH_INVALID_ENTITY | fetch effect has wrong syntax. Use \`["fetch", "EntityName"]\` for list or \`["fetch", "EntityName", { "id": "@payload.id" }]\` for by-ID. NOT \`["fetch", "load", "Entity"]\`. |
 `;
 }

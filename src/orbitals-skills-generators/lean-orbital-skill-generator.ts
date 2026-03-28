@@ -718,7 +718,7 @@ form-section uses \`submitEvent\`/\`cancelEvent\`, NOT \`actions\` array:
 | render-ui | ["render-ui", "modal", { ... }] | Render modal |
 | render-ui | ["render-ui", "modal", null] | Dismiss modal |
 | fetch | ["fetch", "EntityName"] | Fetch all entities |
-| fetch | ["fetch", "EntityName", "@payload.id"] | Fetch one by ID |
+| fetch | ["fetch", "EntityName", { "id": "@payload.id" }] | Fetch one by ID |
 | persist | ["persist", "create", "Entity", "@payload.data"] | Save to DB |
 | persist | ["persist", "update", "Entity", "@payload.id", "@payload.data"] | Update entity |
 | persist | ["persist", "delete", "Entity", "@payload.id"] | Delete entity |

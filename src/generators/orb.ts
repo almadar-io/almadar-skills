@@ -589,7 +589,7 @@ Uses only atoms and molecules. No organisms.
           {
             "from": "Browsing", "to": "Viewing", "event": "VIEW",
             "effects": [
-              ["fetch", "Task", "@payload.id"],
+              ["fetch", "Task", { "id": "@payload.id" }],
               ["render-ui", "modal", {
                 "type": "stack", "direction": "vertical", "gap": "md",
                 "children": [
@@ -611,7 +611,7 @@ Uses only atoms and molecules. No organisms.
           {
             "from": "Browsing", "to": "Editing", "event": "EDIT",
             "effects": [
-              ["fetch", "Task", "@payload.id"],
+              ["fetch", "Task", { "id": "@payload.id" }],
               ["render-ui", "modal", {
                 "type": "form-section", "entity": "Task",
                 "fields": ["title", "description", "status", "priority"],
