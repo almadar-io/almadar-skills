@@ -2,17 +2,33 @@
  * .orb Language Specification Sections
  *
  * Pure reference material: syntax, types, operators, composition rules.
+ * Pattern vocabulary is pulled from @almadar/patterns registry dynamically.
  * No examples, no architectural opinions, no pattern recommendations.
- * Used by the generate_orbital subagent when JEPA plan provides guidance.
  *
  * @packageDocumentation
  */
 
+import { getOrbAllowedPatterns } from '@almadar/patterns';
+
 /**
- * render-ui composition rules and available pattern types.
+ * render-ui composition rules + pattern vocabulary from registry.
  * Describes what patterns exist and how they nest, not how to use them.
  */
 export function getCompositionRules(): string {
+    const groups = getOrbAllowedPatterns() as Record<string, Array<{ name: string; keyProps?: string[] }>>;
+
+    let patternTables = '';
+    for (const [category, patterns] of Object.entries(groups)) {
+        if (!patterns.length) continue;
+        patternTables += `#### ${category}\n`;
+        patternTables += '| Pattern | Props |\n|---------|-------|\n';
+        for (const p of patterns) {
+            const props = (p.keyProps ?? []).slice(0, 6).join(', ');
+            patternTables += `| \`${p.name}\` | ${props} |\n`;
+        }
+        patternTables += '\n';
+    }
+
     return `## render-ui Composition
 
 ### Rules
@@ -21,47 +37,9 @@ export function getCompositionRules(): string {
 3. Compose from atoms + molecules. Nest atoms inside layouts.
 4. Every pattern object MUST have a "type" field, including children.
 
-### Layout Patterns
-| Pattern | Props |
-|---------|-------|
-| stack | direction (vertical/horizontal), gap (xs/sm/md/lg/xl), align (start/center/end/stretch), justify (start/center/end/between), wrap |
-| card | padding, border, rounded, shadow, children |
-| box | padding, bg, border, rounded, shadow, children |
-| simple-grid | cols, gap, children |
+### Available Patterns (from registry)
 
-### Atom Patterns
-| Pattern | Props |
-|---------|-------|
-| typography | variant (h1-h6, body, caption), text, color |
-| button | label, event, variant (primary/secondary/ghost/destructive), icon |
-| icon | name, size, color |
-| badge | text, variant (primary/success/warning/error) |
-| divider | orientation |
-| avatar | src, name, size |
-| progress-bar | value, max, label |
-
-### Data Molecule Patterns
-| Pattern | Props |
-|---------|-------|
-| data-grid | entity, fields, itemActions, cols, gap |
-| data-list | entity, fields, itemActions |
-| form-section | entity, fields, submitEvent, cancelEvent (NOT actions array) |
-| search-input | placeholder, event |
-| filter-group | filters, event |
-| tabs | tabs, activeTab |
-
-### Metric Molecule Patterns
-| Pattern | Props |
-|---------|-------|
-| stat-display | label, value, icon |
-| meter | value, max, label |
-
-### State Molecule Patterns
-| Pattern | Props |
-|---------|-------|
-| empty-state | title, description, icon |
-| loading-state | message |
-
+${patternTables}
 ### Banned Patterns (do not use)
 entity-table, entity-list, entity-cards, page-header, detail-panel, timeline, crud-template, list-template, detail-template`;
 }
@@ -172,16 +150,41 @@ export function getJepaPlanActionReference(): string {
  * Structural errors only, no architectural guidance.
  */
 export function getOrbErrorPatterns(): string {
-    return `## Errors to Avoid
+    return `## Critical Structural Rules
+
+### INIT transition (REQUIRED — #1 cause of blank pages)
+The initial state MUST have a self-loop INIT transition with render-ui and fetch effects.
+Without it, the page loads completely blank — nothing renders.
+- The initial state (isInitial: true) must have: { "from": "InitialState", "to": "InitialState", "event": "INIT", "effects": [["fetch", "Entity"], ["render-ui", "main", { ... }]] }
+- INIT must be declared in stateMachine.events: { "key": "INIT", "name": "Initialize" }
+- INIT must be in the trait emits: [{ "event": "INIT", "scope": "internal" }]
+
+### Modal/drawer exits (REQUIRED — every modal state needs these)
+Every state that renders to "modal" or "drawer" MUST have:
+- A CANCEL transition back: { "from": "ModalState", "to": "PreviousState", "event": "CANCEL", "effects": [["render-ui", "modal", null]] }
+- A CLOSE transition back: same as CANCEL but with event "CLOSE"
+- The SAVE/action transition must also dismiss: ["render-ui", "modal", null]
+
+### Reachable states (every state must have at least one incoming transition)
+If a state exists in states[], there must be at least one transition with "to": that state.
+Otherwise the validator rejects it as unreachable.
+
+### Payload declarations
+If a transition uses @payload.id or @payload.data, the event MUST declare the payload:
+{ "key": "EDIT", "name": "Edit", "payload": [{ "name": "id", "type": "string" }] }
+
+### Pattern props
+Only use props listed in the Available Patterns table. Common mistake: "padding" on card — card accepts title, subtitle, image, actions, children. Use box for padding.
+
+## Other Errors to Avoid
 
 - Missing entity field at orbital level
-- Missing collection on entity
-- Empty enum values array
-- Modal/drawer state without CANCEL and CLOSE transitions back
-- form-section with "actions" array instead of submitEvent/cancelEvent
-- @state.field (bare @state only, no paths)
-- ["set", "@payload.field", ...] (set targets @entity only)
-- Bare @entity without field path
-- Entity type as binding root (@Product.name instead of @entity.name)
-- Emits using events format ({ key, name } instead of { event, scope })`;
+- Missing collection on entity (must be plural lowercase: "tasks" for Task)
+- Empty enum values array (values must have at least one entry)
+- form-section: use submitEvent/cancelEvent strings, NOT an "actions" array
+- @state is bare (no paths): never @state.field, just @state
+- set effect targets @entity.field only: never ["set", "@payload.field", ...]
+- Bare @entity without field path: use @entity.fieldName
+- Entity type as binding root: use @entity.name not @Product.name
+- Emits format: [{ "event": "X", "scope": "internal" }] NOT [{ "key": "X", "name": "..." }]`;
 }

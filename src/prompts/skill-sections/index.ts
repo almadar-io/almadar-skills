@@ -73,6 +73,14 @@ export {
 // Uses Import System
 export { getUsesImportSection, getUsesImportCompact } from "./uses-imports.js";
 
+// .orb language spec sections (for JEPA-guided subagent)
+export {
+  getCompositionRules,
+  getOrbSyntaxSpec,
+  getJepaPlanActionReference,
+  getOrbErrorPatterns,
+} from "./orb-language-spec.js";
+
 // Binding documentation (source of truth from @almadar/core)
 export {
   getBindingsGuide,
