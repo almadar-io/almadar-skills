@@ -19,7 +19,6 @@ import {
     getCommonErrorsSection,
     getDecompositionCompact,
     getConnectivityCompact,
-    getThemeGuide,
     getBannedProps,
     getFlowPatternSection,
     getPortableOrbitalOutputSection,
@@ -71,10 +70,6 @@ ${getMoleculeFirstDesignGuide()}
 
 ---
 
-${getThemeGuide()}
-
----
-
 ${getBannedProps()}
 
 ---
@@ -101,11 +96,9 @@ ${getContextUsageCompact()}
 
 ${getCommonErrorsSection('top6')}
 
-${getToolWorkflowSection()}
-
 ${getCriticalOutputRequirements()}
 
-${getMoleculeFirstExample()}
+${getTrimmedExample()}
 `;
 }
 
@@ -491,215 +484,57 @@ If the user specifies validation constraints, add S-expression guards:
 Every orbital MUST have an entity field. No exceptions.`;
 }
 
-function getMoleculeFirstExample(): string {
+function getTrimmedExample(): string {
     return `---
 
-## Example: Task Manager (Molecule-First - VALIDATED)
+## Example: INIT Transition (Molecule-First Composition)
 
-This example passes \`orbital validate\` with zero errors and zero warnings.
-Uses only atoms and molecules. No organisms.
+The INIT transition is the most important: it defines the main view. This shows the correct composition pattern.
 
 \`\`\`json
 {
-  "name": "Taskly",
-  "version": "1.0.0",
-  "orbitals": [{
-    "name": "Task Management",
-    "entity": {
-      "name": "Task",
-      "collection": "tasks",
-      "fields": [
-        { "name": "title", "type": "string", "required": true },
-        { "name": "description", "type": "string" },
-        { "name": "status", "type": "enum", "values": ["todo", "in-progress", "done"] },
-        { "name": "priority", "type": "enum", "values": ["low", "medium", "high"] }
+  "from": "Browsing", "to": "Browsing", "event": "INIT",
+  "effects": [
+    ["fetch", "Task"],
+    ["render-ui", "main", {
+      "type": "stack", "direction": "vertical", "gap": "lg",
+      "children": [
+        {
+          "type": "stack", "direction": "horizontal", "justify": "between", "align": "center",
+          "children": [
+            { "type": "typography", "variant": "h1", "text": "Task Management" },
+            { "type": "button", "label": "New Task", "event": "CREATE", "variant": "primary", "icon": "plus" }
+          ]
+        },
+        {
+          "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
+          "children": [
+            { "type": "stat-display", "label": "Total", "value": "@entity.count", "icon": "list" },
+            { "type": "stat-display", "label": "Active", "value": "@entity.activeCount", "icon": "clock" }
+          ]
+        },
+        {
+          "type": "data-grid", "entity": "Task",
+          "fields": ["title", "status", "priority"],
+          "itemActions": [
+            { "event": "VIEW", "label": "View" },
+            { "event": "EDIT", "label": "Edit" },
+            { "event": "DELETE", "label": "Delete" }
+          ]
+        }
       ]
-    },
-    "traits": [{
-      "name": "TaskInteraction",
-      "category": "interaction",
-      "linkedEntity": "Task",
-      "emits": [{ "event": "INIT", "scope": "internal" }],
-      "stateMachine": {
-        "states": [
-          { "name": "Browsing", "isInitial": true },
-          { "name": "Creating" },
-          { "name": "Editing" },
-          { "name": "Viewing" }
-        ],
-        "events": [
-          { "key": "INIT", "name": "Initialize" },
-          { "key": "CREATE", "name": "Create" },
-          { "key": "VIEW", "name": "View", "payload": [{ "name": "id", "type": "string" }] },
-          { "key": "EDIT", "name": "Edit", "payload": [{ "name": "id", "type": "string" }] },
-          { "key": "DELETE", "name": "Delete", "payload": [{ "name": "id", "type": "string" }] },
-          { "key": "SAVE", "name": "Save", "payload": [{ "name": "data", "type": "object" }] },
-          { "key": "CANCEL", "name": "Cancel" },
-          { "key": "CLOSE", "name": "Close" }
-        ],
-        "transitions": [
-          {
-            "from": "Browsing", "to": "Browsing", "event": "INIT",
-            "effects": [
-              ["fetch", "Task"],
-              ["render-ui", "main", {
-                "type": "stack", "direction": "vertical", "gap": "lg",
-                "children": [
-                  {
-                    "type": "stack", "direction": "horizontal", "justify": "between", "align": "center",
-                    "children": [
-                      { "type": "typography", "variant": "h1", "text": "Task Management" },
-                      { "type": "button", "label": "New Task", "event": "CREATE", "variant": "primary", "icon": "plus" }
-                    ]
-                  },
-                  {
-                    "type": "stack", "direction": "horizontal", "gap": "md", "wrap": true,
-                    "children": [
-                      { "type": "stat-display", "label": "Total Tasks", "value": "@entity.count", "icon": "list" },
-                      { "type": "stat-display", "label": "In Progress", "value": "@entity.inProgressCount", "icon": "clock" },
-                      { "type": "stat-display", "label": "Completed", "value": "@entity.completedCount", "icon": "check-circle" }
-                    ]
-                  },
-                  {
-                    "type": "search-input", "placeholder": "Search tasks..."
-                  },
-                  {
-                    "type": "data-grid", "entity": "Task",
-                    "fields": ["title", "status", "priority"],
-                    "itemActions": [
-                      { "event": "VIEW", "label": "View" },
-                      { "event": "EDIT", "label": "Edit" },
-                      { "event": "DELETE", "label": "Delete" }
-                    ]
-                  }
-                ]
-              }]
-            ]
-          },
-          {
-            "from": "Browsing", "to": "Creating", "event": "CREATE",
-            "effects": [
-              ["render-ui", "modal", {
-                "type": "form-section", "entity": "Task",
-                "fields": ["title", "description", "status", "priority"],
-                "submitEvent": "SAVE", "cancelEvent": "CANCEL"
-              }]
-            ]
-          },
-          {
-            "from": "Browsing", "to": "Viewing", "event": "VIEW",
-            "effects": [
-              ["fetch", "Task", { "id": "@payload.id" }],
-              ["render-ui", "modal", {
-                "type": "stack", "direction": "vertical", "gap": "md",
-                "children": [
-                  { "type": "typography", "variant": "h2", "text": "@entity.title" },
-                  { "type": "badge", "text": "@entity.status", "variant": "primary" },
-                  { "type": "badge", "text": "@entity.priority", "variant": "secondary" },
-                  { "type": "divider" },
-                  { "type": "typography", "variant": "body", "text": "@entity.description" },
-                  { "type": "stack", "direction": "horizontal", "gap": "sm", "justify": "end",
-                    "children": [
-                      { "type": "button", "label": "Edit", "event": "EDIT", "variant": "secondary" },
-                      { "type": "button", "label": "Close", "event": "CLOSE", "variant": "ghost" }
-                    ]
-                  }
-                ]
-              }]
-            ]
-          },
-          {
-            "from": "Browsing", "to": "Editing", "event": "EDIT",
-            "effects": [
-              ["fetch", "Task", { "id": "@payload.id" }],
-              ["render-ui", "modal", {
-                "type": "form-section", "entity": "Task",
-                "fields": ["title", "description", "status", "priority"],
-                "submitEvent": "SAVE", "cancelEvent": "CANCEL"
-              }]
-            ]
-          },
-          {
-            "from": "Creating", "to": "Browsing", "event": "SAVE",
-            "effects": [
-              ["persist", "create", "Task", "@payload.data"],
-              ["render-ui", "modal", null],
-              ["fetch", "Task"]
-            ]
-          },
-          {
-            "from": "Editing", "to": "Browsing", "event": "SAVE",
-            "effects": [
-              ["persist", "update", "Task", "@entity.id", "@payload.data"],
-              ["render-ui", "modal", null],
-              ["fetch", "Task"]
-            ]
-          },
-          {
-            "from": "Creating", "to": "Browsing", "event": "CANCEL",
-            "effects": [["render-ui", "modal", null]]
-          },
-          {
-            "from": "Creating", "to": "Browsing", "event": "CLOSE",
-            "effects": [["render-ui", "modal", null]]
-          },
-          {
-            "from": "Editing", "to": "Browsing", "event": "CANCEL",
-            "effects": [["render-ui", "modal", null]]
-          },
-          {
-            "from": "Editing", "to": "Browsing", "event": "CLOSE",
-            "effects": [["render-ui", "modal", null]]
-          },
-          {
-            "from": "Viewing", "to": "Browsing", "event": "CLOSE",
-            "effects": [["render-ui", "modal", null]]
-          },
-          {
-            "from": "Viewing", "to": "Browsing", "event": "CANCEL",
-            "effects": [["render-ui", "modal", null]]
-          },
-          {
-            "from": "Viewing", "to": "Editing", "event": "EDIT",
-            "effects": [
-              ["render-ui", "modal", {
-                "type": "form-section", "entity": "Task",
-                "fields": ["title", "description", "status", "priority"],
-                "submitEvent": "SAVE", "cancelEvent": "CANCEL"
-              }]
-            ]
-          },
-          {
-            "from": "Browsing", "to": "Browsing", "event": "DELETE",
-            "effects": [
-              ["persist", "delete", "Task", "@payload.id"],
-              ["fetch", "Task"]
-            ]
-          }
-        ]
-      }
-    }],
-    "pages": [{
-      "name": "TasksPage",
-      "path": "/tasks",
-      "viewType": "list",
-      "isInitial": true,
-      "entity": "Task",
-      "traits": [{ "ref": "TaskInteraction" }]
-    }],
-    "emits": [],
-    "listens": []
-  }]
+    }]
+  ]
 }
 \`\`\`
 
-**Key points (molecule-first composition):**
-- **Header**: \`stack\` (horizontal) + \`typography\` (h1) + \`button\` (composed, NOT \`page-header\`)
-- **Stats**: \`stat-display\` molecules in a horizontal \`stack\` (NOT \`stats\` organism)
-- **Search**: \`search-input\` molecule
-- **Data**: \`data-grid\` with \`entity\`, \`fields\`, \`itemActions\` (NOT \`entity-table\`)
-- **Detail view**: \`stack\` + \`typography\` + \`badge\` + \`divider\` (NOT \`detail-panel\`)
-- **Forms**: \`form-section\` with \`submitEvent\`/\`cancelEvent\`
-- **Theme**: All visual props use CSS variables
+**Other key transitions** (brief):
+- **CREATE -> modal**: \`["render-ui", "modal", { "type": "form-section", "entity": "Task", "fields": [...], "submitEvent": "SAVE", "cancelEvent": "CANCEL" }]\`
+- **SAVE -> close modal**: \`["persist", "create", "Task", "@payload.data"], ["render-ui", "modal", null], ["fetch", "Task"]\`
+- **VIEW -> modal detail**: compose with \`stack\` + \`typography\` + \`badge\` + \`divider\` + \`button\` (NOT \`detail-panel\`)
+- **CANCEL/CLOSE**: \`["render-ui", "modal", null]\`
+- **DELETE**: \`["persist", "delete", "Task", "@payload.id"], ["fetch", "Task"]\`
+
+**Key rules**: header = \`stack\` + \`typography\` + \`button\` (NOT \`page-header\`). Data = \`data-grid\` (NOT \`entity-table\`). Forms = \`form-section\` with \`submitEvent\`/\`cancelEvent\`.
 `;
 }
