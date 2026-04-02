@@ -18,8 +18,8 @@ importers:
         specifier: '>=2.8.7'
         version: 2.10.1
       '@almadar/std':
-        specifier: '>=3.3.4'
-        version: 3.9.0
+        specifier: '>=3.10.0'
+        version: 3.10.0
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -76,8 +76,8 @@ packages:
   '@almadar/patterns@2.10.1':
     resolution: {integrity: sha512-IEkjA60vGWhXOGOmoYtdLtnVFbA+OixLipmdvaCE2hy+3NRyAKG5YczQioeGLk7jMe3ebLW4XZPoZb6fAubURA==}
 
-  '@almadar/std@3.9.0':
-    resolution: {integrity: sha512-tUkyzA+mvKyq6VjJtHzrLG8uoc8TVST5VHDRAQmUMzmhg3Hdw+gjsvxHC0piWoFOiXLaR7jWcCTnsWnkOcbFpQ==}
+  '@almadar/std@3.10.0':
+    resolution: {integrity: sha512-tgyq3pmnJz298NOQIrNRd9Jocz2oXdd9+BIx3Xx1HWGVGrbtq7HqHX67w91M8iZbl1eAAfGiywfG9dXhLzLTug==}
 
   '@anthropic-ai/sdk@0.52.0':
     resolution: {integrity: sha512-d4c+fg+xy9e46c8+YnrrgIQR45CZlAi7PwdzIfDXDM6ACxEZli1/fxhURsq30ZpMZy6LvSkr41jGq5aF5TD7rQ==}
@@ -1194,7 +1194,7 @@ snapshots:
 
   '@almadar/patterns@2.10.1': {}
 
-  '@almadar/std@3.9.0':
+  '@almadar/std@3.10.0':
     dependencies:
       '@almadar/core': 2.9.1
       '@almadar/operators': 2.1.3

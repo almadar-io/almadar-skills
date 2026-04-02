@@ -50,7 +50,7 @@
     "@almadar/core": ">=2.6.3",
     "@almadar/llm": ">=2.0.0",
     "@almadar/patterns": ">=2.8.7",
-    "@almadar/std": ">=3.3.4",
+    "@almadar/std": ">=3.10.0",
     "commander": "^12.0.0",
     "glob": "^10.3.10"
   },
