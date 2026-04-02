@@ -52,6 +52,44 @@ export function generateOrbSkill(): GeneratedSkill {
     };
 }
 
+/**
+ * Generate the coordinator skill for the main agent.
+ *
+ * Slim prompt: only architecture, decomposition, flow patterns, connectivity.
+ * No pattern vocabulary, composition rules, bindings, or error catalogs.
+ * Those belong in the subagent (generate_orbital).
+ */
+export function generateOrbCoordinatorSkill(): GeneratedSkill {
+    const frontmatter = {
+        name: 'orb-coordinator',
+        description: 'Coordinate .orb generation: decompose, dispatch to subagents, manage quality loop.',
+        allowedTools: ['scaffold', 'generate_orbital', 'combine_and_write', 'validate', 'compile', 'verify', 'jepa_predict', 'jepa_gap', 'jepa_plan', 'jepa_repair', 'read_file', 'edit_file', 'write_file'],
+        version: '1.0.0',
+    };
+
+    const content = `# Orb Coordinator
+
+> Decompose requirements into orbitals, dispatch generation to subagents, manage the quality loop.
+> You do NOT write .orb code directly. You coordinate.
+
+${getArchitectureSection()}
+
+---
+
+${getFlowPatternSection()}
+
+---
+
+${getDecompositionCompact()}
+
+---
+
+${getConnectivityCompact()}
+`;
+
+    return { name: 'orb-coordinator', frontmatter, content };
+}
+
 function generateOrbSkillContent(): string {
     return `# Orb Generation Skill (Molecule-First)
 

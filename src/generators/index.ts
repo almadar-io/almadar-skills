@@ -26,7 +26,7 @@ export { generateAlmadarAssistantSkill } from './almadar-assistant.js';
 export { generateConverterSkill } from './converter.js';
 
 // Orb skill (molecule-first, for Masar pipeline and LLM generation)
-export { generateOrbSkill } from './orb.js';
+export { generateOrbSkill, generateOrbCoordinatorSkill } from './orb.js';
 
 // Behaviors skill (compose standard library behaviors into apps)
 export { generateBehaviorsSkill } from './behaviors.js';

@@ -12,7 +12,7 @@ export * from './generators/index.js';
 export * from './prompts/index.js';
 
 // Convenience re-exports for common use cases
-export { generateOrbSkill } from './generators/orb.js';
+export { generateOrbSkill, generateOrbCoordinatorSkill } from './generators/orb.js';
 export { generateKflowOrbitalsSkill } from './generators/kflow-orbitals.js';
 export { generateKflowOrbitalFixingSkill } from './generators/kflow-orbital-fixing.js';
 export { generateDomainLanguageSkill } from './generators/domain-language.js';
