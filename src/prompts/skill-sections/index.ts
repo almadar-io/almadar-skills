@@ -81,6 +81,16 @@ export {
   getOrbErrorPatterns,
 } from "./orb-language-spec.js";
 
+// Behavior agent sections (for behavior-driven agent)
+export {
+  getBehaviorCatalogForAgent,
+  getBehaviorDetailForSubagent,
+  getBehaviorCompositionOpsRef,
+  getBehaviorDomainMap,
+  getBehaviorPatternSubset,
+  getBehaviorAdaptationGuide,
+} from "./behavior-agent-sections.js";
+
 // Binding documentation (source of truth from @almadar/core)
 export {
   getBindingsGuide,
