@@ -47,7 +47,7 @@ export function getReactComponentReference(): string {
 
     let output = '## React Components (@almadar/ui)\n\n';
     output += 'Use these components in your JSX. Atoms and molecules only.\n\n';
-    output += '```tsx\nimport { Stack, Typography, Button, Badge, Icon, Divider, DataGrid, FormSection, StatDisplay } from "@almadar/ui";\n```\n\n';
+    output += '```tsx\nimport { Stack, Typography, Button, Badge, Icon, Divider, DataGrid, DataList, StatDisplay, Card, Avatar, ProgressBar, Alert, Modal } from "@almadar/ui";\n```\n\n';
 
     for (const [category, patterns] of Object.entries(groups)) {
         const rows: string[] = [];
@@ -88,79 +88,104 @@ export function getReactComponentReference(): string {
 export function getTemplateComplianceRules(): string {
     return `## Template Compliance Rules
 
-Your JSX must survive the flattener round-trip: JSX → JSON → compiled JSX.
+You must write a typed React function component. The converter transforms it to render-ui JSON.
+
+### Required structure
+\`\`\`tsx
+import { Stack, Typography, DataGrid, Card, Badge, Button } from '@almadar/ui';
+
+interface Task {
+  id: string;
+  title: string;
+  status: string;
+}
+
+export function TaskListView({ entity }: { entity: Task[] }) {
+  return (
+    <Stack direction="vertical" gap="xl">
+      <Typography variant="h1" content="Tasks" />
+      <DataGrid entity={entity} renderItem={(item: Task) => (
+        <Card title={item.title}>
+          <Badge label={item.status} />
+        </Card>
+      )} />
+    </Stack>
+  );
+}
+\`\`\`
+
+### REQUIRED
+- \`import { ... } from '@almadar/ui'\` (components you use)
+- \`interface EntityName { ... }\` (typed from entity fields)
+- \`export function ViewName({ entity }: { entity: EntityName[] })\`
+- \`return (...)\` wrapping JSX
+- Access entity data as typed props: \`entity.title\`, \`item.status\`
+- The converter automatically rewrites \`entity.title\` to \`@entity.title\` bindings
 
 ### ALLOWED
 - String literal props: \`label="Tasks"\`
-- Entity bindings as strings: \`text="@entity.title"\`, \`value="@entity.count"\`
+- Typed property access: \`content={entity.title}\`, \`label={item.status}\`
 - Array literal props: \`fields={["title", "status"]}\`
 - Object literal props: \`itemActions={[{ event: "EDIT", label: "Edit" }]}\`
-- Simple conditionals: \`variant={entity.active ? "success" : "neutral"}\`
+- renderItem arrow function: \`renderItem={(item: Task) => (...)}\`
 - Component nesting: \`<Stack><Typography /><Button /></Stack>\`
 
-### BANNED (will be stripped or break)
-- **No hooks**: useState, useEffect, useMemo, useCallback, useRef — all banned
-- **No callbacks**: onClick={() => ...}, onChange={handleChange} — use event/submitEvent props instead
-- **No local variables**: const x = ..., let y = ... — access entity fields directly
-- **No imports**: import { helper } from ... — everything must be inline
-- **No .map()/.filter()**: data-grid and data-list handle iteration internally
-- **No template literals with expressions**: \`\`\${entity.name}\`\` — use "@entity.name" string
-- **No computed expressions**: count={array.length}, value={a + b}
-- **No JSX in props**: icon={<Icon />} — use icon="iconName" string
+### BANNED (will fail lint)
+- **No hooks**: useState, useEffect, useMemo, useCallback
+- **No callbacks**: onClick={() => ...}, onChange={handleChange} (except renderItem)
+- **No local variables**: const x = ... (access entity fields directly)
+- **No raw HTML**: <div>, <span>, <p>, <section> (use Stack, Box, Typography)
+- **No .map()/.filter()**: DataGrid/DataList handle iteration via renderItem
+- **No @entity.field magic strings**: use typed prop access instead
+- **No template literals**: \`\`\${entity.name}\`\`
+- **No computed expressions**: count={array.length}
 
-### Entity Bindings
-Use "@entity.fieldName" as string prop values:
+### DataGrid / DataList with renderItem
 \`\`\`tsx
-<Typography variant="h1" content="@entity.title" />
-<Badge label="@entity.status" variant="primary" />
-<StatDisplay value="@entity.count" label="Total" />
-\`\`\`
-Note: Typography uses \`content\` prop (NOT \`text\`). Badge uses \`label\` prop (NOT \`text\`).
-
-### DataGrid / DataList — MUST use renderItem
-DataGrid and DataList require \`renderItem\` render prop for per-item views. Do NOT nest children directly.
-\`\`\`tsx
-// CORRECT: renderItem render prop
-<DataGrid entity="Task" renderItem={(item) => (
+<DataGrid entity={entity} renderItem={(item: Task) => (
   <Stack direction="horizontal" gap="md">
-    <Typography variant="h4" content="@item.title" />
-    <Badge label="@item.status" variant="primary" />
-    <Button label="Edit" event="EDIT_TASK" variant="ghost" />
+    <Typography variant="h4" content={item.title} />
+    <Badge label={item.status} variant="primary" />
+    <Button label="Edit" event="EDIT" variant="ghost" />
   </Stack>
 )} />
-
-// WRONG: nesting children — will not compile correctly
-<DataGrid entity="Task">
-  <Stack>...</Stack>
-</DataGrid>
 \`\`\`
-Inside renderItem, use \`@item.fieldName\` bindings (not \`@entity.fieldName\`).
+Inside renderItem, access fields on the typed \`item\` parameter.
+Outside renderItem, access fields on the \`entity\` prop.
 
 ### Events
 Use event prop strings, not callbacks:
 \`\`\`tsx
 <Button label="Create" event="CREATE" variant="primary" />
-<FormSection entity="Task" fields={["title"]} submitEvent="SAVE" cancelEvent="CANCEL" />
-<DataGrid entity="Task" itemActions={[{ event: "EDIT", label: "Edit" }]} />
-\`\`\``;
+\`\`\`
+
+### Props
+Typography uses \`content\` (NOT \`text\`). Badge uses \`label\` (NOT \`text\`).`;
 }
 
 /**
  * Entity binding reference for React JSX context.
  */
 export function getReactEntityBindings(): string {
-    return `## Entity Bindings in JSX
+    return `## Entity Data Access
 
-All data access uses "@root.path" strings as prop values:
+Access entity data through typed props. The converter rewrites to binding strings automatically.
 
-| Binding | JSX Usage |
-|---------|-----------|
-| @entity.field | \`<Typography text="@entity.title" />\` |
-| @payload.field | \`<Typography text="@payload.data" />\` (read-only, in event handlers) |
-| @state | \`<Badge text="@state" />\` (current state name, bare) |
-| @now | \`<Typography text="@now" />\` (timestamp) |
+| In your JSX | Converter produces |
+|-------------|-------------------|
+| \`entity.title\` | \`@entity.title\` |
+| \`item.status\` (inside renderItem) | \`@item.status\` |
 
-No function calls: @count(), @sum(), @filter() do NOT exist.
-No concatenation: "@entity.first @entity.last" is INVALID.
-One binding per prop value.`;
+\`\`\`tsx
+// You write:
+<Typography content={entity.title} />
+<Badge label={item.status} />
+
+// Converter produces render-ui JSON:
+// { type: "typography", content: "@entity.title" }
+// { type: "badge", label: "@item.status" }
+\`\`\`
+
+Do NOT use magic strings like \`"@entity.title"\`. Use typed property access.
+One field per prop value. No concatenation, no function calls.`;
 }
