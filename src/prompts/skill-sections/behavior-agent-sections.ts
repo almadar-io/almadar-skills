@@ -100,12 +100,12 @@ These are deterministic tools. The LLM decides WHAT to compose, these handle HOW
 
 | Tool | Purpose | Key args |
 |------|---------|----------|
-| \`adapt_behavior\` | Rebind entity/fields on a behavior orbital | behaviorName, entityName, fields |
+| \`call_behavior\` | Call behavior function directly (stdList, stdCart, etc.) | behaviorName, params: { entityName, fields } |
+| \`compose_orbitals\` | Assemble orbitals from .orbitals/ with layout + wiring | appName, outputPath, layoutStrategy?, eventWiring? |
+| \`update_render_ui\` | Customize render-ui views with React subagent | orbitalName, entityName, fields, styleHint? |
 | \`compose_behaviors\` | Assemble orbitals into a schema with layout + wiring | appName, orbitals, layoutStrategy?, eventWiring? |
 | \`connect_orbitals\` | Wire cross-orbital events (A emits → B listens) | orbitalA, orbitalB, event, triggers? |
 | \`merge_orbitals\` | Merge multiple behaviors into one orbital (shared entity) | name, entity, sources, pages |
-| \`pipe_orbitals\` | Chain orbitals sequentially (wizard flow) | orbitals, events |
-| \`detect_layout\` | Auto-detect layout: single/tabs/sidebar/dashboard/wizard | orbitals, eventWiring? |
 
 ### Layout strategies
 - **single**: 1 orbital → 1 page
