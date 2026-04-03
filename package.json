@@ -1,6 +1,6 @@
 {
   "name": "@almadar-io/skills",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "description": "AI skill generators and prompts for Orbital schema generation",
   "type": "module",
   "main": "./dist/index.js",
