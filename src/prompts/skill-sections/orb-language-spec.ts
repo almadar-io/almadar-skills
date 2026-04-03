@@ -8,7 +8,7 @@
  * @packageDocumentation
  */
 
-import { getOrbAllowedPatterns } from '@almadar/patterns';
+import { getOrbAllowedPatterns, isValidPatternType } from '@almadar/patterns';
 
 /**
  * render-ui composition rules + pattern vocabulary from registry.
@@ -23,6 +23,7 @@ export function getCompositionRules(): string {
         patternTables += `#### ${category}\n`;
         patternTables += '| Pattern | Props |\n|---------|-------|\n';
         for (const p of patterns) {
+            if (!isValidPatternType(p.name)) continue;
             const props = (p.keyProps ?? []).slice(0, 6).join(', ');
             patternTables += `| \`${p.name}\` | ${props} |\n`;
         }

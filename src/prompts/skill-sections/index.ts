@@ -81,6 +81,13 @@ export {
   getOrbErrorPatterns,
 } from "./orb-language-spec.js";
 
+// React UI guide sections (for react flattening path)
+export {
+  getReactComponentReference,
+  getTemplateComplianceRules,
+  getReactEntityBindings,
+} from "./react-ui-guide.js";
+
 // Behavior agent sections (for behavior-driven agent)
 export {
   getBehaviorCatalogForAgent,
