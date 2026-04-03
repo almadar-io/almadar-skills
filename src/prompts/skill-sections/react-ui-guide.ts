@@ -111,10 +111,30 @@ Your JSX must survive the flattener round-trip: JSX → JSON → compiled JSX.
 ### Entity Bindings
 Use "@entity.fieldName" as string prop values:
 \`\`\`tsx
-<Typography text="@entity.title" />
-<Badge text="@entity.status" variant="primary" />
+<Typography variant="h1" content="@entity.title" />
+<Badge label="@entity.status" variant="primary" />
 <StatDisplay value="@entity.count" label="Total" />
 \`\`\`
+Note: Typography uses \`content\` prop (NOT \`text\`). Badge uses \`label\` prop (NOT \`text\`).
+
+### DataGrid / DataList — MUST use renderItem
+DataGrid and DataList require \`renderItem\` render prop for per-item views. Do NOT nest children directly.
+\`\`\`tsx
+// CORRECT: renderItem render prop
+<DataGrid entity="Task" renderItem={(item) => (
+  <Stack direction="horizontal" gap="md">
+    <Typography variant="h4" content="@item.title" />
+    <Badge label="@item.status" variant="primary" />
+    <Button label="Edit" event="EDIT_TASK" variant="ghost" />
+  </Stack>
+)} />
+
+// WRONG: nesting children — will not compile correctly
+<DataGrid entity="Task">
+  <Stack>...</Stack>
+</DataGrid>
+\`\`\`
+Inside renderItem, use \`@item.fieldName\` bindings (not \`@entity.fieldName\`).
 
 ### Events
 Use event prop strings, not callbacks:
