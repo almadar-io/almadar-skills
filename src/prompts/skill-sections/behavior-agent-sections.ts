@@ -27,8 +27,8 @@ import { getOrbAllowedPatterns } from '@almadar/patterns';
  * Behavior catalog for the coordinator prompt.
  * Lists behaviors at a level with name, description, operations.
  */
-export function getBehaviorCatalogForAgent(level?: 'atom' | 'molecule' | 'organism'): string {
-  const registry = getBehaviorRegistry();
+export async function getBehaviorCatalogForAgent(level?: 'atom' | 'molecule' | 'organism'): Promise<string> {
+  const registry = await getBehaviorRegistry();
   const entries = Object.values(registry)
     .filter(b => !level || b.level === level)
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -62,8 +62,8 @@ export function getBehaviorCatalogForAgent(level?: 'atom' | 'molecule' | 'organi
  * Behavior detail for the subagent prompt.
  * Returns the behavior summary + the render-ui trees from the .orb file.
  */
-export function getBehaviorDetailForSubagent(name: string): string {
-  const summary = getBehaviorSummary(name);
+export async function getBehaviorDetailForSubagent(name: string): Promise<string> {
+  const summary = await getBehaviorSummary(name);
   if (!summary) return `## Behavior: ${name}\n\nBehavior not found.`;
 
   let output = `## Behavior Reference: ${name}\n\n`;
@@ -118,12 +118,12 @@ These are deterministic tools. The LLM decides WHAT to compose, these handle HOW
 /**
  * Domain → behavior mapping from the registry.
  */
-export function getBehaviorDomainMap(): string {
+export async function getBehaviorDomainMap(): Promise<string> {
   const domains = ['UI Patterns', 'Game', 'Domain', 'Services', 'Infrastructure'];
   let output = '## Domain → Behavior Map\n\n';
 
   for (const domain of domains) {
-    const behaviors = getBehaviorsByDomain(domain);
+    const behaviors = await getBehaviorsByDomain(domain);
     if (behaviors.length === 0) continue;
     const names = behaviors.slice(0, 10).map(b => `\`${b.name}\``).join(', ');
     output += `**${domain}**: ${names}${behaviors.length > 10 ? ` (+${behaviors.length - 10} more)` : ''}\n\n`;
@@ -135,10 +135,10 @@ export function getBehaviorDomainMap(): string {
 /**
  * Filtered pattern table: only patterns used by the selected behaviors.
  */
-export function getBehaviorPatternSubset(behaviorNames: string[]): string {
+export async function getBehaviorPatternSubset(behaviorNames: string[]): Promise<string> {
   const allPatterns = new Set<string>();
   for (const name of behaviorNames) {
-    const summary = getBehaviorSummary(name);
+    const summary = await getBehaviorSummary(name);
     if (summary) {
       for (const p of summary.patterns) allPatterns.add(p);
     }
