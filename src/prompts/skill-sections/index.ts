@@ -114,3 +114,6 @@ export {
   getVerificationSection,
   getProjectStructureSection,
 } from "./tool-registry.js";
+
+// Memory recording rules (for agent memory)
+export { getMemoryRecordingRules } from "./memory-recording-rules.js";
