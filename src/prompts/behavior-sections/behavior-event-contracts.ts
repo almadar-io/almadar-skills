@@ -8,18 +8,10 @@
  */
 
 import { getAllBehaviors } from '@almadar/std';
-
-/**
- * Behavior schema entry shape from getAllBehaviors.
- */
-interface BehaviorEntry {
-    name: string;
-    orbitals?: Array<Record<string, unknown>>;
-    [key: string]: unknown;
-}
+import type { BehaviorSchemaEntry } from './classify.js';
 
 /** Extract all emits and listens from all traits in a behavior schema. */
-function extractEventContracts(schema: BehaviorEntry): {
+function extractEventContracts(schema: BehaviorSchemaEntry): {
     emits: string[];
     listens: string[];
 } {
@@ -30,22 +22,20 @@ function extractEventContracts(schema: BehaviorEntry): {
     if (!orbitals) return { emits: allEmits, listens: allListens };
 
     for (const orbital of orbitals) {
-        const traits = orbital.traits as Array<Record<string, unknown>> | undefined;
+        const traits = orbital.traits;
         if (!traits) continue;
 
         for (const trait of traits) {
-            const emits = trait.emits as Array<{ event: string }> | undefined;
-            if (emits) {
-                for (const e of emits) {
+            if (trait.emits) {
+                for (const e of trait.emits) {
                     if (e.event && !allEmits.includes(e.event)) {
                         allEmits.push(e.event);
                     }
                 }
             }
 
-            const listens = trait.listens as Array<{ event: string }> | undefined;
-            if (listens) {
-                for (const l of listens) {
+            if (trait.listens) {
+                for (const l of trait.listens) {
                     if (l.event && !allListens.includes(l.event)) {
                         allListens.push(l.event);
                     }
@@ -62,7 +52,7 @@ function extractEventContracts(schema: BehaviorEntry): {
  * Skips behaviors that have no emits and no listens.
  */
 export function getBehaviorEventContractsSection(): string {
-    const behaviors = getAllBehaviors() as BehaviorEntry[];
+    const behaviors = getAllBehaviors() as BehaviorSchemaEntry[];
 
     const entries: string[] = [];
     for (const schema of behaviors) {

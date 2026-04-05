@@ -9,12 +9,13 @@
 
 import { getAllBehaviors } from '@almadar/std';
 import { classifyBehavior, extractTraitData } from './classify.js';
+import type { BehaviorSchemaEntry } from './classify.js';
 
 /**
  * Generate a detailed reference for all organism behaviors.
  */
 export function getBehaviorOrganismReference(): string {
-    const allBehaviors = getAllBehaviors() as Array<{ name: string; description?: string; orbitals?: Array<Record<string, unknown>>; [key: string]: unknown }>;
+    const allBehaviors = getAllBehaviors() as BehaviorSchemaEntry[];
     const organisms = allBehaviors.filter(b => classifyBehavior(b.name) === 'organisms');
 
     if (organisms.length === 0) {

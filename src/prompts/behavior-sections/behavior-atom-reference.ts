@@ -9,12 +9,13 @@
 
 import { getAllBehaviors } from '@almadar/std';
 import { classifyBehavior, extractTraitData } from './classify.js';
+import type { BehaviorSchemaEntry } from './classify.js';
 
 /**
  * Generate a detailed reference for all atom behaviors.
  */
 export function getBehaviorAtomReference(): string {
-    const allBehaviors = getAllBehaviors() as Array<{ name: string; description?: string; orbitals?: Array<Record<string, unknown>>; [key: string]: unknown }>;
+    const allBehaviors = getAllBehaviors() as BehaviorSchemaEntry[];
     const atoms = allBehaviors.filter(b => classifyBehavior(b.name) === 'atoms');
 
     if (atoms.length === 0) {

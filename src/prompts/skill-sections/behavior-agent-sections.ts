@@ -201,24 +201,44 @@ interface RenderUiEntry {
   tree: unknown;
 }
 
+/** Trait shape for render-ui extraction */
+interface AgentTraitShape {
+  stateMachine?: {
+    transitions?: Array<{
+      event: string;
+      effects?: unknown[];
+    }>;
+  };
+}
+
+/** Orbital shape for render-ui extraction */
+interface AgentOrbitalShape {
+  traits?: AgentTraitShape[];
+}
+
+/** Schema shape for render-ui extraction */
+interface AgentSchemaShape {
+  orbitals?: AgentOrbitalShape[];
+}
+
 function extractRenderUiTrees(schema: unknown): RenderUiEntry[] {
   const results: RenderUiEntry[] = [];
-  const obj = schema as Record<string, unknown>;
-  const orbitals = (obj.orbitals ?? []) as Array<Record<string, unknown>>;
+  const obj = schema as AgentSchemaShape;
+  const orbitals = obj.orbitals ?? [];
 
   for (const orbital of orbitals) {
-    const traits = (orbital.traits ?? []) as Array<Record<string, unknown>>;
+    const traits = orbital.traits ?? [];
     for (const trait of traits) {
-      const sm = trait.stateMachine as Record<string, unknown> | undefined;
+      const sm = trait.stateMachine;
       if (!sm) continue;
-      const transitions = (sm.transitions ?? []) as Array<Record<string, unknown>>;
+      const transitions = sm.transitions ?? [];
       for (const t of transitions) {
-        const effects = (t.effects ?? []) as unknown[];
+        const effects = t.effects ?? [];
         for (const effect of effects) {
           if (Array.isArray(effect) && effect.length >= 3 && effect[0] === 'render-ui' && effect[2] !== null) {
             results.push({
               slot: effect[1] as string,
-              event: t.event as string,
+              event: t.event,
               tree: effect[2],
             });
           }

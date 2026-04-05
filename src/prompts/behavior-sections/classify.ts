@@ -7,6 +7,39 @@
  * @packageDocumentation
  */
 
+import type { StateMachine, Transition, Effect } from '@almadar/core';
+
+// ============================================================================
+// Shared types for behavior schema traversal
+// ============================================================================
+
+/** Trait shape as stored in behavior schema orbitals */
+export interface BehaviorTraitShape {
+  name?: string;
+  stateMachine?: StateMachine;
+  emits?: Array<{ event: string }>;
+  listens?: Array<{ event: string }>;
+}
+
+/** Orbital shape as stored in behavior schemas */
+export interface BehaviorOrbitalShape {
+  name?: string;
+  traits?: BehaviorTraitShape[];
+}
+
+/** Entry returned by getAllBehaviors() with typed orbital structure */
+export interface BehaviorSchemaEntry {
+  name: string;
+  description?: string;
+  orbitals?: BehaviorOrbitalShape[];
+  [key: string]: unknown;
+}
+
+/** Transition shape with effects for render-ui extraction */
+export interface TransitionWithEffects extends Transition {
+  effects?: Effect[];
+}
+
 /**
  * Known atom behavior names. Atoms are self-contained, irreducible state machines.
  * Derived from the behaviors/functions/atoms/ directory in @almadar/std source.
@@ -44,7 +77,7 @@ export function classifyBehavior(name: string): 'atoms' | 'molecules' | 'organis
 }
 
 /** Extract trait state/event data from a behavior schema's first orbital. */
-export function extractTraitData(schema: { orbitals?: Array<Record<string, unknown>> }): {
+export function extractTraitData(schema: { orbitals?: BehaviorOrbitalShape[] }): {
     states: string[];
     events: string[];
     emits: string[];
@@ -55,22 +88,18 @@ export function extractTraitData(schema: { orbitals?: Array<Record<string, unkno
         return { states: [], events: [], emits: [], listens: [] };
     }
 
-    const traits = orbitals[0].traits as Array<Record<string, unknown>> | undefined;
+    const traits = orbitals[0].traits;
     if (!traits || traits.length === 0) {
         return { states: [], events: [], emits: [], listens: [] };
     }
 
     const trait = traits[0];
-    const sm = trait.stateMachine as Record<string, unknown> | undefined;
+    const sm = trait.stateMachine;
 
-    const states = (sm?.states as Array<{ name: string }> | undefined)
-        ?.map(s => s.name) ?? [];
-    const events = (sm?.events as Array<{ key: string }> | undefined)
-        ?.map(e => e.key) ?? [];
-    const emits = (trait.emits as Array<{ event: string }> | undefined)
-        ?.map(e => e.event) ?? [];
-    const listens = (trait.listens as Array<{ event: string }> | undefined)
-        ?.map(l => l.event) ?? [];
+    const states = sm?.states?.map(s => s.name) ?? [];
+    const events = sm?.events?.map(e => e.key) ?? [];
+    const emits = trait.emits?.map(e => e.event) ?? [];
+    const listens = trait.listens?.map(l => l.event) ?? [];
 
     return { states, events, emits, listens };
 }
