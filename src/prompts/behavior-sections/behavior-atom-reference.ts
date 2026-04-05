@@ -15,7 +15,7 @@ import { classifyBehavior, extractTraitData } from './classify.js';
  * Generate a detailed reference for all atom behaviors.
  */
 export function getBehaviorAtomReference(): string {
-    const allBehaviors = getAllBehaviors() as unknown as OrbitalSchema[];
+    const allBehaviors = getAllBehaviors() as OrbitalSchema[];
     const atoms = allBehaviors.filter(b => classifyBehavior(b.name) === 'atoms');
 
     if (atoms.length === 0) {

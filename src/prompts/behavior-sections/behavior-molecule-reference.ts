@@ -15,7 +15,7 @@ import { classifyBehavior, extractTraitData } from './classify.js';
  * Generate a detailed reference for all molecule behaviors.
  */
 export function getBehaviorMoleculeReference(): string {
-    const allBehaviors = getAllBehaviors() as unknown as OrbitalSchema[];
+    const allBehaviors = getAllBehaviors() as OrbitalSchema[];
     const molecules = allBehaviors.filter(b => classifyBehavior(b.name) === 'molecules');
 
     if (molecules.length === 0) {
