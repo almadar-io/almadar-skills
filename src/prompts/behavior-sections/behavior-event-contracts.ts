@@ -59,7 +59,7 @@ function extractEventContracts(schema: OrbitalSchema): {
  * Skips behaviors that have no emits and no listens.
  */
 export function getBehaviorEventContractsSection(): string {
-    const behaviors = getAllBehaviors() as OrbitalSchema[];
+    const behaviors = getAllBehaviors() as unknown as OrbitalSchema[];
 
     const entries: string[] = [];
     for (const schema of behaviors) {

@@ -15,7 +15,7 @@ import { classifyBehavior, extractTraitData } from './classify.js';
  * Generate a detailed reference for all organism behaviors.
  */
 export function getBehaviorOrganismReference(): string {
-    const allBehaviors = getAllBehaviors() as OrbitalSchema[];
+    const allBehaviors = getAllBehaviors() as unknown as OrbitalSchema[];
     const organisms = allBehaviors.filter(b => classifyBehavior(b.name) === 'organisms');
 
     if (organisms.length === 0) {
