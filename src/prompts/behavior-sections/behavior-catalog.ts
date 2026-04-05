@@ -42,7 +42,7 @@ function extractDescription(schema: OrbitalSchema): string {
  * Generate a markdown catalog of all standard behaviors, grouped by level.
  */
 export function getBehaviorCatalogSection(): string {
-    const allBehaviors = getAllBehaviors() as OrbitalSchema[];
+    const allBehaviors = getAllBehaviors() as unknown as OrbitalSchema[];
 
     const atoms: OrbitalSchema[] = [];
     const molecules: OrbitalSchema[] = [];
