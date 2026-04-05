@@ -7,15 +7,15 @@
  * @packageDocumentation
  */
 
+import type { OrbitalSchema } from '@almadar/core';
 import { getAllBehaviors } from '@almadar/std';
 import { classifyBehavior, extractTraitData } from './classify.js';
-import type { BehaviorSchemaEntry } from './classify.js';
 
 /**
  * Generate a detailed reference for all organism behaviors.
  */
 export function getBehaviorOrganismReference(): string {
-    const allBehaviors = getAllBehaviors() as BehaviorSchemaEntry[];
+    const allBehaviors = getAllBehaviors() as OrbitalSchema[];
     const organisms = allBehaviors.filter(b => classifyBehavior(b.name) === 'organisms');
 
     if (organisms.length === 0) {

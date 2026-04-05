@@ -7,37 +7,33 @@
  * @packageDocumentation
  */
 
-import type { StateMachine, Transition, Effect } from '@almadar/core';
+import type { Transition, Effect, OrbitalSchema, Orbital, Trait, TraitRef } from '@almadar/core';
 
 // ============================================================================
-// Shared types for behavior schema traversal
+// Re-exported core types (replacing local duplicates)
 // ============================================================================
 
-/** Trait shape as stored in behavior schema orbitals */
-export interface BehaviorTraitShape {
-  name?: string;
-  stateMachine?: StateMachine;
-  emits?: Array<{ event: string }>;
-  listens?: Array<{ event: string }>;
-}
+/** @deprecated Use `Trait` from `@almadar/core` directly. */
+export type BehaviorTraitShape = Trait;
 
-/** Orbital shape as stored in behavior schemas */
-export interface BehaviorOrbitalShape {
-  name?: string;
-  traits?: BehaviorTraitShape[];
-}
+/** @deprecated Use `Orbital` from `@almadar/core` directly. */
+export type BehaviorOrbitalShape = Orbital;
 
-/** Entry returned by getAllBehaviors() with typed orbital structure */
-export interface BehaviorSchemaEntry {
-  name: string;
-  description?: string;
-  orbitals?: BehaviorOrbitalShape[];
-  [key: string]: unknown;
-}
+/** @deprecated Use `OrbitalSchema` from `@almadar/core` directly. */
+export type BehaviorSchemaEntry = OrbitalSchema;
 
 /** Transition shape with effects for render-ui extraction */
 export interface TransitionWithEffects extends Transition {
   effects?: Effect[];
+}
+
+/**
+ * Narrow a TraitRef to an inline Trait (filtering out string refs and object refs).
+ * Behavior schemas from @almadar/std always have inline traits, but the type system
+ * requires narrowing since TraitRef = string | { ref: string; ... } | Trait.
+ */
+function isInlineTrait(traitRef: TraitRef): traitRef is Trait {
+  return typeof traitRef === 'object' && traitRef !== null && 'stateMachine' in traitRef;
 }
 
 /**
@@ -77,7 +73,7 @@ export function classifyBehavior(name: string): 'atoms' | 'molecules' | 'organis
 }
 
 /** Extract trait state/event data from a behavior schema's first orbital. */
-export function extractTraitData(schema: { orbitals?: BehaviorOrbitalShape[] }): {
+export function extractTraitData(schema: { orbitals?: Orbital[] }): {
     states: string[];
     events: string[];
     emits: string[];
@@ -88,18 +84,23 @@ export function extractTraitData(schema: { orbitals?: BehaviorOrbitalShape[] }):
         return { states: [], events: [], emits: [], listens: [] };
     }
 
-    const traits = orbitals[0].traits;
-    if (!traits || traits.length === 0) {
+    const traitRefs = orbitals[0].traits;
+    if (!traitRefs || traitRefs.length === 0) {
         return { states: [], events: [], emits: [], listens: [] };
     }
 
-    const trait = traits[0];
-    const sm = trait.stateMachine;
+    // Behavior schemas always use inline traits, narrow from TraitRef to Trait
+    const firstInline = traitRefs.find(isInlineTrait);
+    if (!firstInline) {
+        return { states: [], events: [], emits: [], listens: [] };
+    }
+
+    const sm = firstInline.stateMachine;
 
     const states = sm?.states?.map(s => s.name) ?? [];
     const events = sm?.events?.map(e => e.key) ?? [];
-    const emits = trait.emits?.map(e => e.event) ?? [];
-    const listens = trait.listens?.map(l => l.event) ?? [];
+    const emits = firstInline.emits?.map(e => e.event) ?? [];
+    const listens = firstInline.listens?.map(l => l.event) ?? [];
 
     return { states, events, emits, listens };
 }

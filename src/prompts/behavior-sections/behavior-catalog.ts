@@ -7,20 +7,28 @@
  * @packageDocumentation
  */
 
+import type { OrbitalSchema, TraitRef, Trait } from '@almadar/core';
 import { getAllBehaviors } from '@almadar/std';
 import { classifyBehavior } from './classify.js';
-import type { BehaviorSchemaEntry } from './classify.js';
+
+/** Narrow a TraitRef to an inline Trait. */
+function isInlineTrait(traitRef: TraitRef): traitRef is Trait {
+    return typeof traitRef === 'object' && traitRef !== null && 'stateMachine' in traitRef;
+}
 
 /** Extract description from a behavior, falling back to orbital/trait name. */
-function extractDescription(schema: BehaviorSchemaEntry): string {
+function extractDescription(schema: OrbitalSchema): string {
     if (schema.description) return schema.description;
 
     const orbitals = schema.orbitals;
     if (!orbitals || orbitals.length === 0) return 'No description available';
 
     const traits = orbitals[0].traits;
-    if (traits && traits.length > 0 && typeof traits[0].name === 'string') {
-        return `Behavior: ${traits[0].name}`;
+    if (traits && traits.length > 0) {
+        const firstInline = traits.find(isInlineTrait);
+        if (firstInline && typeof firstInline.name === 'string') {
+            return `Behavior: ${firstInline.name}`;
+        }
     }
 
     if (typeof orbitals[0].name === 'string') {
@@ -34,11 +42,11 @@ function extractDescription(schema: BehaviorSchemaEntry): string {
  * Generate a markdown catalog of all standard behaviors, grouped by level.
  */
 export function getBehaviorCatalogSection(): string {
-    const allBehaviors = getAllBehaviors() as BehaviorSchemaEntry[];
+    const allBehaviors = getAllBehaviors() as OrbitalSchema[];
 
-    const atoms: BehaviorSchemaEntry[] = [];
-    const molecules: BehaviorSchemaEntry[] = [];
-    const organisms: BehaviorSchemaEntry[] = [];
+    const atoms: OrbitalSchema[] = [];
+    const molecules: OrbitalSchema[] = [];
+    const organisms: OrbitalSchema[] = [];
 
     for (const b of allBehaviors) {
         const level = classifyBehavior(b.name);
@@ -47,7 +55,7 @@ export function getBehaviorCatalogSection(): string {
         else organisms.push(b);
     }
 
-    const formatList = (behaviors: BehaviorSchemaEntry[]): string =>
+    const formatList = (behaviors: OrbitalSchema[]): string =>
         behaviors.map(b => `- \`${b.name}\`: ${extractDescription(b)}`).join('\n');
 
     return `## Behavior Catalog (${allBehaviors.length} behaviors)

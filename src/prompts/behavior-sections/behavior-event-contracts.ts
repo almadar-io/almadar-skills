@@ -7,11 +7,16 @@
  * @packageDocumentation
  */
 
+import type { OrbitalSchema, TraitRef, Trait } from '@almadar/core';
 import { getAllBehaviors } from '@almadar/std';
-import type { BehaviorSchemaEntry } from './classify.js';
+
+/** Narrow a TraitRef to an inline Trait. */
+function isInlineTrait(traitRef: TraitRef): traitRef is Trait {
+    return typeof traitRef === 'object' && traitRef !== null && 'stateMachine' in traitRef;
+}
 
 /** Extract all emits and listens from all traits in a behavior schema. */
-function extractEventContracts(schema: BehaviorSchemaEntry): {
+function extractEventContracts(schema: OrbitalSchema): {
     emits: string[];
     listens: string[];
 } {
@@ -22,20 +27,22 @@ function extractEventContracts(schema: BehaviorSchemaEntry): {
     if (!orbitals) return { emits: allEmits, listens: allListens };
 
     for (const orbital of orbitals) {
-        const traits = orbital.traits;
-        if (!traits) continue;
+        const traitRefs = orbital.traits;
+        if (!traitRefs) continue;
 
-        for (const trait of traits) {
-            if (trait.emits) {
-                for (const e of trait.emits) {
+        for (const traitRef of traitRefs) {
+            if (!isInlineTrait(traitRef)) continue;
+
+            if (traitRef.emits) {
+                for (const e of traitRef.emits) {
                     if (e.event && !allEmits.includes(e.event)) {
                         allEmits.push(e.event);
                     }
                 }
             }
 
-            if (trait.listens) {
-                for (const l of trait.listens) {
+            if (traitRef.listens) {
+                for (const l of traitRef.listens) {
                     if (l.event && !allListens.includes(l.event)) {
                         allListens.push(l.event);
                     }
@@ -52,7 +59,7 @@ function extractEventContracts(schema: BehaviorSchemaEntry): {
  * Skips behaviors that have no emits and no listens.
  */
 export function getBehaviorEventContractsSection(): string {
-    const behaviors = getAllBehaviors() as BehaviorSchemaEntry[];
+    const behaviors = getAllBehaviors() as OrbitalSchema[];
 
     const entries: string[] = [];
     for (const schema of behaviors) {

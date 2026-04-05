@@ -7,15 +7,15 @@
  * @packageDocumentation
  */
 
+import type { OrbitalSchema } from '@almadar/core';
 import { getAllBehaviors } from '@almadar/std';
 import { classifyBehavior, extractTraitData } from './classify.js';
-import type { BehaviorSchemaEntry } from './classify.js';
 
 /**
  * Generate a detailed reference for all atom behaviors.
  */
 export function getBehaviorAtomReference(): string {
-    const allBehaviors = getAllBehaviors() as BehaviorSchemaEntry[];
+    const allBehaviors = getAllBehaviors() as OrbitalSchema[];
     const atoms = allBehaviors.filter(b => classifyBehavior(b.name) === 'atoms');
 
     if (atoms.length === 0) {
