@@ -188,6 +188,9 @@ function getLoloValidationRules(): string {
 | **render-ui pattern** | \`{ type: "stack", ... }\` | \`{ "type": "stack" }\` | No quotes on keys in LOLO objects |
 | **Emits** | \`emits { INIT internal }\` | \`emits: [{ event: "INIT" }]\` | Use LOLO emits block syntax |
 | **Page** | \`page "/path" -> Trait\` | \`pages: [{ path: "/path" }]\` | Use LOLO page syntax |
+| **Persist Arity** | \`(persist EntityName @payload.data)\` | \`(persist create Entity @payload)\` | \`persist\` operator takes EXACTLY 2 or 3 arguments! |
+| **Payload Schemas** | \`listens { SAVE { data: string } }\` | \`listens { SAVE }\` but using \`@payload.data\` | If you use \`@payload.X\`, you MUST define it in the event schema! |
+| **No Field Hallucinations** | \`@entity.price\` | \`@entity.items\` (if not declared) | DO NOT hallucinate fields in \`@entity\`. Only bind fields you explicitly defined. |
 
 ### Binding Rules for render-ui Props
 
@@ -195,6 +198,12 @@ function getLoloValidationRules(): string {
 - NEVER concatenate bindings: \`@price @currency\` is INVALID
 - NEVER use inline expressions: \`@quantity <= 0\` is INVALID
 - For conditional logic, use guards on transitions, not prop expressions
+
+### ❌ FATAL MISTAKES TO AVOID (Error Simulator)
+
+> **MISTAKE:** You write \`(persist EntityName ?data)\` or \`(set @status ?newStatus)\` in an \`EVENT_KEY\` transition, but fail to explicitly declare those payload variables in the \`emits\` block for \`EVENT_KEY\`.
+> **🔥 COMPILER CRASH:** \`[ORB_BINDING_PAYLOAD_FIELD_UNDECLARED] Event 'EVENT_KEY' uses @payload.data but has no schema.\`
+> **✅ FIX:** Every time you use \`?variable\` in an effect, you MUST immediately declare that exact event and payload schema type inside the \`emits\` block at the top of the trait.
 
 ### Composition Quality Checklist
 
@@ -244,16 +253,20 @@ state browsing {
 \`\`\`
 
 ### 4. Modal exits (REQUIRED for every modal/drawer state)
+Whenever a transition closes a modal via \`(render-ui modal null)\`, you MUST also refresh the main view via \`(render-ui main {...})\`.
 \`\`\`lolo
 state creating {
   SAVE -> browsing
-    (persist create Entity ?data)
+    (persist EntityName ?data)
     (render-ui modal null)
-    (fetch Entity)
+    (render-ui main { type: "stack", ... })
+    (fetch EntityName)
   CANCEL -> browsing
     (render-ui modal null)
+    (render-ui main { type: "stack", ... })
   CLOSE -> browsing
     (render-ui modal null)
+    (render-ui main { type: "stack", ... })
 }
 \`\`\`
 

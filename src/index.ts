@@ -13,6 +13,7 @@ export * from './prompts/index.js';
 
 // Convenience re-exports for common use cases
 export { generateOrbSkill, generateOrbCoordinatorSkill } from './generators/orb.js';
+export { generateLoloSkill } from './generators/lolo.js';
 export { generateKflowOrbitalsSkill } from './generators/kflow-orbitals.js';
 export { generateKflowOrbitalFixingSkill } from './generators/kflow-orbital-fixing.js';
 export { generateDomainLanguageSkill } from './generators/domain-language.js';

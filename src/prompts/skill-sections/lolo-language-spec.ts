@@ -62,6 +62,14 @@ entity EntityName [persistent: collection_name] {
 trait TraitName -> EntityName [interaction] {
   initial: stateName              # optional (defaults to first state)
 
+  emits {
+    EVENT_NAME scope { field : type }  # broadcast events
+  }
+
+  listens {
+    SourceTrait EVENT -> LOCAL_EVENT    # receive cross-trait events
+  }
+
   state stateName {
     EVENT_KEY -> targetState       # transition
       (effect1 ...)               # effects (one per line)
@@ -69,14 +77,6 @@ trait TraitName -> EntityName [interaction] {
 
     EVENT_KEY -> targetState when (guard ...)  # guarded transition
       (effect ...)
-  }
-
-  emits {
-    EVENT_NAME scope { field : type }  # broadcast events
-  }
-
-  listens {
-    SourceTrait EVENT -> LOCAL_EVENT    # receive cross-trait events
   }
 }
 \`\`\`
@@ -182,9 +182,8 @@ Every operator call uses Lisp form: \`(op arg1 arg2 ...)\`. No infix, no method 
 | **set** | \`(set @field value)\` | Assign value to entity field |
 | **fetch** | \`(fetch EntityName)\` | Load all entity data |
 | **fetch by id** | \`(fetch EntityName { id: ?id })\` | Load single entity |
-| **persist create** | \`(persist create EntityName ?data)\` | Create new record |
-| **persist update** | \`(persist update EntityName ?id ?data)\` | Update record |
-| **persist delete** | \`(persist delete EntityName ?id)\` | Delete record |
+| **persist** | \`(persist EntityName ?data)\` | Persist record (max 3 args) |
+| **persist with id** | \`(persist EntityName ?id ?data)\` | Update record |
 | **render-ui** | \`(render-ui slot { type: "pattern", ... })\` | Render UI into slot |
 | **render-ui dismiss** | \`(render-ui slot null)\` | Clear/close slot |
 | **emit** | \`(emit EVENT_KEY)\` or \`(emit EVENT_KEY { k: v })\` | Broadcast event |
@@ -350,6 +349,17 @@ orbital TaskOrbital {
   }
 
   trait TaskBrowse -> Task [interaction] {
+    emits {
+      INIT internal
+      SAVE internal { id: string, data: any }
+      CREATE internal
+      VIEW internal { id: string }
+      EDIT internal { id: string }
+      DELETE internal { id: string }
+      CANCEL internal
+      CLOSE internal
+    }
+
     state browsing {
       INIT -> browsing
         (fetch Task)
@@ -386,19 +396,22 @@ orbital TaskOrbital {
       VIEW -> viewing
       EDIT -> editing
       DELETE -> browsing
-        (persist delete Task ?id)
+        (persist Task ?id null)
         (fetch Task)
     }
 
     state creating {
       SAVE -> browsing
-        (persist create Task ?data)
+        (persist Task ?data)
         (render-ui modal null)
+        (render-ui main { type: "stack", children: [{ type: "typography", variant: "h1", text: "Task Management" }, { type: "data-grid", entity: "Task", fields: ["title", "status", "priority"], itemActions: [{ event: "VIEW", label: "View" }, { event: "EDIT", label: "Edit" }, { event: "DELETE", label: "Delete" }] }] })
         (fetch Task)
       CANCEL -> browsing
         (render-ui modal null)
+        (render-ui main { type: "stack", children: [{ type: "typography", variant: "h1", text: "Task Management" }, { type: "data-grid", entity: "Task", fields: ["title", "status", "priority"], itemActions: [{ event: "VIEW", label: "View" }, { event: "EDIT", label: "Edit" }, { event: "DELETE", label: "Delete" }] }] })
       CLOSE -> browsing
         (render-ui modal null)
+        (render-ui main { type: "stack", children: [{ type: "typography", variant: "h1", text: "Task Management" }, { type: "data-grid", entity: "Task", fields: ["title", "status", "priority"], itemActions: [{ event: "VIEW", label: "View" }, { event: "EDIT", label: "Edit" }, { event: "DELETE", label: "Delete" }] }] })
 
       INIT -> creating
         (render-ui modal {
@@ -411,6 +424,7 @@ orbital TaskOrbital {
     state viewing {
       CLOSE -> browsing
         (render-ui modal null)
+        (render-ui main { type: "stack", children: [{ type: "typography", variant: "h1", text: "Task Management" }, { type: "data-grid", entity: "Task", fields: ["title", "status", "priority"], itemActions: [{ event: "VIEW", label: "View" }, { event: "EDIT", label: "Edit" }, { event: "DELETE", label: "Delete" }] }] })
       EDIT -> editing
 
       INIT -> viewing
@@ -434,11 +448,13 @@ orbital TaskOrbital {
 
     state editing {
       SAVE -> browsing
-        (persist update Task ?id ?data)
+        (persist Task ?id ?data)
         (render-ui modal null)
+        (render-ui main { type: "stack", children: [{ type: "typography", variant: "h1", text: "Task Management" }, { type: "data-grid", entity: "Task", fields: ["title", "status", "priority"], itemActions: [{ event: "VIEW", label: "View" }, { event: "EDIT", label: "Edit" }, { event: "DELETE", label: "Delete" }] }] })
         (fetch Task)
       CANCEL -> browsing
         (render-ui modal null)
+        (render-ui main { type: "stack", children: [{ type: "typography", variant: "h1", text: "Task Management" }, { type: "data-grid", entity: "Task", fields: ["title", "status", "priority"], itemActions: [{ event: "VIEW", label: "View" }, { event: "EDIT", label: "Edit" }, { event: "DELETE", label: "Delete" }] }] })
 
       INIT -> editing
         (render-ui modal {
@@ -449,9 +465,6 @@ orbital TaskOrbital {
         })
     }
 
-    emits {
-      INIT internal
-    }
   }
 
   page "/tasks" -> TaskBrowse [view: list, entity: Task, initial]
