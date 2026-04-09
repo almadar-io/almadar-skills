@@ -28,6 +28,9 @@ export { generateConverterSkill } from './converter.js';
 // Orb skill (molecule-first, for Masar pipeline and LLM generation)
 export { generateOrbSkill, generateOrbCoordinatorSkill } from './orb.js';
 
+// LOLO skill (molecule-first, LOLO syntax — mirrors orb skill)
+export { generateLoloSkill } from './lolo.js';
+
 // Behaviors skill (compose standard library behaviors into apps)
 export { generateBehaviorsSkill } from './behaviors.js';
 
@@ -54,6 +57,7 @@ import { generateKflowOrbitalFixingSkill } from './kflow-orbital-fixing.js';
 import { generateDomainLanguageSkill } from './domain-language.js';
 import { generateAlmadarAssistantSkill } from './almadar-assistant.js';
 import { generateOrbSkill } from './orb.js';
+import { generateLoloSkill } from './lolo.js';
 import { generateConverterSkill } from './converter.js';
 import { generateBehaviorsSkill } from './behaviors.js';
 import { generateLeanOrbitalSkill } from '../orbitals-skills-generators/lean/lean-orbital-generator.js';
@@ -72,6 +76,7 @@ import { generateAlmadarCodebaseSkill } from './almadar-codebase.js';
 export function generateAllBuilderSkills(): GeneratedSkill[] {
   return [
     generateOrbSkill(),
+    generateLoloSkill(),
     generateKflowOrbitalsSkill(),
     generateKflowOrbitalFixingSkill(),
     {

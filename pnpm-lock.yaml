@@ -9,17 +9,17 @@ importers:
   .:
     dependencies:
       '@almadar/core':
-        specifier: '>=2.13.0'
-        version: 2.13.0
+        specifier: '>=4.2.0'
+        version: 4.2.0
       '@almadar/llm':
         specifier: '>=2.5.1'
-        version: 2.9.0(@almadar/core@2.13.0)
+        version: 2.9.0(@almadar/core@4.2.0)
       '@almadar/patterns':
         specifier: '>=2.8.7'
-        version: 2.12.0
+        version: 2.12.1
       '@almadar/std':
-        specifier: '>=3.11.0'
-        version: 3.11.0
+        specifier: '>=5.2.0'
+        version: 5.2.0
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -54,8 +54,8 @@ importers:
 
 packages:
 
-  '@almadar/core@2.13.0':
-    resolution: {integrity: sha512-N3ePH19tZ8YQDTTnp4lrAMx7dQp9npBPolBegWUID/Zc+Vv3xjEgzh+KrafAZDQDhiPfCHtJxu6FNkEsf12Aew==}
+  '@almadar/core@4.2.0':
+    resolution: {integrity: sha512-cgw3miOGTJt1lCLK05SdPRdS+0QkSBfFmUvBd7q0Dv55kDpqpbhzN+TlLC1UjQvLeqXpmXzlldSrl4x0gChyGg==}
 
   '@almadar/eslint-plugin@2.7.0':
     resolution: {integrity: sha512-d0WT80e9APcLB6HSP7cVOqJ2jfOzR6TjKkAV5GNbGWqqrRYW7Kj0EtaAMaJEESZD+br9Jr5u8Mub4FJQULhGSg==}
@@ -70,14 +70,14 @@ packages:
       '@almadar/core':
         optional: true
 
-  '@almadar/operators@2.2.0':
-    resolution: {integrity: sha512-2XTjk0hjHMFxPvgS6qnz0pfjO0hgZ5dllolQ1dAz4LxLHn8umEw4YJ1NM+pL9EaUcSRaogHYpnDTMXPPLoUCIw==}
+  '@almadar/operators@3.0.0':
+    resolution: {integrity: sha512-Ur6dD3FrWiq1A/XZ+I7lyjBev/eOZ77H1F6V2Xp4hZl2gHt7jbxatdCECEsG0qzJCwQen2vCKWLJEpl9yhFwMA==}
 
-  '@almadar/patterns@2.12.0':
-    resolution: {integrity: sha512-vy5niBqe/nyS0m9eEw+6rYfnQV/WocSEnk6R0RMQ4/48vf/1Y7ahXy3MZKnc3ixBAtHUmJO6ppAisOln6xmP+g==}
+  '@almadar/patterns@2.12.1':
+    resolution: {integrity: sha512-9DUspuL5dloYE3Go9rtGk7zt/MRG6ZywzNksZIrLVL8biF67ZBL4zT8CYLgFo6BDcWijOqBZkGcOuxt1RiBgYQ==}
 
-  '@almadar/std@3.11.0':
-    resolution: {integrity: sha512-q6uxYVRBQHq+6OH9kjgN5L0dNrhfAPHjJy88o3zPbqzyZGS4sGmYB+cWRD6YXw0SDPnRgC7UT+ZP/yJvtV13Hw==}
+  '@almadar/std@5.2.0':
+    resolution: {integrity: sha512-CaYbpUmXezFgCMtkmTjzReF38hT3rmTDOLr9kxtyYZFHWTk9XdtBlvsPaSE/63vjkS1WUUqTl2K871gGT/Tc5g==}
 
   '@anthropic-ai/sdk@0.52.0':
     resolution: {integrity: sha512-d4c+fg+xy9e46c8+YnrrgIQR45CZlAi7PwdzIfDXDM6ACxEZli1/fxhURsq30ZpMZy6LvSkr41jGq5aF5TD7rQ==}
@@ -265,20 +265,20 @@ packages:
     resolution: {integrity: sha512-EriSTlt5OC9/7SXkRSCAhfSxxoSUgBm33OH+IkwbdpgoqsSsUg7y3uh+IICI/Qg4BBWr3U2i39RpmycbxMq4ew==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
 
-  '@eslint/config-array@0.23.4':
-    resolution: {integrity: sha512-lf19F24LSMfF8weXvW5QEtnLqW70u7kgit5e9PSx0MsHAFclGd1T9ynvWEMDT1w5J4Qt54tomGeAhdoAku1Xow==}
+  '@eslint/config-array@0.23.5':
+    resolution: {integrity: sha512-Y3kKLvC1dvTOT+oGlqNQ1XLqK6D1HU2YXPc52NmAlJZbMMWDzGYXMiPRJ8TYD39muD/OTjlZmNJ4ib7dvSrMBA==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@eslint/config-helpers@0.5.4':
-    resolution: {integrity: sha512-jJhqiY3wPMlWWO3370M86CPJ7pt8GmEwSLglMfQhjXal07RCvhmU0as4IuUEW5SJeunfItiEetHmSxCCe9lDBg==}
+  '@eslint/config-helpers@0.5.5':
+    resolution: {integrity: sha512-eIJYKTCECbP/nsKaaruF6LW967mtbQbsw4JTtSVkUQc9MneSkbrgPJAbKl9nWr0ZeowV8BfsarBmPpBzGelA2w==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@eslint/core@1.2.0':
-    resolution: {integrity: sha512-8FTGbNzTvmSlc4cZBaShkC6YvFMG0riksYWRFKXztqVdXaQbcZLXlFbSpC05s70sGEsXAw0qwhx69JiW7hQS7A==}
+  '@eslint/core@1.2.1':
+    resolution: {integrity: sha512-MwcE1P+AZ4C6DWlpin/OmOA54mmIZ/+xZuJiQd4SyB29oAJjN30UW9wkKNptW2ctp4cEsvhlLY/CsQ1uoHDloQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@eslint/object-schema@3.0.4':
-    resolution: {integrity: sha512-55lO/7+Yp0ISKRP0PsPtNTeNGapXaO085aELZmWCVc5SH3jfrqpuU6YgOdIxMS99ZHkQN1cXKE+cdIqwww9ptw==}
+  '@eslint/object-schema@3.0.5':
+    resolution: {integrity: sha512-vqTaUEgxzm+YDSdElad6PiRoX4t8VGDjCtt05zn4nU810UIx/uNEV7/lZJ6KwFThKZOzOxzXy48da+No7HZaMw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/plugin-kit@0.6.1':
@@ -328,8 +328,8 @@ packages:
     resolution: {integrity: sha512-DP9c7TREy6iA7HnywstmUAsNyJNYTFpRg2yBfQ+6H0l1HnvQzei9GsQ36GeOLxgRaD3vm9K8urCcawSC7yQpCw==}
     engines: {node: '>=20'}
 
-  '@langchain/openai@1.4.2':
-    resolution: {integrity: sha512-xGtleIJUgSDNxFnQ/x5h5T/zGj5VFhw+LiICg/Q9NxpMaxBeG7ZbxYRuKQmH/XuIw+oM8cG+uWmn4lzMsgN0rg==}
+  '@langchain/openai@1.4.3':
+    resolution: {integrity: sha512-psf/e06nJ9YFXG67VVaKw6dAEeHLSc6wSbB3+sXpe6zEdpvC7+fyiEIxY6HntBkBU/uyqdeSt8Uu5WL+pQD+vg==}
     engines: {node: '>=20'}
     peerDependencies:
       '@langchain/core': ^1.1.39
@@ -595,10 +595,6 @@ packages:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
 
-  chalk@5.6.2:
-    resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-
   chokidar@4.0.3:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
@@ -624,9 +620,6 @@ packages:
   consola@3.4.2:
     resolution: {integrity: sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA==}
     engines: {node: ^14.18.0 || >=16.10.0}
-
-  console-table-printer@2.15.0:
-    resolution: {integrity: sha512-SrhBq4hYVjLCkBVOWaTzceJalvn5K1Zq5aQA6wXC/cYjI3frKWNPEMK3sZsJfNNQApvCQmgBcc13ZKmFj8qExw==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -825,8 +818,8 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
-  langsmith@0.5.16:
-    resolution: {integrity: sha512-nSsSnTo3gjg1dnb48vb8i582zyjvtPbn+EpR6P1pNELb+4Hb4R3nt7LDy+Tl1ltw73vPGfJQtUWOl28irI1b5w==}
+  langsmith@0.5.17:
+    resolution: {integrity: sha512-/MEqTL50YH2SUZJtRl4+xI/tIgvu8OG5v6PMALKNkznjIelzf9q9kw0xxj1PC+r/ammMjVD1V2z9JmiT3AMqsQ==}
     peerDependencies:
       '@opentelemetry/api': '*'
       '@opentelemetry/exporter-trace-otlp-proto': '*'
@@ -902,8 +895,8 @@ packages:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
 
-  openai@6.33.0:
-    resolution: {integrity: sha512-xAYN1W3YsDXJWA5F277135YfkEk6H7D3D6vWwRhJ3OEkzRgcyK8z/P5P9Gyi/wB4N8kK9kM5ZjprfvyHagKmpw==}
+  openai@6.34.0:
+    resolution: {integrity: sha512-yEr2jdGf4tVFYG6ohmr3pF6VJuveP0EA/sS8TBx+4Eq5NT10alu5zg2dmxMXMgqpihRDQlFGpRt2XwsGj+Fyxw==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -1029,9 +1022,6 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  simple-wcswidth@1.1.2:
-    resolution: {integrity: sha512-j7piyCjAeTDSjzTSQ7DokZtMNwNlEAyxqSZeCS+CXH7fJ4jx3FuJ/mTW3mE+6JLs4VJBbcll0Kjn+KXI5t21Iw==}
-
   source-map@0.7.6:
     resolution: {integrity: sha512-i5uvt8C3ikiWeNZSVZNWcfZPItFQOsYTUAOkcUPGd8DqDy1uOUikjt5dG+uRlwyvR108Fb9DOd4GvXfT0N2/uQ==}
     engines: {node: '>= 12'}
@@ -1067,8 +1057,8 @@ packages:
   tinyexec@0.3.2:
     resolution: {integrity: sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA==}
 
-  tinyglobby@0.2.15:
-    resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
+  tinyglobby@0.2.16:
+    resolution: {integrity: sha512-pn99VhoACYR8nFHhxqix+uvsbXineAasWm5ojXoN8xEwK5Kd3/TrhNn1wByuD52UxWRLy8pu+kRMniEi6Eq9Zg==}
     engines: {node: '>=12.0.0'}
 
   tree-kill@1.2.2:
@@ -1163,10 +1153,10 @@ packages:
 
 snapshots:
 
-  '@almadar/core@2.13.0':
+  '@almadar/core@4.2.0':
     dependencies:
-      '@almadar/operators': 2.2.0
-      '@almadar/patterns': 2.12.0
+      '@almadar/operators': 3.0.0
+      '@almadar/patterns': 2.12.1
       zod: 3.25.76
 
   '@almadar/eslint-plugin@2.7.0(eslint@10.0.0)':
@@ -1174,32 +1164,32 @@ snapshots:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.9.0(@almadar/core@2.13.0)':
+  '@almadar/llm@2.9.0(@almadar/core@4.2.0)':
     dependencies:
       '@anthropic-ai/sdk': 0.52.0
-      '@langchain/anthropic': 1.3.26(@langchain/core@1.1.39(openai@6.33.0(zod@3.25.76)))
-      '@langchain/core': 1.1.39(openai@6.33.0(zod@3.25.76))
-      '@langchain/openai': 1.4.2(@langchain/core@1.1.39(openai@6.33.0(zod@3.25.76)))
-      openai: 6.33.0(zod@3.25.76)
+      '@langchain/anthropic': 1.3.26(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))
+      '@langchain/core': 1.1.39(openai@6.34.0(zod@3.25.76))
+      '@langchain/openai': 1.4.3(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))
+      openai: 6.34.0(zod@3.25.76)
       zod: 3.25.76
     optionalDependencies:
-      '@almadar/core': 2.13.0
+      '@almadar/core': 4.2.0
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
       - '@opentelemetry/sdk-trace-base'
       - ws
 
-  '@almadar/operators@2.2.0': {}
+  '@almadar/operators@3.0.0': {}
 
-  '@almadar/patterns@2.12.0':
+  '@almadar/patterns@2.12.1':
     dependencies:
-      '@almadar/core': 2.13.0
+      '@almadar/core': 4.2.0
 
-  '@almadar/std@3.11.0':
+  '@almadar/std@5.2.0':
     dependencies:
-      '@almadar/core': 2.13.0
-      '@almadar/operators': 2.2.0
+      '@almadar/core': 4.2.0
+      '@almadar/operators': 3.0.0
 
   '@anthropic-ai/sdk@0.52.0': {}
 
@@ -1298,27 +1288,27 @@ snapshots:
 
   '@eslint-community/regexpp@4.12.2': {}
 
-  '@eslint/config-array@0.23.4':
+  '@eslint/config-array@0.23.5':
     dependencies:
-      '@eslint/object-schema': 3.0.4
+      '@eslint/object-schema': 3.0.5
       debug: 4.4.3
       minimatch: 10.2.5
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/config-helpers@0.5.4':
+  '@eslint/config-helpers@0.5.5':
     dependencies:
-      '@eslint/core': 1.2.0
+      '@eslint/core': 1.2.1
 
-  '@eslint/core@1.2.0':
+  '@eslint/core@1.2.1':
     dependencies:
       '@types/json-schema': 7.0.15
 
-  '@eslint/object-schema@3.0.4': {}
+  '@eslint/object-schema@3.0.5': {}
 
   '@eslint/plugin-kit@0.6.1':
     dependencies:
-      '@eslint/core': 1.2.0
+      '@eslint/core': 1.2.1
       levn: 0.4.1
 
   '@humanfs/core@0.19.1': {}
@@ -1355,13 +1345,13 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@langchain/anthropic@1.3.26(@langchain/core@1.1.39(openai@6.33.0(zod@3.25.76)))':
+  '@langchain/anthropic@1.3.26(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))':
     dependencies:
       '@anthropic-ai/sdk': 0.74.0(zod@3.25.76)
-      '@langchain/core': 1.1.39(openai@6.33.0(zod@3.25.76))
+      '@langchain/core': 1.1.39(openai@6.34.0(zod@3.25.76))
       zod: 3.25.76
 
-  '@langchain/core@1.1.39(openai@6.33.0(zod@3.25.76))':
+  '@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76))':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       '@standard-schema/spec': 1.1.0
@@ -1369,7 +1359,7 @@ snapshots:
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.21
-      langsmith: 0.5.16(openai@6.33.0(zod@3.25.76))
+      langsmith: 0.5.17(openai@6.34.0(zod@3.25.76))
       mustache: 4.2.0
       p-queue: 6.6.2
       uuid: 11.1.0
@@ -1381,11 +1371,11 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/openai@1.4.2(@langchain/core@1.1.39(openai@6.33.0(zod@3.25.76)))':
+  '@langchain/openai@1.4.3(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))':
     dependencies:
-      '@langchain/core': 1.1.39(openai@6.33.0(zod@3.25.76))
+      '@langchain/core': 1.1.39(openai@6.34.0(zod@3.25.76))
       js-tiktoken: 1.0.21
-      openai: 6.33.0(zod@3.25.76)
+      openai: 6.34.0(zod@3.25.76)
       zod: 3.25.76
     transitivePeerDependencies:
       - ws
@@ -1521,7 +1511,7 @@ snapshots:
       debug: 4.4.3
       minimatch: 9.0.9
       semver: 7.7.4
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       ts-api-utils: 2.5.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -1582,8 +1572,6 @@ snapshots:
 
   camelcase@6.3.0: {}
 
-  chalk@5.6.2: {}
-
   chokidar@4.0.3:
     dependencies:
       readdirp: 4.1.2
@@ -1601,10 +1589,6 @@ snapshots:
   confbox@0.1.8: {}
 
   consola@3.4.2: {}
-
-  console-table-printer@2.15.0:
-    dependencies:
-      simple-wcswidth: 1.1.2
 
   cross-spawn@7.0.6:
     dependencies:
@@ -1674,9 +1658,9 @@ snapshots:
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.0.0)
       '@eslint-community/regexpp': 4.12.2
-      '@eslint/config-array': 0.23.4
-      '@eslint/config-helpers': 0.5.4
-      '@eslint/core': 1.2.0
+      '@eslint/config-array': 0.23.5
+      '@eslint/config-helpers': 0.5.5
+      '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.6.1
       '@humanfs/node': 0.16.7
       '@humanwhocodes/module-importer': 1.0.1
@@ -1829,15 +1813,12 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  langsmith@0.5.16(openai@6.33.0(zod@3.25.76)):
+  langsmith@0.5.17(openai@6.34.0(zod@3.25.76)):
     dependencies:
-      chalk: 5.6.2
-      console-table-printer: 2.15.0
       p-queue: 6.6.2
-      semver: 7.7.4
       uuid: 10.0.0
     optionalDependencies:
-      openai: 6.33.0(zod@3.25.76)
+      openai: 6.34.0(zod@3.25.76)
 
   levn@0.4.1:
     dependencies:
@@ -1891,7 +1872,7 @@ snapshots:
 
   object-assign@4.1.1: {}
 
-  openai@6.33.0(zod@3.25.76):
+  openai@6.34.0(zod@3.25.76):
     optionalDependencies:
       zod: 3.25.76
 
@@ -2005,8 +1986,6 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  simple-wcswidth@1.1.2: {}
-
   source-map@0.7.6: {}
 
   string-width@4.2.3:
@@ -2036,7 +2015,7 @@ snapshots:
       lines-and-columns: 1.2.4
       mz: 2.7.0
       pirates: 4.0.7
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       ts-interface-checker: 0.1.13
 
   thenify-all@1.6.0:
@@ -2049,7 +2028,7 @@ snapshots:
 
   tinyexec@0.3.2: {}
 
-  tinyglobby@0.2.15:
+  tinyglobby@0.2.16:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
@@ -2081,7 +2060,7 @@ snapshots:
       source-map: 0.7.6
       sucrase: 3.35.1
       tinyexec: 0.3.2
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       tree-kill: 1.2.2
     optionalDependencies:
       typescript: 5.9.3

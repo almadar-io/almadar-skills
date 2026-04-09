@@ -81,6 +81,14 @@ export {
   getOrbErrorPatterns,
 } from "./orb-language-spec.js";
 
+// LOLO language spec sections (for LOLO skill generation)
+export {
+  getLoloLanguageSpec,
+  getLoloEffectsReference,
+  getLoloRenderUIGuide,
+  getLoloExampleSection,
+} from "./lolo-language-spec.js";
+
 // React UI guide sections (for react flattening path)
 export {
   getReactComponentReference,
