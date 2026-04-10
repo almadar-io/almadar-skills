@@ -19,7 +19,7 @@ importers:
         version: 2.12.1
       '@almadar/std':
         specifier: '>=5.2.0'
-        version: 5.2.0
+        version: 5.2.2
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -76,8 +76,8 @@ packages:
   '@almadar/patterns@2.12.1':
     resolution: {integrity: sha512-9DUspuL5dloYE3Go9rtGk7zt/MRG6ZywzNksZIrLVL8biF67ZBL4zT8CYLgFo6BDcWijOqBZkGcOuxt1RiBgYQ==}
 
-  '@almadar/std@5.2.0':
-    resolution: {integrity: sha512-CaYbpUmXezFgCMtkmTjzReF38hT3rmTDOLr9kxtyYZFHWTk9XdtBlvsPaSE/63vjkS1WUUqTl2K871gGT/Tc5g==}
+  '@almadar/std@5.2.2':
+    resolution: {integrity: sha512-t6AEzVi0aAtPdm9m28KSb2d0DwVbeJyQ8lXrJsr/mvvZm7uANmumjof9AMb0ij738TPKIKWPurz6O6FAq0U1ZA==}
 
   '@anthropic-ai/sdk@0.52.0':
     resolution: {integrity: sha512-d4c+fg+xy9e46c8+YnrrgIQR45CZlAi7PwdzIfDXDM6ACxEZli1/fxhURsq30ZpMZy6LvSkr41jGq5aF5TD7rQ==}
@@ -818,8 +818,8 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
-  langsmith@0.5.17:
-    resolution: {integrity: sha512-/MEqTL50YH2SUZJtRl4+xI/tIgvu8OG5v6PMALKNkznjIelzf9q9kw0xxj1PC+r/ammMjVD1V2z9JmiT3AMqsQ==}
+  langsmith@0.5.18:
+    resolution: {integrity: sha512-3zuZUWffTHQ+73EAwnodADtf534VNEZUpXr9jC12qyG8/IQuJET7PRsCpTb9wX2lmBspakwLUpqpj3tNm/0bVA==}
     peerDependencies:
       '@opentelemetry/api': '*'
       '@opentelemetry/exporter-trace-otlp-proto': '*'
@@ -1186,7 +1186,7 @@ snapshots:
     dependencies:
       '@almadar/core': 4.2.0
 
-  '@almadar/std@5.2.0':
+  '@almadar/std@5.2.2':
     dependencies:
       '@almadar/core': 4.2.0
       '@almadar/operators': 3.0.0
@@ -1359,7 +1359,7 @@ snapshots:
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.21
-      langsmith: 0.5.17(openai@6.34.0(zod@3.25.76))
+      langsmith: 0.5.18(openai@6.34.0(zod@3.25.76))
       mustache: 4.2.0
       p-queue: 6.6.2
       uuid: 11.1.0
@@ -1813,7 +1813,7 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  langsmith@0.5.17(openai@6.34.0(zod@3.25.76)):
+  langsmith@0.5.18(openai@6.34.0(zod@3.25.76)):
     dependencies:
       p-queue: 6.6.2
       uuid: 10.0.0
