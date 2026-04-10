@@ -125,3 +125,6 @@ export {
 
 // Memory recording rules (for agent memory)
 export { getMemoryRecordingRules } from "./memory-recording-rules.js";
+
+// Studio user context (for builder app, NOT orbital-agent-cli)
+export { getStudioUserContextSection } from "./studio-user-context.js";
