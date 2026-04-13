@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@almadar/core':
         specifier: '>=4.2.0'
-        version: 4.2.0
+        version: 4.3.0
       '@almadar/llm':
         specifier: '>=2.5.1'
-        version: 2.9.0(@almadar/core@4.2.0)
+        version: 2.9.0(@almadar/core@4.3.0)
       '@almadar/patterns':
         specifier: '>=2.8.7'
-        version: 2.12.1
+        version: 2.12.2
       '@almadar/std':
         specifier: '>=5.2.0'
         version: 5.2.2
@@ -54,8 +54,8 @@ importers:
 
 packages:
 
-  '@almadar/core@4.2.0':
-    resolution: {integrity: sha512-cgw3miOGTJt1lCLK05SdPRdS+0QkSBfFmUvBd7q0Dv55kDpqpbhzN+TlLC1UjQvLeqXpmXzlldSrl4x0gChyGg==}
+  '@almadar/core@4.3.0':
+    resolution: {integrity: sha512-WED6ITpBZvrG+XU30v9foq0z6tZt1i73lFeLEKO7Zr6lwtqazGi09o5XyOveBQ9ftg1dj45Yy/Mq5TVgg04n+Q==}
 
   '@almadar/eslint-plugin@2.7.0':
     resolution: {integrity: sha512-d0WT80e9APcLB6HSP7cVOqJ2jfOzR6TjKkAV5GNbGWqqrRYW7Kj0EtaAMaJEESZD+br9Jr5u8Mub4FJQULhGSg==}
@@ -73,8 +73,8 @@ packages:
   '@almadar/operators@3.0.0':
     resolution: {integrity: sha512-Ur6dD3FrWiq1A/XZ+I7lyjBev/eOZ77H1F6V2Xp4hZl2gHt7jbxatdCECEsG0qzJCwQen2vCKWLJEpl9yhFwMA==}
 
-  '@almadar/patterns@2.12.1':
-    resolution: {integrity: sha512-9DUspuL5dloYE3Go9rtGk7zt/MRG6ZywzNksZIrLVL8biF67ZBL4zT8CYLgFo6BDcWijOqBZkGcOuxt1RiBgYQ==}
+  '@almadar/patterns@2.12.2':
+    resolution: {integrity: sha512-tBp+DJH5g6Z2PAJR4u5va0bwlT9j9Bsk3HRmlCQMAl2o4dNMt351FlIOErMmbB5QW0blUYj0dAiGKOmi6f4wgw==}
 
   '@almadar/std@5.2.2':
     resolution: {integrity: sha512-t6AEzVi0aAtPdm9m28KSb2d0DwVbeJyQ8lXrJsr/mvvZm7uANmumjof9AMb0ij738TPKIKWPurz6O6FAq0U1ZA==}
@@ -328,8 +328,8 @@ packages:
     resolution: {integrity: sha512-DP9c7TREy6iA7HnywstmUAsNyJNYTFpRg2yBfQ+6H0l1HnvQzei9GsQ36GeOLxgRaD3vm9K8urCcawSC7yQpCw==}
     engines: {node: '>=20'}
 
-  '@langchain/openai@1.4.3':
-    resolution: {integrity: sha512-psf/e06nJ9YFXG67VVaKw6dAEeHLSc6wSbB3+sXpe6zEdpvC7+fyiEIxY6HntBkBU/uyqdeSt8Uu5WL+pQD+vg==}
+  '@langchain/openai@1.4.4':
+    resolution: {integrity: sha512-mRr/X5rvlwPj6cSXPxbL+CtOqYANO1/+CQ3Z+5t48kWnrlgPYOazmA+UAWvqQOuwJ6LaYn3SFrt43rR4lte/Ow==}
     engines: {node: '>=20'}
     peerDependencies:
       '@langchain/core': ^1.1.39
@@ -574,8 +574,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  brace-expansion@2.0.3:
-    resolution: {integrity: sha512-MCV/fYJEbqx68aE58kv2cA/kiky1G8vux3OR6/jbS+jIMe/6fJWa0DTzJU7dqijOWYwHi1t29FlfYI9uytqlpA==}
+  brace-expansion@2.1.0:
+    resolution: {integrity: sha512-TN1kCZAgdgweJhWWpgKYrQaMNHcDULHkWwQIspdtjV4Y5aurRdZpjAqn6yX3FPqTA9ngHCc4hJxMAMgGfve85w==}
 
   brace-expansion@5.0.5:
     resolution: {integrity: sha512-VZznLgtwhn+Mact9tfiwx64fA9erHH/MCXEUfB/0bX/6Fz6ny5EGTXYltMocqg4xFAQZtnO3DHWWXi8RiuN7cQ==}
@@ -1153,10 +1153,10 @@ packages:
 
 snapshots:
 
-  '@almadar/core@4.2.0':
+  '@almadar/core@4.3.0':
     dependencies:
       '@almadar/operators': 3.0.0
-      '@almadar/patterns': 2.12.1
+      '@almadar/patterns': 2.12.2
       zod: 3.25.76
 
   '@almadar/eslint-plugin@2.7.0(eslint@10.0.0)':
@@ -1164,16 +1164,16 @@ snapshots:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.9.0(@almadar/core@4.2.0)':
+  '@almadar/llm@2.9.0(@almadar/core@4.3.0)':
     dependencies:
       '@anthropic-ai/sdk': 0.52.0
       '@langchain/anthropic': 1.3.26(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))
       '@langchain/core': 1.1.39(openai@6.34.0(zod@3.25.76))
-      '@langchain/openai': 1.4.3(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))
+      '@langchain/openai': 1.4.4(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))
       openai: 6.34.0(zod@3.25.76)
       zod: 3.25.76
     optionalDependencies:
-      '@almadar/core': 4.2.0
+      '@almadar/core': 4.3.0
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -1182,13 +1182,13 @@ snapshots:
 
   '@almadar/operators@3.0.0': {}
 
-  '@almadar/patterns@2.12.1':
+  '@almadar/patterns@2.12.2':
     dependencies:
-      '@almadar/core': 4.2.0
+      '@almadar/core': 4.3.0
 
   '@almadar/std@5.2.2':
     dependencies:
-      '@almadar/core': 4.2.0
+      '@almadar/core': 4.3.0
       '@almadar/operators': 3.0.0
 
   '@anthropic-ai/sdk@0.52.0': {}
@@ -1371,7 +1371,7 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/openai@1.4.3(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))':
+  '@langchain/openai@1.4.4(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))':
     dependencies:
       '@langchain/core': 1.1.39(openai@6.34.0(zod@3.25.76))
       js-tiktoken: 1.0.21
@@ -1555,7 +1555,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  brace-expansion@2.0.3:
+  brace-expansion@2.1.0:
     dependencies:
       balanced-match: 1.0.2
 
@@ -1847,7 +1847,7 @@ snapshots:
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 2.0.3
+      brace-expansion: 2.1.0
 
   minipass@7.1.3: {}
 
