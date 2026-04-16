@@ -10,16 +10,16 @@ importers:
     dependencies:
       '@almadar/core':
         specifier: '>=4.2.0'
-        version: 4.3.0
+        version: 4.7.1
       '@almadar/llm':
         specifier: '>=2.5.1'
-        version: 2.9.0(@almadar/core@4.3.0)
+        version: 2.9.0(@almadar/core@4.7.1)
       '@almadar/patterns':
         specifier: '>=2.8.7'
-        version: 2.12.2
+        version: 2.13.0
       '@almadar/std':
         specifier: '>=5.2.0'
-        version: 5.2.2
+        version: 6.1.0
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -29,7 +29,7 @@ importers:
     devDependencies:
       '@almadar/eslint-plugin':
         specifier: '>=2.7.0'
-        version: 2.7.0(eslint@10.0.0)
+        version: 2.8.0(eslint@10.0.0)
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.17
@@ -54,11 +54,11 @@ importers:
 
 packages:
 
-  '@almadar/core@4.3.0':
-    resolution: {integrity: sha512-WED6ITpBZvrG+XU30v9foq0z6tZt1i73lFeLEKO7Zr6lwtqazGi09o5XyOveBQ9ftg1dj45Yy/Mq5TVgg04n+Q==}
+  '@almadar/core@4.7.1':
+    resolution: {integrity: sha512-Jj6vYCH5Ozan6Sy5zYr69yT3qU8PvjZPy+/rsK+5ZzBxRB/drodCK6cbsGBOTutlmFaYEaiV4zsrgeo1cNEohg==}
 
-  '@almadar/eslint-plugin@2.7.0':
-    resolution: {integrity: sha512-d0WT80e9APcLB6HSP7cVOqJ2jfOzR6TjKkAV5GNbGWqqrRYW7Kj0EtaAMaJEESZD+br9Jr5u8Mub4FJQULhGSg==}
+  '@almadar/eslint-plugin@2.8.0':
+    resolution: {integrity: sha512-8abtGsVP+YBaUEchSfGfQV3ZHEPtWt+4Swtu3P0AFofr+OMSfHLnor4aIwULzag+nHD9FQ7cQkVCTfBVgTHgiw==}
     peerDependencies:
       eslint: '>=8.0.0'
 
@@ -73,11 +73,11 @@ packages:
   '@almadar/operators@3.0.0':
     resolution: {integrity: sha512-Ur6dD3FrWiq1A/XZ+I7lyjBev/eOZ77H1F6V2Xp4hZl2gHt7jbxatdCECEsG0qzJCwQen2vCKWLJEpl9yhFwMA==}
 
-  '@almadar/patterns@2.12.2':
-    resolution: {integrity: sha512-tBp+DJH5g6Z2PAJR4u5va0bwlT9j9Bsk3HRmlCQMAl2o4dNMt351FlIOErMmbB5QW0blUYj0dAiGKOmi6f4wgw==}
+  '@almadar/patterns@2.13.0':
+    resolution: {integrity: sha512-8Xw4a9IDh2Vg4hHaMOcLw2tHavCrucjaaB5qJOHcUHKOI3YFTcBtE/BqfxkMNbaEmco+P5ayzjmOTNAgj0pSxw==}
 
-  '@almadar/std@5.2.2':
-    resolution: {integrity: sha512-t6AEzVi0aAtPdm9m28KSb2d0DwVbeJyQ8lXrJsr/mvvZm7uANmumjof9AMb0ij738TPKIKWPurz6O6FAq0U1ZA==}
+  '@almadar/std@6.1.0':
+    resolution: {integrity: sha512-TGX/NS0brKC25hkBpv7gshn6uye78ZrWTrt4qH+eKWhBBdn8AIXpOGr8+URXO0+t+DSSgNn1bMiqtmgUq0sdBA==}
 
   '@anthropic-ai/sdk@0.52.0':
     resolution: {integrity: sha512-d4c+fg+xy9e46c8+YnrrgIQR45CZlAi7PwdzIfDXDM6ACxEZli1/fxhURsq30ZpMZy6LvSkr41jGq5aF5TD7rQ==}
@@ -324,8 +324,8 @@ packages:
     peerDependencies:
       '@langchain/core': ^1.1.38
 
-  '@langchain/core@1.1.39':
-    resolution: {integrity: sha512-DP9c7TREy6iA7HnywstmUAsNyJNYTFpRg2yBfQ+6H0l1HnvQzei9GsQ36GeOLxgRaD3vm9K8urCcawSC7yQpCw==}
+  '@langchain/core@1.1.40':
+    resolution: {integrity: sha512-RJ41GQEMxr9ZEZNoIiPgW0+v9nAY6FEZGlk+MjBghr2GR8He50abLam0XCe1aqUJjuKbqt2lUD6M+6SZ+2NIJg==}
     engines: {node: '>=20'}
 
   '@langchain/openai@1.4.4':
@@ -753,8 +753,8 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  get-tsconfig@4.13.7:
-    resolution: {integrity: sha512-7tN6rFgBlMgpBML5j8typ92BKFi2sFQvIdpAqLA2beia5avZDrMs0FLZiM5etShWq5irVyGcGMEA1jcDaK7A/Q==}
+  get-tsconfig@4.14.0:
+    resolution: {integrity: sha512-yTb+8DXzDREzgvYmh6s9vHsSVCHeC0G3PI5bEXNBHtmshPnO+S5O7qgLEOn0I5QvMy6kpZN8K1NKGyilLb93wA==}
 
   glob-parent@6.0.2:
     resolution: {integrity: sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A==}
@@ -818,8 +818,8 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
-  langsmith@0.5.18:
-    resolution: {integrity: sha512-3zuZUWffTHQ+73EAwnodADtf534VNEZUpXr9jC12qyG8/IQuJET7PRsCpTb9wX2lmBspakwLUpqpj3tNm/0bVA==}
+  langsmith@0.5.20:
+    resolution: {integrity: sha512-ULhLM8RswvQDXufLtNtvclHrWCBx8Cb5UPI6lAZC+8Dq59iHsVPz/3Ac9khWNm1VIvChRsuykixD/WrmzuuA3Q==}
     peerDependencies:
       '@opentelemetry/api': '*'
       '@opentelemetry/exporter-trace-otlp-proto': '*'
@@ -1153,27 +1153,27 @@ packages:
 
 snapshots:
 
-  '@almadar/core@4.3.0':
+  '@almadar/core@4.7.1':
     dependencies:
       '@almadar/operators': 3.0.0
-      '@almadar/patterns': 2.12.2
+      '@almadar/patterns': 2.13.0
       zod: 3.25.76
 
-  '@almadar/eslint-plugin@2.7.0(eslint@10.0.0)':
+  '@almadar/eslint-plugin@2.8.0(eslint@10.0.0)':
     dependencies:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.9.0(@almadar/core@4.3.0)':
+  '@almadar/llm@2.9.0(@almadar/core@4.7.1)':
     dependencies:
       '@anthropic-ai/sdk': 0.52.0
-      '@langchain/anthropic': 1.3.26(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))
-      '@langchain/core': 1.1.39(openai@6.34.0(zod@3.25.76))
-      '@langchain/openai': 1.4.4(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))
+      '@langchain/anthropic': 1.3.26(@langchain/core@1.1.40(openai@6.34.0(zod@3.25.76)))
+      '@langchain/core': 1.1.40(openai@6.34.0(zod@3.25.76))
+      '@langchain/openai': 1.4.4(@langchain/core@1.1.40(openai@6.34.0(zod@3.25.76)))
       openai: 6.34.0(zod@3.25.76)
       zod: 3.25.76
     optionalDependencies:
-      '@almadar/core': 4.3.0
+      '@almadar/core': 4.7.1
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -1182,13 +1182,13 @@ snapshots:
 
   '@almadar/operators@3.0.0': {}
 
-  '@almadar/patterns@2.12.2':
+  '@almadar/patterns@2.13.0':
     dependencies:
-      '@almadar/core': 4.3.0
+      '@almadar/core': 4.7.1
 
-  '@almadar/std@5.2.2':
+  '@almadar/std@6.1.0':
     dependencies:
-      '@almadar/core': 4.3.0
+      '@almadar/core': 4.7.1
       '@almadar/operators': 3.0.0
 
   '@anthropic-ai/sdk@0.52.0': {}
@@ -1345,13 +1345,13 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@langchain/anthropic@1.3.26(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))':
+  '@langchain/anthropic@1.3.26(@langchain/core@1.1.40(openai@6.34.0(zod@3.25.76)))':
     dependencies:
       '@anthropic-ai/sdk': 0.74.0(zod@3.25.76)
-      '@langchain/core': 1.1.39(openai@6.34.0(zod@3.25.76))
+      '@langchain/core': 1.1.40(openai@6.34.0(zod@3.25.76))
       zod: 3.25.76
 
-  '@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76))':
+  '@langchain/core@1.1.40(openai@6.34.0(zod@3.25.76))':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       '@standard-schema/spec': 1.1.0
@@ -1359,7 +1359,7 @@ snapshots:
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.21
-      langsmith: 0.5.18(openai@6.34.0(zod@3.25.76))
+      langsmith: 0.5.20(openai@6.34.0(zod@3.25.76))
       mustache: 4.2.0
       p-queue: 6.6.2
       uuid: 11.1.0
@@ -1371,9 +1371,9 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/openai@1.4.4(@langchain/core@1.1.39(openai@6.34.0(zod@3.25.76)))':
+  '@langchain/openai@1.4.4(@langchain/core@1.1.40(openai@6.34.0(zod@3.25.76)))':
     dependencies:
-      '@langchain/core': 1.1.39(openai@6.34.0(zod@3.25.76))
+      '@langchain/core': 1.1.40(openai@6.34.0(zod@3.25.76))
       js-tiktoken: 1.0.21
       openai: 6.34.0(zod@3.25.76)
       zod: 3.25.76
@@ -1749,7 +1749,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  get-tsconfig@4.13.7:
+  get-tsconfig@4.14.0:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
@@ -1813,7 +1813,7 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  langsmith@0.5.18(openai@6.34.0(zod@3.25.76)):
+  langsmith@0.5.20(openai@6.34.0(zod@3.25.76)):
     dependencies:
       p-queue: 6.6.2
       uuid: 10.0.0
@@ -2073,7 +2073,7 @@ snapshots:
   tsx@4.21.0:
     dependencies:
       esbuild: 0.27.7
-      get-tsconfig: 4.13.7
+      get-tsconfig: 4.14.0
     optionalDependencies:
       fsevents: 2.3.3
 

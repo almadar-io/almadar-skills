@@ -18,8 +18,11 @@ import {
     getBehaviorOrganismReference,
     getBehaviorCompositionGuide,
     getBehaviorEventContractsSection,
-    getDomainBehaviorMapping,
+    getCommonCompositionsSection,
     getCrossOrbitalWiringGuide,
+    getSlotVocabularySection,
+    getScopeVocabularySection,
+    getFewShotExamplesSection,
 } from '../prompts/behavior-sections/index.js';
 
 /**
@@ -51,6 +54,14 @@ ${getBehaviorCatalogSection()}
 
 ---
 
+${getSlotVocabularySection()}
+
+---
+
+${getScopeVocabularySection()}
+
+---
+
 ${getBehaviorCompositionGuide()}
 
 ---
@@ -59,7 +70,11 @@ ${getBehaviorEventContractsSection()}
 
 ---
 
-${getDomainBehaviorMapping()}
+${getCommonCompositionsSection()}
+
+---
+
+${getFewShotExamplesSection()}
 
 ---
 

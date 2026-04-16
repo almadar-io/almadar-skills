@@ -13,5 +13,17 @@ export { getBehaviorMoleculeReference } from './behavior-molecule-reference.js';
 export { getBehaviorOrganismReference } from './behavior-organism-reference.js';
 export { getBehaviorCompositionGuide } from './behavior-composition-guide.js';
 export { getBehaviorEventContractsSection } from './behavior-event-contracts.js';
-export { getDomainBehaviorMapping } from './domain-behavior-mapping.js';
 export { getCrossOrbitalWiringGuide } from './cross-orbital-wiring-guide.js';
+
+// Phase 7.2 — slot + scope vocabulary
+export {
+    getSlotVocabularySection,
+    getScopeVocabularySection,
+} from './slots-and-scopes.js';
+
+// Phase 7.4 + 7.5 — few-shot examples and common compositions
+// (common compositions replaced the retired domain-behavior-mapping table)
+export {
+    getFewShotExamplesSection,
+    getCommonCompositionsSection,
+} from './few-shot-examples.js';
