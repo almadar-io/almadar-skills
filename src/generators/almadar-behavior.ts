@@ -38,17 +38,22 @@ ${getToolsByCategorySection('build')}
 ## Behavior Editing Flow
 
 \`\`\`
-1. NEVER edit .orb files in behaviors/exports/ directly
-2. Edit the .ts source in packages/almadar-std/behaviors/ (or behaviors/domain/)
-3. Run export_behavior with the behavior name (or --all)
-4. Run behavior_registry_sync to update the behaviors-registry.json index
-5. Run verify_behaviors --headed --screenshots to test
-6. Run lint_files on all changed files
+1. Edit the .orb file directly in packages/almadar-std/behaviors/registry/
+   (registry/ is the canonical source of truth since Phase E, 2026-04-08).
+   The .ts factories under behaviors/functions/ are @deprecated.
+   The legacy behaviors/exports/ mirror is retired — do not edit there.
+2. (Optional) If you must regenerate the .orb from the deprecated .ts
+   factory, run export_behavior; prefer editing the .orb directly.
+3. Run behavior_registry_sync to update the behaviors-registry.json index.
+4. Run verify_behaviors --headed --screenshots (or ./tools/orbital-verify.sh
+   with no args, which now defaults to scanning the full registry headed
+   with screenshots).
+5. Run lint_files on all changed files.
 \`\`\`
 
-### If a .orb export was accidentally edited
-Run sync_orb_to_behaviors to copy content back to the .ts source.
-Normal flow is .ts -> .orb (via export_behavior), NEVER the reverse during normal work.
+### If a registry .orb needs to be fed back to the legacy .ts factory
+Run sync_orb_to_behaviors. This reverse direction is rarely needed because
+the .ts layer is @deprecated.
 
 ---
 

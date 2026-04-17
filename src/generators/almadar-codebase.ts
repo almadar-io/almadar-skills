@@ -97,7 +97,7 @@ ${getVerificationSection()}
 5. **0 errors AND 0 warnings.** Warnings are errors.
 6. **NEVER edit projects/*/app/.** It's compiler output. Fix the .orb.
 7. **NEVER edit orbital-rust/crates/** without user approval.
-8. **NEVER edit .orb files in behaviors/exports/.** Edit the .ts source.
+8. **Edit .orb files in behaviors/registry/ directly** (canonical source of truth since Phase E). The .ts factories under behaviors/functions/ are @deprecated. The legacy behaviors/exports/ mirror is retired.
 `;
 
   return { name: 'almadar-codebase', frontmatter, content };

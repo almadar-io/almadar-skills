@@ -14,10 +14,12 @@
  *     events must come from a sibling in the same orbital).
  *
  * Source of truth is the raw `.orb` files — in the monorepo the
- * registry/ tree is preferred (richest scope info). When the package
- * is installed from npm, only `dist/behaviors/exports/` ships; the
- * reader falls back to that. Everything the LLM needs is emitted;
- * nothing is fabricated when missing.
+ * `behaviors/registry/` tree is preferred (richest scope info and the
+ * canonical source since Phase E, 2026-04-08). When the package is
+ * installed from npm, the same `behaviors/registry/` folder ships at
+ * the package root; the legacy `behaviors/exports/` layout is kept only
+ * as a fallback for older installed versions. Everything the LLM needs
+ * is emitted; nothing is fabricated when missing.
  *
  * @packageDocumentation
  */
@@ -70,11 +72,11 @@ function hasImportMetaResolve(
 
 /**
  * Walk the `@almadar/std` package and return a list of `.orb` file paths
- * for the given tier (atoms / molecules). Prefers the source
- * `behaviors/registry/<tier>` tree (monorepo-only, richest scope info)
- * and falls back to the published `dist/behaviors/exports/<tier>` copy.
- * Returns [] when neither is reachable (e.g. tests in a detached
- * environment) — the caller degrades gracefully.
+ * for the given tier (atoms / molecules). Prefers the canonical
+ * `behaviors/registry/<tier>` tree and falls back to the legacy
+ * `behaviors/exports/<tier>` layout (only present in older installed
+ * versions of `@almadar/std`). Returns [] when neither is reachable
+ * (e.g. tests in a detached environment) — the caller degrades gracefully.
  */
 function resolveBehaviorTierDir(tier: 'atoms' | 'molecules'): string | null {
     let stdPkgRoot: string;
