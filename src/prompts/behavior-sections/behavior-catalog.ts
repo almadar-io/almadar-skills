@@ -13,13 +13,12 @@
  *     overrides (only external-scoped events are remappable; internal
  *     events must come from a sibling in the same orbital).
  *
- * Source of truth is the raw `.orb` files — in the monorepo the
- * `behaviors/registry/` tree is preferred (richest scope info and the
- * canonical source since Phase E, 2026-04-08). When the package is
- * installed from npm, the same `behaviors/registry/` folder ships at
- * the package root; the legacy `behaviors/exports/` layout is kept only
- * as a fallback for older installed versions. Everything the LLM needs
- * is emitted; nothing is fabricated when missing.
+ * Source of truth is the raw `.orb` files under `behaviors/registry/`
+ * (canonical since Phase E, 2026-04-08). The installed `@almadar/std`
+ * package ships that same folder at the package root. The legacy
+ * `behaviors/exports/` layout was retired on 2026-04-17 and is no longer
+ * read. Everything the LLM needs is emitted; nothing is fabricated when
+ * missing.
  *
  * @packageDocumentation
  */
@@ -72,11 +71,10 @@ function hasImportMetaResolve(
 
 /**
  * Walk the `@almadar/std` package and return a list of `.orb` file paths
- * for the given tier (atoms / molecules). Prefers the canonical
- * `behaviors/registry/<tier>` tree and falls back to the legacy
- * `behaviors/exports/<tier>` layout (only present in older installed
- * versions of `@almadar/std`). Returns [] when neither is reachable
- * (e.g. tests in a detached environment) — the caller degrades gracefully.
+ * for the given tier (atoms / molecules) from the canonical
+ * `behaviors/registry/<tier>` tree. Returns `null` when the std package
+ * isn't resolvable (e.g. tests in a detached environment) so the caller
+ * can degrade gracefully.
  */
 function resolveBehaviorTierDir(tier: 'atoms' | 'molecules'): string | null {
     let stdPkgRoot: string;
@@ -95,12 +93,6 @@ function resolveBehaviorTierDir(tier: 'atoms' | 'molecules'): string | null {
 
     const registryDir = resolve(stdPkgRoot, 'behaviors', 'registry', tier);
     if (existsSync(registryDir)) return registryDir;
-
-    const exportsDir = resolve(stdPkgRoot, 'behaviors', 'exports', tier);
-    if (existsSync(exportsDir)) return exportsDir;
-
-    const distExportsDir = resolve(stdPkgRoot, 'dist', 'behaviors', 'exports', tier);
-    if (existsSync(distExportsDir)) return distExportsDir;
 
     return null;
 }
