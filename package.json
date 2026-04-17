@@ -1,6 +1,6 @@
 {
   "name": "@almadar-io/skills",
-  "version": "2.16.2",
+  "version": "2.16.3",
   "description": "AI skill generators and prompts for Orbital schema generation",
   "type": "module",
   "main": "./dist/index.js",
@@ -78,5 +78,10 @@
     "prompts",
     "generation"
   ],
-  "homepage": "https://github.com/almadar-io/almadar#readme"
+  "homepage": "https://github.com/almadar-io/almadar#readme",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
 }
