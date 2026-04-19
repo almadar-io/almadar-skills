@@ -1,6 +1,6 @@
 {
   "name": "@almadar-io/skills",
-  "version": "2.16.6",
+  "version": "2.16.7",
   "description": "AI skill generators and prompts for Orbital schema generation",
   "type": "module",
   "main": "./dist/index.js",
@@ -47,10 +47,10 @@
     "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
-    "@almadar/core": ">=4.2.0",
-    "@almadar/llm": ">=2.5.1",
-    "@almadar/patterns": ">=2.8.7",
-    "@almadar/std": ">=5.2.0",
+    "@almadar/core": ">=4.8.2",
+    "@almadar/llm": ">=2.9.1",
+    "@almadar/patterns": ">=2.14.1",
+    "@almadar/std": ">=6.4.1",
     "commander": "^12.0.0",
     "glob": "^10.3.10"
   },
