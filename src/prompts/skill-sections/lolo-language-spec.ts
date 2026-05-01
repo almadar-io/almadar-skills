@@ -59,7 +59,7 @@ entity EntityName [persistent: collection_name] {
 ### Trait (inline)
 
 \`\`\`lolo
-trait TraitName -> EntityName [interaction] {
+trait TraitName -> EntityName [interaction, instance] {
   initial: stateName              # optional (defaults to first state)
 
   emits {
@@ -67,7 +67,7 @@ trait TraitName -> EntityName [interaction] {
   }
 
   listens {
-    SourceTrait EVENT -> LOCAL_EVENT    # receive cross-trait events
+    SourceTrait.EVENT -> LOCAL_EVENT    # receive cross-trait events (dot-separated)
   }
 
   state stateName {
@@ -83,20 +83,47 @@ trait TraitName -> EntityName [interaction] {
 
 **Categories**: \`interaction\`, \`integration\`, \`lifecycle\`, \`temporal\`, \`validation\`, \`notification\`, \`agent\`
 
+**Scope markers** (mandatory in modern std behaviors):
+
+| Marker | Use when | Example |
+|---|---|---|
+| \`[category, instance]\` | Trait owns a single record. Reads/writes \`@entity.field\`. | \`trait TaskDetail -> Task [interaction, instance]\` |
+| \`[category, collection]\` | Trait owns a list. Reads rows via \`@payload.data\`. | \`trait TaskBrowse -> Task [interaction, collection]\` |
+
+The compiler still accepts a bare \`[category]\` header today, but every working std behavior carries the scope marker and a future phase will make it a hard parse-time requirement. Always write the scope.
+
 ### Trait (reference form — from imported behavior)
 
 \`\`\`lolo
 trait LocalName = Alias.traits.UpstreamTrait -> EntityName {
   events {
-    UPSTREAM_EVENT: LOCAL_EVENT     # rename event keys
+    UPSTREAM_EVENT: LOCAL_EVENT     # rename atom event keys
   }
-  on LOCAL_EVENT {                 # replace transition effects
-    (fetch EntityName)
-    (render-ui main { type: "data-grid", entity: "EntityName" })
+  config {
+    fields: [
+      { name: "title", type: "string", label: "Title" }
+    ],                              # caller config substituted into the atom's @config.* bindings
+    icon: "plus",
+    title: "Add Item"
   }
-  emitsScope internal              # or external
+  listens {
+    SiblingTrait.SOMETHING -> LOCAL_EVENT     # cross-trait listens (replace upstream's listens)
+  }
+  emitsScope internal               # or external — sets scope on every emit
 }
 \`\`\`
+
+**Override fields supported at the call site** (parser: \`crates/orbital-lolo/src/parser.rs:1083-1156\`):
+
+| Field | Effect |
+|---|---|
+| \`-> EntityName\` (header) | Rebinds the atom's \`linkedEntity\`. Rewrites every \`@entity.*\` and \`["ref", X]\` inside the inlined trait. |
+| \`events { OLD: NEW }\` | Renames atom event keys at the call site. Rewrites the events array, transition triggers, emit/listen keys, and \`(emit X)\` literals. |
+| \`config { param: value }\` | Caller-supplied config values for the atom's \`@config.<param>\` bindings. The inline phase substitutes these before lowering. |
+| \`listens { ... }\` | Replaces the atom's \`listens\` array entirely (use \`listens {}\` to clear). |
+| \`emitsScope internal \| external\` | Sets the scope on every emit produced by the inlined trait. |
+
+**Removed in Phase 9.5.H:** the \`on EVENT { ... }\` effects-override is gone. The parser errors with a message pointing you to the replacement pattern (declare a sibling coordinator trait that listens for the atom's event and runs your effects in its own transition). Don't use \`on EVENT\` — it won't parse.
 
 ### Uses Declarations (imports)
 
@@ -120,33 +147,55 @@ emits {
 
 ### Listens
 
+Cross-trait listens use **dot-separated** \`Source.EVENT -> TRIGGER\` (Phase 10 canonical form; the pre-Phase-10 space-separated form is rejected by the parser):
+
 \`\`\`lolo
 listens {
-  OrderProcessing ORDER_SHIPPED -> SHOW
+  OrderProcessing.ORDER_SHIPPED -> SHOW
     with { message: ?orderId }
-  InventoryManager STOCK_UPDATED -> REFRESH
+  InventoryManager.STOCK_UPDATED -> REFRESH
     when (> ?quantity 0)
+}
+\`\`\`
+
+For local-only payload-shape declarations (no source, no trigger), drop the dotted source:
+
+\`\`\`lolo
+listens {
+  CartItemLoaded { data : [CartItem] }    # declares the payload schema for THIS trait's incoming key
 }
 \`\`\`
 
 ### Page
 
 \`\`\`lolo
-page "/path" -> Trait1, Trait2                          # inline page
-page "/path" -> Trait1 [view: list, entity: Entity]     # with hints
-page "/path" = Alias.pages.UpstreamPage -> Trait1       # reference page
-page "/" -> Dashboard [initial]                         # landing page
+page "/path" -> Trait1, Trait2                                    # inline (anonymous)
+page "/path" as PageName -> Trait1, Trait2                        # named — preferred
+page "/path" as PageName -> Trait1 [view: list, entity: Entity]   # with hints
+page "/path" = Alias.pages.UpstreamPage -> Trait1                 # reference (overrides upstream's traits)
+page "/" as Dashboard -> DashboardLayout [initial]                # landing page
+\`\`\`
+
+**Always prefer \`as PageName\`** so the generated route name is explicit and stable. Without it, the compiler derives a name from the path, which is fragile across renames. Worked example from \`std-cart\`:
+
+\`\`\`lolo
+page "/cart" as CartItemPage -> CartItemCartBrowse, CartItemAddItem, CartItemRemoveConfirm, CartItemPersistor
 \`\`\`
 
 ### Sigils (binding context)
 
 | Sigil | Resolves to | Valid in |
 |---|---|---|
-| \`@field\` | Entity field value | guards, effects, ticks |
-| \`@field.sub\` | Nested field | guards, effects |
-| \`?field\` | Payload field | guards, effects (NOT ticks) |
+| \`@entity.field\` | Entity field value (canonical form — always write the qualified path) | guards, effects, ticks |
+| \`@entity.relation.field\` | Nested / related field | guards, effects |
+| \`?field\` | Payload field shorthand (sugar for \`@payload.field\`) | guards, effects (NOT ticks) |
+| \`@payload.field\` | Payload field (qualified form) | guards, effects |
+| \`@config.param\` | Caller-supplied config from a trait reference's \`config { ... }\` block | guards, effects |
+| \`@trait.OtherTraitName\` | Embed another trait's current frame inside this trait's \`render-ui\` (resolves via \`<TraitFrame>\` at runtime) | render-ui only |
 | \`@now\` | Current timestamp | guards, effects, ticks |
 | \`@state\` | Current state name (bare, no path) | guards, effects |
+
+\`@entity.field\` is the canonical form. Bare \`@field\` is rewritten to \`@entity.field\` by the lolo lower step, but you should always write the qualified path so the source is unambiguous and future-proof.
 
 ### Comments
 
@@ -348,7 +397,7 @@ orbital TaskOrbital {
     activeCount : int = derived (array/length (array/filter @items (== @item.status "active")))
   }
 
-  trait TaskBrowse -> Task [interaction] {
+  trait TaskBrowse -> Task [interaction, collection] {
     emits {
       INIT internal
       SAVE internal { id: string, data: any }
@@ -467,7 +516,7 @@ orbital TaskOrbital {
 
   }
 
-  page "/tasks" -> TaskBrowse [view: list, entity: Task, initial]
+  page "/tasks" as TasksPage -> TaskBrowse [view: list, entity: Task, initial]
 }
 \`\`\`
 

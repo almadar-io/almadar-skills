@@ -140,11 +140,15 @@ orbital OrbitalName {
     # fields...
   }
 
-  trait TraitName -> EntityName [interaction] {
-    # state machine...
+  trait TraitName -> EntityName [interaction, instance] {
+    # state machine for a single record
   }
 
-  page "/path" -> TraitName
+  trait TraitListName -> EntityName [interaction, collection] {
+    # state machine for a collection
+  }
+
+  page "/path" as PageName -> TraitName
 }
 \`\`\`
 
@@ -181,13 +185,15 @@ function getLoloValidationRules(): string {
 |---------|-------------|-------|-------|
 | **Events in state** | \`INIT -> browsing\` | \`"INIT" -> browsing\` | Don't quote event keys |
 | **Effects** | \`(set @status "done")\` | \`set @status "done"\` | Effects MUST be parenthesized |
-| **Sigils** | \`@field\`, \`?field\` | \`@entity.field\` | Use bare \`@field\` (rewritten by lowering) |
+| **Sigils** | \`@entity.field\`, \`@payload.field\`, \`?field\` | bare \`@field\` (works but ambiguous) | Always write the qualified path. Bare \`@field\` is rewritten to \`@entity.field\` by lowering — write the qualified form. |
+| **Category + scope** | \`[interaction, instance]\` or \`[interaction, collection]\` | \`[interaction]\` (legal but stale) | Always include the scope marker. |
+| **Cross-trait listens** | \`Source.EVENT -> TRIGGER\` (dot) | \`Source EVENT -> TRIGGER\` (space) | Phase 10 form is dot-separated; the space form is rejected. |
 | **Guard** | \`when (> @count 0)\` | \`if @count > 0\` | Guards use \`when\` + S-expression |
-| **Category** | \`[interaction]\` | \`category: interaction\` | Use bracket syntax |
+| **Category** | \`[interaction, instance]\` | \`category: interaction\` | Use bracket syntax with both category AND scope |
 | **Persistence** | \`[persistent: tasks]\` | \`persistence: "persistent"\` | Use bracket syntax |
 | **render-ui pattern** | \`{ type: "stack", ... }\` | \`{ "type": "stack" }\` | No quotes on keys in LOLO objects |
 | **Emits** | \`emits { INIT internal }\` | \`emits: [{ event: "INIT" }]\` | Use LOLO emits block syntax |
-| **Page** | \`page "/path" -> Trait\` | \`pages: [{ path: "/path" }]\` | Use LOLO page syntax |
+| **Page** | \`page "/path" as PageName -> Trait\` | \`pages: [{ path: "/path" }]\` or omitting \`as PageName\` | Use LOLO page syntax with explicit \`as PageName\` |
 | **Persist Arity** | \`(persist EntityName @payload.data)\` | \`(persist create Entity @payload)\` | \`persist\` operator takes EXACTLY 2 or 3 arguments! |
 | **Payload Schemas** | \`listens { SAVE { data: string } }\` | \`listens { SAVE }\` but using \`@payload.data\` | If you use \`@payload.X\`, you MUST define it in the event schema! |
 | **No Field Hallucinations** | \`@entity.price\` | \`@entity.items\` (if not declared) | DO NOT hallucinate fields in \`@entity\`. Only bind fields you explicitly defined. |
@@ -236,12 +242,17 @@ entity EntityName [persistent: collection_name] {
 }
 \`\`\`
 
-### 2. Category tag on traits (REQUIRED)
+### 2. Category + scope on traits (REQUIRED)
 \`\`\`lolo
-trait TraitName -> EntityName [interaction] {
-  # ...
+trait TraitName -> EntityName [interaction, instance] {
+  # single-record trait
+}
+
+trait TraitListName -> EntityName [interaction, collection] {
+  # collection trait — drives a list
 }
 \`\`\`
+Use \`[instance]\` when the trait owns one record (modal forms, detail views). Use \`[collection]\` when it drives a list (browse, filter, pagination).
 
 ### 3. INIT transition (REQUIRED — without it, page renders blank)
 \`\`\`lolo
@@ -272,8 +283,9 @@ state creating {
 
 ### 5. Page binding (REQUIRED to expose traits)
 \`\`\`lolo
-page "/path" -> TraitName [view: list, entity: EntityName, initial]
+page "/path" as PageName -> TraitName [view: list, entity: EntityName, initial]
 \`\`\`
+Always write \`as PageName\` so the generated route name is explicit and stable across renames.
 
 ### 6. ONE Orbital Per Entity
 

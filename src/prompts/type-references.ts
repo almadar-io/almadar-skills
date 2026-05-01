@@ -8,8 +8,16 @@
  */
 
 import { getAllPatternTypes, getPatternPropsCompact } from '@almadar/patterns';
-import { OPERATORS } from '@almadar/core/types';
 import { UI_SLOTS } from '@almadar/core/types';
+
+// `OPERATORS` was retired from @almadar/core when the operators registry was
+// folded into `@almadar/std/modules/core` (April 2026). For the S-expression
+// quick-ref sample below we use a fixed set of representative operator names —
+// the prompt only needs ~15 examples for the LLM to grok the form.
+const OPERATOR_SAMPLE = [
+  'set', 'fetch', 'persist', 'render-ui', 'emit', 'navigate', 'notify',
+  'if', 'when', 'let', 'do', '+', '-', '*', '/',
+] as const;
 
 /**
  * Get minimal type reference for orbital schemas.
@@ -73,7 +81,7 @@ ${getPatternPropsCompact()}
  * Get S-Expression quick reference.
  */
 export function getSExprQuickRef(): string {
-  const operators = Object.keys(OPERATORS).slice(0, 15); // First 15 operators
+  const operators = OPERATOR_SAMPLE.slice(0, 15);
 
   return `
 ## S-Expression Quick Reference
