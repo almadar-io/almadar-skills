@@ -1,42 +1,66 @@
 /**
  * Behavior Atom Reference Section
  *
- * Generates a detailed reference for atom-level behaviors.
- * Extracts states, events, and metadata from the .orb data.
+ * Generates a detailed reference for atom-level behaviors. Reads raw
+ * `.orb` files from the installed std package's
+ * `behaviors/registry/<topic>/atoms/` tree (with legacy flat-layout
+ * fallback). Atoms own their state-machine topology and carry it inline
+ * in the .orb source, so reading the raw file gives the analyzer LLM
+ * real semantic info — states, events, emits, listens — instead of bare
+ * names.
  *
  * @packageDocumentation
  */
 
-import type { OrbitalSchema } from '@almadar/core';
-import { getAllBehaviors } from '@almadar/std';
-import { classifyBehavior, extractTraitData } from './classify.js';
+import {
+    loadTierBehaviors,
+    extractInlineTraits,
+    getBehaviorDescription,
+    type LoadedBehavior,
+    type InlineTraitInfo,
+} from './behavior-loader.js';
+
+function renderTraitLine(t: InlineTraitInfo): string {
+    const parts: string[] = [];
+    if (t.states.length > 0) parts.push(`states: ${t.states.join(', ')}`);
+    if (t.events.length > 0) parts.push(`events: ${t.events.join(', ')}`);
+    const emitsExt = t.emits.filter((e) => e.scope === 'external').map((e) => e.event);
+    if (emitsExt.length > 0) parts.push(`emits(ext): ${emitsExt.join(', ')}`);
+    const listensExt = t.listens.filter((l) => l.scope === 'external').map((l) => l.event);
+    if (listensExt.length > 0) parts.push(`listens(ext): ${listensExt.join(', ')}`);
+    return parts.length > 0 ? `  - ${t.traitName} — ${parts.join('; ')}` : `  - ${t.traitName}`;
+}
+
+function renderBehavior(b: LoadedBehavior): string {
+    const traits = extractInlineTraits(b.raw);
+    const desc = getBehaviorDescription(b.raw);
+    const lines: string[] = [];
+    lines.push(`#### \`${b.name}\``);
+    if (desc) lines.push(desc);
+    if (traits.length === 0) {
+        lines.push('- (no inline traits — references atoms via `uses:`)');
+    } else {
+        for (const t of traits) lines.push(renderTraitLine(t));
+    }
+    return lines.join('\n');
+}
 
 /**
- * Generate a detailed reference for all atom behaviors.
+ * Generate a detailed reference for all atom behaviors. Atoms are
+ * self-contained, irreducible state machines — exactly the shape the
+ * LLM picks for single-primitive prompts.
  */
 export function getBehaviorAtomReference(): string {
-    const allBehaviors = getAllBehaviors() as OrbitalSchema[];
-    const atoms = allBehaviors.filter(b => classifyBehavior(b.name) === 'atoms');
-
+    const atoms = loadTierBehaviors('atoms');
     if (atoms.length === 0) {
         return '### Atom Reference\n\nNo atoms found.';
     }
 
-    const entries = atoms.map(schema => {
-        const { states, events } = extractTraitData(schema);
-        const desc = schema.description ?? '';
-
-        const lines: string[] = [];
-        lines.push(`#### \`${schema.name}\``);
-        if (desc) lines.push(desc);
-        lines.push(`- **States**: ${states.length > 0 ? states.join(', ') : 'none'}`);
-        lines.push(`- **Events**: ${events.length > 0 ? events.join(', ') : 'none'}`);
-        return lines.join('\n');
-    });
-
-    return `### Atom Reference (${atoms.length})
-
-Atoms are self-contained, irreducible state machines. Each atom handles a single concern.
-
-${entries.join('\n\n')}`;
+    return [
+        `### Atom Reference (${atoms.length})`,
+        '',
+        'Atoms are self-contained, irreducible state machines. Each atom handles one concern. Pick an atom when the prompt is a single primitive (browse, list, dialog, gallery). Compose multiple atoms in one orbital when the prompt layers two primitives.',
+        '',
+        atoms.map(renderBehavior).join('\n\n'),
+    ].join('\n');
 }

@@ -23,7 +23,7 @@
  * @packageDocumentation
  */
 
-import { readdirSync, readFileSync, existsSync, realpathSync } from 'fs';
+import { readdirSync, readFileSync, existsSync, realpathSync, statSync } from 'fs';
 import { dirname, resolve, basename } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -70,58 +70,83 @@ function hasImportMetaResolve(
 }
 
 /**
- * Walk the `@almadar/std` package and return a list of `.orb` file paths
- * for the given tier (atoms / molecules) from the canonical
- * `behaviors/registry/<tier>` tree. Returns `null` when the std package
- * isn't resolvable (e.g. tests in a detached environment) so the caller
- * can degrade gracefully.
+ * Walk the `@almadar/std` package and return every `behaviors/registry/<topic>/<tier>`
+ * directory (post-Phase-3.5.G layout, std 7.11+). Returns an empty array
+ * when the std package isn't resolvable (e.g. tests in a detached
+ * environment) so the caller can degrade gracefully. Also handles the
+ * legacy flat layout (`behaviors/registry/<tier>`) as a fallback for
+ * older std versions.
+ *
+ * Topics: core | agent | app | game | service | probes (+ any future tier).
  */
-function resolveBehaviorTierDir(tier: 'atoms' | 'molecules'): string | null {
+function resolveBehaviorTierDirs(tier: 'atoms' | 'molecules' | 'organisms'): string[] {
     let stdPkgRoot: string;
     try {
-        // `import.meta.resolve` works on Node 20+ and returns a file:// URL
-        // to the resolved module. We resolve the behaviors/functions subpath
-        // since that's in the std package's `exports` map.
-        if (!hasImportMetaResolve(import.meta)) return null;
+        if (!hasImportMetaResolve(import.meta)) return [];
         const url = import.meta.resolve('@almadar/std/behaviors/functions');
         const filePath = fileURLToPath(url);
-        // filePath is dist/behaviors/functions/index.js; walk up to package root.
         stdPkgRoot = realpathSync(resolve(dirname(filePath), '..', '..', '..'));
     } catch {
-        return null;
+        return [];
     }
 
-    const registryDir = resolve(stdPkgRoot, 'behaviors', 'registry', tier);
-    if (existsSync(registryDir)) return registryDir;
+    const registryRoot = resolve(stdPkgRoot, 'behaviors', 'registry');
+    if (!existsSync(registryRoot)) return [];
 
-    return null;
+    const dirs: string[] = [];
+
+    // Topic/tier layout (std 7.11+): registry/<topic>/<tier>/*.orb
+    for (const topic of safeReaddir(registryRoot)) {
+        const topicDir = resolve(registryRoot, topic);
+        if (!isDir(topicDir)) continue;
+        const tierDir = resolve(topicDir, tier);
+        if (existsSync(tierDir) && isDir(tierDir)) dirs.push(tierDir);
+    }
+
+    // Legacy flat layout: registry/<tier>/*.orb (std 7.10 and earlier).
+    // Older atoms / molecules / organisms might still live here when the
+    // installed std version straddles the migration. Adding it as a
+    // fallback costs nothing and keeps the catalog complete.
+    const flatDir = resolve(registryRoot, tier);
+    if (existsSync(flatDir) && isDir(flatDir)) dirs.push(flatDir);
+
+    return dirs;
+}
+
+function safeReaddir(dir: string): string[] {
+    try { return readdirSync(dir); } catch { return []; }
+}
+
+function isDir(path: string): boolean {
+    try { return statSync(path).isDirectory(); } catch { return false; }
 }
 
 /**
- * Read every `.orb` file in the given tier directory, parse as JSON,
- * and return `{ name, raw }` pairs. Silently skips files that fail to
- * parse — the catalog is best-effort metadata.
+ * Read every `.orb` file across all topic-scoped tier directories, parse
+ * as JSON, and return `{ name, raw }` pairs. Silently skips files that
+ * fail to parse — the catalog is best-effort metadata. Dedupes by file
+ * basename when a behavior somehow appears under two topics.
  */
-function loadTierOrbs(tier: 'atoms' | 'molecules'): Array<{ name: string; raw: RawOrb }> {
-    const dir = resolveBehaviorTierDir(tier);
-    if (!dir) return [];
+function loadTierOrbs(tier: 'atoms' | 'molecules' | 'organisms'): Array<{ name: string; raw: RawOrb }> {
+    const dirs = resolveBehaviorTierDirs(tier);
+    if (dirs.length === 0) return [];
 
-    const entries: Array<{ name: string; raw: RawOrb }> = [];
-    for (const file of readdirSync(dir)) {
-        if (!file.endsWith('.orb')) continue;
-        const fullPath = resolve(dir, file);
-        try {
-            const text = readFileSync(fullPath, 'utf-8');
-            const raw = JSON.parse(text) as RawOrb;
-            const name = basename(file, '.orb');
-            entries.push({ name, raw });
-        } catch {
-            // Bad JSON / unreadable — skip.
+    const seen = new Map<string, { name: string; raw: RawOrb }>();
+    for (const dir of dirs) {
+        for (const file of safeReaddir(dir)) {
+            if (!file.endsWith('.orb')) continue;
+            const fullPath = resolve(dir, file);
+            try {
+                const text = readFileSync(fullPath, 'utf-8');
+                const raw = JSON.parse(text) as RawOrb;
+                const name = basename(file, '.orb');
+                if (!seen.has(name)) seen.set(name, { name, raw });
+            } catch {
+                // Bad JSON / unreadable — skip.
+            }
         }
     }
-    // Stable alphabetical order so prompt output is deterministic.
-    entries.sort((a, b) => a.name.localeCompare(b.name));
-    return entries;
+    return Array.from(seen.values()).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // ============================================================================
