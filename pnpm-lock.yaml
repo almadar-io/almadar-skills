@@ -10,16 +10,16 @@ importers:
     dependencies:
       '@almadar/core':
         specifier: '>=4.8.2'
-        version: 7.10.0
+        version: 7.10.1
       '@almadar/llm':
         specifier: '>=2.9.1'
-        version: 2.9.1(@almadar/core@7.10.0)
+        version: 2.9.1(@almadar/core@7.10.1)
       '@almadar/patterns':
         specifier: '>=2.14.1'
-        version: 2.20.2
+        version: 2.20.3
       '@almadar/std':
         specifier: '>=6.4.1'
-        version: 13.8.2
+        version: 13.11.0
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -54,8 +54,8 @@ importers:
 
 packages:
 
-  '@almadar/core@7.10.0':
-    resolution: {integrity: sha512-MMxAOLksn2U+vBOTIYSahyFVz8539JuyYTor85zYDwLtJGd5jGd9H9zSyvdoef0rcGPaxrqmCUe6KGehbxcsTg==}
+  '@almadar/core@7.10.1':
+    resolution: {integrity: sha512-uHgrlHQnGt3keoSZI1AfxL6MQn869yqWUlrQ6fj7Q4/LGkQ+4zQ8M0Vr2Lp6sUySbq8LLzDdxB9FpSUJ+N90VA==}
 
   '@almadar/eslint-plugin@2.8.1':
     resolution: {integrity: sha512-DaWThhbtFMT/IrqEyc+XADrhAqTjc+jeSO9CeiSJKs0+UoBDuNLZNhLy1kiXT61XdHSxCNZD7jjjtHbXbe59+g==}
@@ -70,11 +70,11 @@ packages:
       '@almadar/core':
         optional: true
 
-  '@almadar/patterns@2.20.2':
-    resolution: {integrity: sha512-69uJY5POYYVpZ44fyXsJZeM7wfZHaEd5zTai/bpBrx/IYPuLWELxKc191tyZd+Shomj9KbB5LAFv2stqR0cqJQ==}
+  '@almadar/patterns@2.20.3':
+    resolution: {integrity: sha512-sgE3U14Orevp9Yo+ZR9ASy695M/zxF7jM1d7m46YWiRjaAsrcb34jqcE+xmEjglVcH/1HoHAMegIlG6Wy6zunQ==}
 
-  '@almadar/std@13.8.2':
-    resolution: {integrity: sha512-Xnav/pHK7NLNRXoBPoT4y+pzNd9GKtyCaEEDHKypujFVOLDTVy5BOnJmJmTOSPl6NngDa4wbgt/aa02TGCPgNA==}
+  '@almadar/std@13.11.0':
+    resolution: {integrity: sha512-ScHddbufHy62tRozqk9mCQy9VSaQ7KJfsk7tAPDkqYDJ+NfGSihkUoXX0v0KJUDiL9H3dmE0CTTg4qUfqWeBSA==}
 
   '@anthropic-ai/sdk@0.52.0':
     resolution: {integrity: sha512-d4c+fg+xy9e46c8+YnrrgIQR45CZlAi7PwdzIfDXDM6ACxEZli1/fxhURsq30ZpMZy6LvSkr41jGq5aF5TD7rQ==}
@@ -896,8 +896,8 @@ packages:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
 
-  openai@6.35.0:
-    resolution: {integrity: sha512-L/skwIGnt5xQZHb0UfTu9uAUKbis3ehKypOuJKi20QvG7UStV6C8IC3myGYHcdiF4kms/bAvOJ9UqqNWqi8x/Q==}
+  openai@6.36.0:
+    resolution: {integrity: sha512-Has2YbIusMq9wQEierFsgf9c783dy1y9arX459LmphNacEkkM5yxi2RIyXP0LmkOroQyW19iTwALHL8Yf26UKA==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -1146,9 +1146,9 @@ packages:
 
 snapshots:
 
-  '@almadar/core@7.10.0':
+  '@almadar/core@7.10.1':
     dependencies:
-      '@almadar/patterns': 2.20.2
+      '@almadar/patterns': 2.20.3
       zod: 3.25.76
 
   '@almadar/eslint-plugin@2.8.1(eslint@10.0.0)':
@@ -1156,29 +1156,29 @@ snapshots:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.9.1(@almadar/core@7.10.0)':
+  '@almadar/llm@2.9.1(@almadar/core@7.10.1)':
     dependencies:
       '@anthropic-ai/sdk': 0.52.0
-      '@langchain/anthropic': 1.3.28(@langchain/core@1.1.44(openai@6.35.0(zod@3.25.76)))
-      '@langchain/core': 1.1.44(openai@6.35.0(zod@3.25.76))
-      '@langchain/openai': 1.4.5(@langchain/core@1.1.44(openai@6.35.0(zod@3.25.76)))
-      openai: 6.35.0(zod@3.25.76)
+      '@langchain/anthropic': 1.3.28(@langchain/core@1.1.44(openai@6.36.0(zod@3.25.76)))
+      '@langchain/core': 1.1.44(openai@6.36.0(zod@3.25.76))
+      '@langchain/openai': 1.4.5(@langchain/core@1.1.44(openai@6.36.0(zod@3.25.76)))
+      openai: 6.36.0(zod@3.25.76)
       zod: 3.25.76
     optionalDependencies:
-      '@almadar/core': 7.10.0
+      '@almadar/core': 7.10.1
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
       - '@opentelemetry/sdk-trace-base'
       - ws
 
-  '@almadar/patterns@2.20.2':
+  '@almadar/patterns@2.20.3':
     dependencies:
-      '@almadar/core': 7.10.0
+      '@almadar/core': 7.10.1
 
-  '@almadar/std@13.8.2':
+  '@almadar/std@13.11.0':
     dependencies:
-      '@almadar/core': 7.10.0
+      '@almadar/core': 7.10.1
 
   '@anthropic-ai/sdk@0.52.0': {}
 
@@ -1339,13 +1339,13 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@langchain/anthropic@1.3.28(@langchain/core@1.1.44(openai@6.35.0(zod@3.25.76)))':
+  '@langchain/anthropic@1.3.28(@langchain/core@1.1.44(openai@6.36.0(zod@3.25.76)))':
     dependencies:
       '@anthropic-ai/sdk': 0.90.0(zod@3.25.76)
-      '@langchain/core': 1.1.44(openai@6.35.0(zod@3.25.76))
+      '@langchain/core': 1.1.44(openai@6.36.0(zod@3.25.76))
       zod: 3.25.76
 
-  '@langchain/core@1.1.44(openai@6.35.0(zod@3.25.76))':
+  '@langchain/core@1.1.44(openai@6.36.0(zod@3.25.76))':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       '@standard-schema/spec': 1.1.0
@@ -1353,7 +1353,7 @@ snapshots:
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.21
-      langsmith: 0.6.0(openai@6.35.0(zod@3.25.76))
+      langsmith: 0.6.0(openai@6.36.0(zod@3.25.76))
       mustache: 4.2.0
       p-queue: 6.6.2
       zod: 3.25.76
@@ -1364,11 +1364,11 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/openai@1.4.5(@langchain/core@1.1.44(openai@6.35.0(zod@3.25.76)))':
+  '@langchain/openai@1.4.5(@langchain/core@1.1.44(openai@6.36.0(zod@3.25.76)))':
     dependencies:
-      '@langchain/core': 1.1.44(openai@6.35.0(zod@3.25.76))
+      '@langchain/core': 1.1.44(openai@6.36.0(zod@3.25.76))
       js-tiktoken: 1.0.21
-      openai: 6.35.0(zod@3.25.76)
+      openai: 6.36.0(zod@3.25.76)
       zod: 3.25.76
     transitivePeerDependencies:
       - ws
@@ -1806,11 +1806,11 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  langsmith@0.6.0(openai@6.35.0(zod@3.25.76)):
+  langsmith@0.6.0(openai@6.36.0(zod@3.25.76)):
     dependencies:
       p-queue: 6.6.2
     optionalDependencies:
-      openai: 6.35.0(zod@3.25.76)
+      openai: 6.36.0(zod@3.25.76)
 
   levn@0.4.1:
     dependencies:
@@ -1864,7 +1864,7 @@ snapshots:
 
   object-assign@4.1.1: {}
 
-  openai@6.35.0(zod@3.25.76):
+  openai@6.36.0(zod@3.25.76):
     optionalDependencies:
       zod: 3.25.76
 

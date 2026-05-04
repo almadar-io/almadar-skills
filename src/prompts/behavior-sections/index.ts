@@ -27,3 +27,11 @@ export {
     getFewShotExamplesSection,
     getCommonCompositionsSection,
 } from './few-shot-examples.js';
+
+// Atom-composition recipe path — the molecule-vs-atom decision rule,
+// the recipe schema, the canonical recipe cookbook (core/ atoms only),
+// and the override-surface guide.
+export { getMoleculeVsAtomDecisionRule } from './molecule-vs-atom-decision.js';
+export { getAtomCompositionRecipeSection } from './atom-composition-recipe.js';
+export { getRecipeCookbook } from './recipe-cookbook.js';
+export { getEventRenameAndConfigGuide } from './event-rename-config-guide.js';
