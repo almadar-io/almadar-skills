@@ -1,10 +1,12 @@
 /**
  * Behavior Catalog Section (Phase 7.1 — composition-first)
  *
- * Emits atoms and molecules only. Organisms are top-level apps, not
- * composable parts — they are filtered out entirely.
+ * Emits atoms, molecules, AND organisms. Atoms/molecules are listed with
+ * full trait wiring because the LLM composes them. Organisms are listed
+ * as name + one-line description only — they are picked end-to-end as a
+ * single `suggestedBehavior`, never composed from.
  *
- * For every behavior the LLM sees:
+ * For atom/molecule entries the LLM sees:
  *   - the import path under `uses:` (`std/behaviors/<name>`)
  *   - the derived alias (e.g. `std-browse` -> `Browse`)
  *   - every inline trait's `ref:` string (`Alias.traits.TraitName`)
@@ -239,8 +241,8 @@ function extractTraits(raw: RawOrb): TraitInfo[] {
 // ============================================================================
 
 function renderTier(
-    tier: 'Atoms' | 'Molecules',
-    tierKey: 'atoms' | 'molecules',
+    tier: 'Atoms' | 'Molecules' | 'Organisms',
+    tierKey: 'atoms' | 'molecules' | 'organisms',
     entries: Array<{ name: string; raw: RawOrb }>,
 ): string {
     if (entries.length === 0) {
@@ -250,16 +252,24 @@ function renderTier(
     const lines: string[] = [];
     lines.push(`## ${tier} (${entries.length})`);
     lines.push('');
-    lines.push(
-        tier === 'Atoms'
-            ? 'Atoms are self-contained, irreducible state machines. Compose them directly inside an orbital to build bespoke flows.'
-            : 'Molecules compose atoms with pre-wired event buses. Use a molecule as-is when its declared external surface matches the task; otherwise compose atoms directly.',
-    );
+    if (tier === 'Atoms') {
+        lines.push(
+            'Atoms are self-contained, irreducible state machines. Compose them directly inside an orbital to build bespoke flows.',
+        );
+    } else if (tier === 'Molecules') {
+        lines.push(
+            'Molecules compose atoms with pre-wired event buses. Use a molecule as-is when its declared external surface matches the task; otherwise compose atoms directly.',
+        );
+    } else {
+        lines.push(
+            'Organisms are whole-app templates that already include their full set of orbitals + cross-orbital wiring. Pick one as a single-name `suggestedBehavior` (no `composition` block, no atoms list) when the user prompt names the organism\'s domain end-to-end. Each entry is name + one-line description; internal trait/event detail is omitted because you do not compose organisms — you instantiate one.',
+        );
+    }
     lines.push('');
 
     for (const entry of entries) {
         const alias = behaviorNameToAlias(entry.name);
-        const tierSingular = tierKey === 'atoms' ? 'atom' : 'molecule';
+        const tierSingular = tierKey === 'atoms' ? 'atom' : tierKey === 'molecules' ? 'molecule' : 'organism';
         const description =
             typeof entry.raw.description === 'string' ? entry.raw.description.split('\n')[0] : '';
 
@@ -269,6 +279,15 @@ function renderTier(
             // on word boundaries. Never truncates trait/emit/listen data.
             const trimmed = description.length > 160 ? description.slice(0, 157).replace(/\s+\S*$/, '') + '...' : description;
             lines.push(`  ${trimmed}`);
+        }
+
+        // Organisms: stop after name + description. They are not composed
+        // from outside, so the LLM doesn't need their inner trait wiring;
+        // showing it would just multiply token cost without changing the
+        // pick-by-domain decision.
+        if (tier === 'Organisms') {
+            lines.push('');
+            continue;
         }
 
         const traits = extractTraits(entry.raw);
@@ -300,23 +319,27 @@ function renderTier(
 }
 
 /**
- * Generate the behavior catalog — atoms and molecules only.
- * Organisms are excluded; they are top-level apps, not composable parts.
+ * Generate the behavior catalog — atoms, molecules, and organisms.
+ * Atoms and molecules carry full trait wiring detail because the LLM
+ * composes them. Organisms are listed by name + one-liner only because
+ * they're picked end-to-end as a single `suggestedBehavior`, never
+ * composed from.
  */
 export function getBehaviorCatalogSection(): string {
     const atoms = loadTierOrbs('atoms');
     const molecules = loadTierOrbs('molecules');
+    const organisms = loadTierOrbs('organisms');
 
     const header = `# Behavior Catalog
 
-Atoms and molecules you may compose via \`uses:\` + \`traits:\` in an \`.orb\` program. Organisms are omitted — they're top-level apps, not composable parts.
+Three tiers, each with a different use:
+  - **Atoms**: irreducible state machines. Compose with \`uses:\` + inline \`traits:\`.
+  - **Molecules**: pre-wired compositions of atoms. Use as-is when their external surface matches.
+  - **Organisms**: whole-app templates (multiple orbitals + cross-orbital wiring). Pick one by name as a single \`suggestedBehavior\` when the user's prompt names the organism's full domain. No composition needed.
 
-Each entry shows:
-  - the behavior's import path (\`from:\`) and the alias you use to reference it (\`as:\`)
-  - every inline trait's \`ref:\` string (\`Alias.traits.TraitName\`)
-  - each trait's declared \`emits\` / \`listens\` with scope
+Atoms and molecules show full trait wiring (refs, emits, listens) because you compose them. Organisms show name + one-line description only because you instantiate them, not compose from them.
 
-Scope rules:
+Scope rules (atoms/molecules):
   - \`internal\`: a sibling trait in the same orbital emits (or listens for) this event. You cannot remap internal-scoped events via a trait-reference's \`events:\` override — the compiler rejects it.
   - \`external\`: the event crosses the orbital boundary. You may remap it via \`events: { OLD: "NEW" }\` on the trait reference.
 `;
@@ -326,5 +349,7 @@ Scope rules:
         renderTier('Atoms', 'atoms', atoms),
         '',
         renderTier('Molecules', 'molecules', molecules),
+        '',
+        renderTier('Organisms', 'organisms', organisms),
     ].join('\n');
 }
