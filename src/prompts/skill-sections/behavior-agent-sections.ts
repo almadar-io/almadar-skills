@@ -19,6 +19,16 @@ import {
 } from '@almadar/std';
 import { getOrbAllowedPatterns } from '@almadar/patterns';
 
+/**
+ * Local intersection — the published `RegistryEntry` type omits `topic`,
+ * but every entry in `behaviors-registry.json` carries one (`'app' |
+ * 'agent' | 'game' | 'service' | 'core' | 'probes'`). Per the agent's
+ * type-safety rule we extend in the consumer instead of laundering through
+ * `as unknown as`. Replace with `RegistryEntry` once std exposes `topic`
+ * on the public type.
+ */
+type RegistryEntryWithTopic = RegistryEntry & { topic?: string };
+
 // ============================================================================
 // Coordinator Sections
 // ============================================================================
@@ -55,6 +65,41 @@ export async function getBehaviorCatalogForAgent(level?: 'atom' | 'molecule' | '
     output += '\n';
   }
 
+  return output;
+}
+
+/**
+ * App-organism-only catalog for the agent prompt.
+ *
+ * Filters the registry to `topic === 'app'` AND `level === 'organism'` —
+ * the 18 hand-authored, runtime-verified application organisms. Used
+ * exclusively by the orbital-agent under the "select one organism +
+ * parameterize" model (see docs/Almadar_Studio_Agent_Gaps.md). Atoms /
+ * molecules / non-app organisms (game/service/agent topics) are
+ * intentionally hidden — the agent doesn't compose primitives anymore;
+ * it picks an organism, the analyzer fills its params, and subagents
+ * sculpt the resolved orb.
+ */
+export async function getAppOrganismCatalogForAgent(): Promise<string> {
+  const registry = await getBehaviorRegistry();
+  const entries = (Object.values(registry) as RegistryEntryWithTopic[])
+    .filter((b) => b.level === 'organism' && b.topic === 'app')
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (entries.length === 0) {
+    return '## App Organism Catalog\n\nNo app organisms found.';
+  }
+
+  let output = `## App Organism Catalog (${entries.length})\n\n`;
+  output += "Each entry below is a complete, runtime-verified application. Pick the one whose domain matches the user's prompt, then collect its parameters via the analysis questionnaire.\n\n";
+  output += '| Name | Description | Default entity | Complexity |\n';
+  output += '|------|-------------|----------------|------------|\n';
+  for (const b of entries) {
+    const desc = b.description.replace(/\|/g, '\\|').slice(0, 120);
+    const entity = b.defaultEntity?.name ?? '—';
+    const cx = `${b.complexity.states}S/${b.complexity.events}E/${b.complexity.transitions}T`;
+    output += `| \`${b.name}\` | ${desc} | ${entity} | ${cx} |\n`;
+  }
   return output;
 }
 

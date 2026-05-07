@@ -40,9 +40,13 @@ function renderBehavior(b: LoadedBehavior): string {
  * Generate a detailed reference for all organism behaviors. Organisms
  * are full applications — pick one when the prompt describes an entire
  * domain (marketplace, clinic booking, CMS, healthcare, helpdesk).
+ *
+ * @param topic optional single-topic filter (e.g. 'app'). When provided,
+ *              only organisms in that topic directory are listed. Used by
+ *              the agent to expose only `app/organisms` to the model.
  */
-export function getBehaviorOrganismReference(): string {
-    const organisms = loadTierBehaviors('organisms');
+export function getBehaviorOrganismReference(topic?: string): string {
+    const organisms = loadTierBehaviors('organisms', topic);
     if (organisms.length === 0) {
         return '### Organism Reference\n\nNo organisms found.';
     }

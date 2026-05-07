@@ -99,6 +99,7 @@ export {
 // Behavior agent sections (for behavior-driven agent)
 export {
   getBehaviorCatalogForAgent,
+  getAppOrganismCatalogForAgent,
   getBehaviorDetailForSubagent,
   getBehaviorCompositionOpsRef,
   getBehaviorDomainMap,

@@ -98,20 +98,34 @@ export function resolveStdRegistryRoot(): string | null {
  * installed std package, plus the legacy flat `<tier>/` directory. Reads
  * every `.orb`, parses as JSON, dedupes by name. Result is sorted
  * alphabetically by name for deterministic prompt output.
+ *
+ * @param tier   tier directory to walk (atoms / molecules / organisms)
+ * @param topic  optional single-topic filter (e.g. 'app'). When provided,
+ *               only `<registry>/<topic>/<tier>/` is read; the legacy flat
+ *               layout is skipped because it carries no topic. Used by the
+ *               agent to expose only `app/organisms` to the model.
  */
-export function loadTierBehaviors(tier: BehaviorTier): LoadedBehavior[] {
+export function loadTierBehaviors(tier: BehaviorTier, topic?: string): LoadedBehavior[] {
     const registryRoot = resolveStdRegistryRoot();
     if (!registryRoot) return [];
 
     const seen = new Map<string, LoadedBehavior>();
 
+    if (topic) {
+        const tierDir = resolve(registryRoot, topic, tier);
+        if (existsSync(tierDir) && isDir(tierDir)) {
+            ingestDir(tierDir, topic, tier, seen);
+        }
+        return Array.from(seen.values()).sort((a, b) => a.name.localeCompare(b.name));
+    }
+
     // Topic-scoped layout: registry/<topic>/<tier>/*.orb
-    for (const topic of safeReaddir(registryRoot)) {
-        const topicDir = resolve(registryRoot, topic);
+    for (const topicEntry of safeReaddir(registryRoot)) {
+        const topicDir = resolve(registryRoot, topicEntry);
         if (!isDir(topicDir)) continue;
         const tierDir = resolve(topicDir, tier);
         if (!existsSync(tierDir) || !isDir(tierDir)) continue;
-        ingestDir(tierDir, topic, tier, seen);
+        ingestDir(tierDir, topicEntry, tier, seen);
     }
 
     // Legacy flat layout: registry/<tier>/*.orb (pre-7.11 stds).
