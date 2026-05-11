@@ -83,7 +83,7 @@ export async function getBehaviorCatalogForAgent(level?: 'atom' | 'molecule' | '
 export async function getAppOrganismCatalogForAgent(): Promise<string> {
   const registry = await getBehaviorRegistry();
   const entries = (Object.values(registry) as RegistryEntryWithTopic[])
-    .filter((b) => b.level === 'organism' && b.topic === 'app')
+    .filter((b) => b.level === 'organism' && (b.topic === 'app' || b.topic === 'core'))
     .sort((a, b) => a.name.localeCompare(b.name));
 
   if (entries.length === 0) {
