@@ -16,7 +16,6 @@ export { generateOrbSkill, generateOrbCoordinatorSkill } from './generators/orb.
 export { generateLoloSkill } from './generators/lolo.js';
 export { generateKflowOrbitalsSkill } from './generators/kflow-orbitals.js';
 export { generateKflowOrbitalFixingSkill } from './generators/kflow-orbital-fixing.js';
-export { generateDomainLanguageSkill } from './generators/domain-language.js';
 export { generateLeanOrbitalSkill } from './orbitals-skills-generators/lean/lean-orbital-generator.js';
 export { generateLeanFixingSkill } from './orbitals-skills-generators/lean/lean-fixing-generator.js';
 export { getSubagentSystemPrompt } from './orbitals-skills-generators/lean-orbital-skill-generator.js';

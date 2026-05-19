@@ -21,7 +21,6 @@ export { formatFrontmatter, writeSkill, writeAllSkills } from './utils.js';
 // Core skills used by builder client
 export { generateKflowOrbitalsSkill } from './kflow-orbitals.js';
 export { generateKflowOrbitalFixingSkill } from './kflow-orbital-fixing.js';
-export { generateDomainLanguageSkill } from './domain-language.js';
 export { generateAlmadarAssistantSkill } from './almadar-assistant.js';
 export { generateConverterSkill } from './converter.js';
 
@@ -54,7 +53,6 @@ export { generateLeanFixingSkill as generateLeanFixingSkillFull } from '../orbit
 import type { GeneratedSkill } from './types.js';
 import { generateKflowOrbitalsSkill } from './kflow-orbitals.js';
 import { generateKflowOrbitalFixingSkill } from './kflow-orbital-fixing.js';
-import { generateDomainLanguageSkill } from './domain-language.js';
 import { generateAlmadarAssistantSkill } from './almadar-assistant.js';
 import { generateOrbSkill } from './orb.js';
 import { generateLoloSkill } from './lolo.js';
@@ -97,7 +95,6 @@ export function generateAllBuilderSkills(): GeneratedSkill[] {
       },
       content: generateLeanFixingSkill(),
     },
-    generateDomainLanguageSkill(),
     generateAlmadarAssistantSkill(),
     generateBehaviorsSkill(),
     // Tooling skills
