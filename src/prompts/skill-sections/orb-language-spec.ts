@@ -58,7 +58,7 @@ An orbital has: name, entity, traits[], pages[], domainContext, design.
 ### entity
 - name: string (PascalCase)
 - collection: string (plural lowercase of name)
-- persistence: "persistent" | "runtime" | "singleton"
+- persistence: "persistent" | "runtime"
 - fields: array of { name, type, required?, default?, values? (for enum), relation? (for relation) }
 
 ### Field types
