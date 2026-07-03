@@ -26,19 +26,18 @@ jobs:
       - run: pnpm --version
       - run: pnpm install --no-frozen-lockfile
         env:
-          # All deps are public @almadar/* on npmjs; this scoped token is only
-          # for the @almadar-io registry line in .npmrc (currently no such deps).
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: pnpm build
 
       # Auth via the built-in GITHUB_TOKEN (job grants packages: write and the
-      # package is linked to this repo). Replaces the GH_PACKAGES_TOKEN PAT that
-      # expired 2026-07 and 401'd every publish — GITHUB_TOKEN never expires.
+      # package is linked to this repo) — it never expires, unlike the
+      # GH_PACKAGES_TOKEN PAT that expired 2026-07 and 401'd every publish.
+      # The checked-in .npmrc reads the token from ${GH_PACKAGES_TOKEN}, so the
+      # GITHUB_TOKEN value is fed through that env var name.
       - name: Publish to GitHub Packages
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-          pnpm publish --no-git-checks --registry https://npm.pkg.github.com
+        run: pnpm publish --no-git-checks --registry https://npm.pkg.github.com
         env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
