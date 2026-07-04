@@ -15,15 +15,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      # pnpm/action-setup@v4 (NOT @v6, which ignored `version:` and installed a
+      # pnpm 11 beta). No `version:` input → reads pnpm@10.30.3 from
+      # package.json `packageManager`. Must run BEFORE setup-node so pnpm is on
+      # PATH when setup-node@v5 reads `packageManager`.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v5
         with:
           node-version: 22
 
-      # pnpm/action-setup@v6 was observed installing pnpm 11.0.0-beta.4-1
-      # despite `version: 10.30.3`. Bypass the action; pin via npm.
-      - name: Install pnpm 10.30.3 via npm
-        run: npm install -g pnpm@10.30.3
-      - run: pnpm --version
       - run: pnpm install --no-frozen-lockfile
         env:
           GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
