@@ -51,7 +51,6 @@ const ATOM_NAMES = new Set([
     'std-game-over-screen', 'std-dialogue-box', 'std-inventory-panel',
     'std-combat-log', 'std-sprite', 'std-game-audio', 'std-isometric-canvas',
     'std-platformer-canvas', 'std-simulation-canvas', 'std-game-canvas-2d',
-    'std-game-canvas-3d',
 ]);
 
 /**
