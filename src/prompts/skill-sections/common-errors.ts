@@ -12,7 +12,7 @@ import { ViewTypeSchema } from "@almadar/core/types";
 import {
   getPatternPropsCompact,
   getPatternActionsRef,
-} from "@almadar/patterns";
+} from "@almadar/core/patterns";
 
 /**
  * Generate pattern categories from PATTERN_TYPES.

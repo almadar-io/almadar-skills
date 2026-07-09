@@ -8,7 +8,7 @@
 import { getAllBehaviors, getAllStdOperators, generateBehaviorsDocs, generateModulesDocs } from '@almadar/std';
 import { PATTERN_TYPES, isInlineTrait } from '@almadar/core/types';
 import type { Trait, State, Event as OrbitalEvent } from '@almadar/core';
-import { getPatternsGroupedByCategory } from '@almadar/patterns';
+import { getPatternsGroupedByCategory } from '@almadar/core/patterns';
 
 /**
  * Get minimal type reference (patterns, slots, operators).

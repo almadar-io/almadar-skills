@@ -4,14 +4,14 @@
  * Teaches the LLM to compose render-ui trees using ONLY atoms and molecules
  * (plus allowed exceptions: data-list, data-grid, search-input, form-section, meter).
  *
- * Pattern list is derived dynamically from @almadar/patterns registry.
+ * Pattern list is derived dynamically from @almadar/core/patterns registry.
  * No hardcoded pattern lists. When patterns are added/removed from the registry,
  * this guide updates automatically.
  *
  * @packageDocumentation
  */
 
-import { getOrbAllowedPatternsCompact, getOrbAllowedPatternsFiltered } from '@almadar/patterns';
+import { getOrbAllowedPatternsCompact, getOrbAllowedPatternsFiltered } from '@almadar/core/patterns';
 import { getBindingsGuide } from './bindings-guide.js';
 
 /**

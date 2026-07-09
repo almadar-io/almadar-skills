@@ -13,7 +13,7 @@ import {
   getPatternPropsCompact,
   getPatternActionsRef,
   getAllPatternTypes,
-} from "@almadar/patterns";
+} from "@almadar/core/patterns";
 import { getBindingsGuide } from "./bindings-guide.js";
 
 /**

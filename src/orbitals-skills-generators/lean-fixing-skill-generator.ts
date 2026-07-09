@@ -13,7 +13,7 @@ import {
     getSExprQuickRef,
     getRenderUIQuickRef,
 } from './helpers.js';
-import { getPatternActionsRef } from '@almadar/patterns';
+import { getPatternActionsRef } from '@almadar/core/patterns';
 import {
     getArchitectureSection,
     getCommonErrorsSection,

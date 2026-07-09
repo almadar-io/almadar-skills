@@ -2,13 +2,13 @@
  * .orb Language Specification Sections
  *
  * Pure reference material: syntax, types, operators, composition rules.
- * Pattern vocabulary is pulled from @almadar/patterns registry dynamically.
+ * Pattern vocabulary is pulled from @almadar/core/patterns registry dynamically.
  * No examples, no architectural opinions, no pattern recommendations.
  *
  * @packageDocumentation
  */
 
-import { getOrbAllowedPatterns, isValidPatternType } from '@almadar/patterns';
+import { getOrbAllowedPatterns, isValidPatternType } from '@almadar/core/patterns';
 
 /**
  * render-ui composition rules + pattern vocabulary from registry.

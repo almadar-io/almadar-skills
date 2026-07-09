@@ -4,13 +4,13 @@
  * Provides the LOLO surface syntax reference for LLM skill generation.
  * Mirrors orb-language-spec.ts but for LOLO syntax instead of JSON.
  *
- * Pattern vocabulary is pulled from @almadar/patterns registry dynamically
+ * Pattern vocabulary is pulled from @almadar/core/patterns registry dynamically
  * (identical to the orb skill — same atoms + molecules, no organisms).
  *
  * @packageDocumentation
  */
 
-import { getOrbAllowedPatterns, isValidPatternType } from '@almadar/patterns';
+import { getOrbAllowedPatterns, isValidPatternType } from '@almadar/core/patterns';
 
 /**
  * LOLO structural syntax: orbital, entity, trait, state, emits, listens, page, uses.

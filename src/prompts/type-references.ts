@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import { getAllPatternTypes, getPatternPropsCompact } from '@almadar/patterns';
+import { getAllPatternTypes, getPatternPropsCompact } from '@almadar/core/patterns';
 import { UI_SLOTS } from '@almadar/core/types';
 
 // `OPERATORS` was retired from @almadar/core when the operators registry was

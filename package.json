@@ -49,7 +49,6 @@
   "dependencies": {
     "@almadar/core": ">=8.1.0",
     "@almadar/llm": ">=2.11.0",
-    "@almadar/patterns": ">=2.30.3",
     "@almadar/std": ">=15.0.1",
     "commander": "^12.0.0",
     "glob": "^10.3.10"

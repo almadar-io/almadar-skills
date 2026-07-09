@@ -2,7 +2,7 @@
  * Behavior Agent Skill Sections
  *
  * Dynamic prompt sections for the behavior-driven agent.
- * Pulls data from @almadar/std (behaviors), @almadar/patterns (pattern props),
+ * Pulls data from @almadar/std (behaviors), @almadar/core/patterns (pattern props),
  * and @almadar/core (builder signatures). No hardcoded lists.
  *
  * @packageDocumentation
@@ -17,7 +17,7 @@ import {
   type RegistryEntry,
   type BehaviorSummary,
 } from '@almadar/std';
-import { getOrbAllowedPatterns } from '@almadar/patterns';
+import { getOrbAllowedPatterns } from '@almadar/core/patterns';
 
 /**
  * Local intersection — the published `RegistryEntry` type omits `topic`,

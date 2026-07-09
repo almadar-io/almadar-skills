@@ -5,18 +5,18 @@
  * as React JSX (what LLMs know) instead of pattern JSON (what they don't).
  * Atoms + molecules only. No organisms, no templates.
  *
- * Data pulled dynamically from @almadar/patterns.
+ * Data pulled dynamically from @almadar/core/patterns.
  *
  * @packageDocumentation
  */
 
-import { getOrbAllowedPatterns, COMPONENT_MAPPING, isValidPatternType } from '@almadar/patterns';
+import { getOrbAllowedPatterns, COMPONENT_MAPPING, isValidPatternType } from '@almadar/core/patterns';
 
 interface MappingEntry { component: string; importPath: string; category: string }
 
 /**
  * Build the reverse mapping: component name → pattern name.
- * Uses COMPONENT_MAPPING from @almadar/patterns (imported at module level).
+ * Uses COMPONENT_MAPPING from @almadar/core/patterns (imported at module level).
  */
 function getComponentMapping(): Record<string, { pattern: string } & MappingEntry> {
     const result: Record<string, { pattern: string } & MappingEntry> = {};
