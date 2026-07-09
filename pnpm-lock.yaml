@@ -4,22 +4,37 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  react: 19.2.3
+  react-dom: 19.2.3
+  '@types/react': '>=19.0.0'
+  '@types/react-dom': '>=19.0.0'
+  zustand: 4.5.7
+  react-native-reanimated: 4.1.1
+  react-native-worklets: 0.5.1
+  react-syntax-highlighter: ^16.1.0
+  '@react-three/fiber': 9.5.0
+  '@types/three': 0.160.0
+  '@almadar/std': ^16.103.2
+  '@almadar/ui': ^5.93.0
+  '@almadar/core': ^10.24.0
+
 importers:
 
   .:
     dependencies:
       '@almadar/core':
-        specifier: '>=8.1.0'
-        version: 8.1.0
+        specifier: ^10.24.0
+        version: link:../almadar-core
       '@almadar/llm':
         specifier: '>=2.11.0'
-        version: 2.14.1(@almadar/core@8.1.0)
+        version: 2.14.1(@almadar/core@almadar-core)
       '@almadar/patterns':
         specifier: '>=2.30.3'
         version: 2.30.3
       '@almadar/std':
-        specifier: '>=15.0.1'
-        version: 15.0.1
+        specifier: ^16.103.2
+        version: link:../almadar-std
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -57,8 +72,8 @@ importers:
 
 packages:
 
-  '@almadar/core@8.1.0':
-    resolution: {integrity: sha512-+1HwukYDz6guFOIl3U8HEoosfkDsvsIjI+DpWR4UnliMRI2hZvpzDA3/dgks96A1Gkangv28PyO/7b7+JX/onw==}
+  '@almadar/core@10.25.0':
+    resolution: {integrity: sha512-GkwgpunROGSjjO1N9UcTE9Zhy7dXggbrLddXVfWo9C0xbTPzEq4tjAL2PxJSMzkmcxK/R5lNchAqwHMer5fBNw==}
 
   '@almadar/eslint-plugin@2.8.1':
     resolution: {integrity: sha512-DaWThhbtFMT/IrqEyc+XADrhAqTjc+jeSO9CeiSJKs0+UoBDuNLZNhLy1kiXT61XdHSxCNZD7jjjtHbXbe59+g==}
@@ -68,16 +83,13 @@ packages:
   '@almadar/llm@2.14.1':
     resolution: {integrity: sha512-2Ny7p4vEKWY8P9EFbJrXPXK1zfdoeFmvyzk9kuGwQT3WF8UgbOC8F1+Ov6V4hLJ9KNfeQ9OaOyFZGWIsJPEbAA==}
     peerDependencies:
-      '@almadar/core': '>=7.12.0'
+      '@almadar/core': ^10.24.0
     peerDependenciesMeta:
       '@almadar/core':
         optional: true
 
   '@almadar/patterns@2.30.3':
     resolution: {integrity: sha512-/ZRO1un/eUcDduzzUm0DnTni7OtL7v6bWpaBgcRz4DtJYE/UQfzauOFH63rb2ALHLNsDm21PVZb7jiLvdQW83Q==}
-
-  '@almadar/std@15.0.1':
-    resolution: {integrity: sha512-nI44r7xPaRi4kyAT56KSzCz9ZrqOaF1CMeFfl7fS7i5K2p063CkSPm6GwaG1nnnkFmqmTlONU1r4jKEoM7DQpQ==}
 
   '@anthropic-ai/sdk@0.52.0':
     resolution: {integrity: sha512-d4c+fg+xy9e46c8+YnrrgIQR45CZlAi7PwdzIfDXDM6ACxEZli1/fxhURsq30ZpMZy6LvSkr41jGq5aF5TD7rQ==}
@@ -1338,7 +1350,7 @@ packages:
 
 snapshots:
 
-  '@almadar/core@8.1.0':
+  '@almadar/core@10.25.0':
     dependencies:
       '@almadar/patterns': 2.30.3
       zod: 3.25.76
@@ -1348,7 +1360,7 @@ snapshots:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.14.1(@almadar/core@8.1.0)':
+  '@almadar/llm@2.14.1(@almadar/core@almadar-core)':
     dependencies:
       '@anthropic-ai/sdk': 0.52.0
       '@langchain/anthropic': 1.4.0(@langchain/core@1.1.47(openai@6.38.0(zod@3.25.76)))
@@ -1357,7 +1369,7 @@ snapshots:
       openai: 6.38.0(zod@3.25.76)
       zod: 3.25.76
     optionalDependencies:
-      '@almadar/core': 8.1.0
+      '@almadar/core': link:../almadar-core
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -1366,11 +1378,7 @@ snapshots:
 
   '@almadar/patterns@2.30.3':
     dependencies:
-      '@almadar/core': 8.1.0
-
-  '@almadar/std@15.0.1':
-    dependencies:
-      '@almadar/core': 8.1.0
+      '@almadar/core': 10.25.0
 
   '@anthropic-ai/sdk@0.52.0': {}
 
