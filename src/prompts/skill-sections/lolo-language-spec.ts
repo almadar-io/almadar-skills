@@ -31,11 +31,33 @@ type Status = active | done  # file-scoped type alias (zero or more)
 
 orbital OrbitalName {        # one or more orbitals
   uses Alias from "path"     # imports (optional)
+  expects identity Customer { role : "admin" | "member" }  # sibling requirements (optional)
+  expects entity OrderRecord { totalAmount : number }      #   typed minimal shape you rely on
   entity EntityName [...]    # exactly one entity
   trait TraitName -> Entity   # one or more traits
   page "/path" -> Trait       # zero or more pages
 }
 \`\`\`
+
+### Expects (consumer-side requirements)
+
+\`expects\` declares what an orbital needs from its SIBLINGS — the dual of providing.
+Standalone validation trusts the declaration and checks your usages against the
+declared shape; the composed program link-checks every expectation against the
+real provider entity and fails with attribution when it is unsatisfied.
+
+\`\`\`lolo
+expects identity Customer { role : "admin" | "member" }  # the @user fields you read, typed
+expects identity                       # bare escape hatch: roster exists, open shape
+expects entity OrderRecord { status : "placed" | "shipped" }  # sibling entity you touch
+expects entity CartItem                # existence-only: opaque reference, no fields
+\`\`\`
+
+Rules: declare \`expects identity\` whenever an access directive (@create/@update/
+@delete/@read) or guard reads \`@user\`; declare \`expects entity X\` whenever a
+relation field, \`persist\`/\`fetch\` effect, or \`linkedEntity\` targets a sibling's
+entity. Shape fields use the entity field grammar verbatim. \`expects\` declares
+nothing and owns nothing — the provider's entity is the only real definition.
 
 ### Entity
 
