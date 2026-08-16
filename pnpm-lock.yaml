@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@almadar/core':
-        specifier: ^10.56.0
-        version: 10.56.0
+        specifier: ^10.58.0
+        version: 10.58.0
       '@almadar/llm':
         specifier: ^2.40.0
-        version: 2.40.0(@almadar/core@10.56.0)
+        version: 2.40.0(@almadar/core@10.58.0)
       '@almadar/std':
-        specifier: ^16.169.0
-        version: 16.169.0
+        specifier: ^16.172.0
+        version: 16.172.0
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -57,8 +57,8 @@ importers:
 
 packages:
 
-  '@almadar/core@10.56.0':
-    resolution: {integrity: sha512-YMI+6eH2OWL5xwWWbQof/OReul8iGO0GxmxvStvkEV+UXhjvjCa2EYWc2iW5RvPHxVjhLz5YyE04I/Fg6Wl/OA==}
+  '@almadar/core@10.58.0':
+    resolution: {integrity: sha512-n8RjvvFKwT0YnylJ0mwG0+q94b106CHesJormv7BHm0m4CfO9cUBnNPzFWk9wBRQFjHjFOWPfLNYatuTdnuDiQ==}
 
   '@almadar/eslint-plugin@2.15.0':
     resolution: {integrity: sha512-8mQTnuU7eHOSpCgAag5VEywVce9iWFNC2j6cKvrwjOH/cbak+6Akgnp/zjK3bvy6xoVp6k/4H6bIh/WkRhbfSg==}
@@ -73,8 +73,8 @@ packages:
   '@almadar/logger@1.11.0':
     resolution: {integrity: sha512-rl1NszSOd4iMr759J9OpwaB0hISq22Tnwx0A2cItjXyCO0+nBwVY3gFpHuP52dSRKvZ9iPmxPhhk8ATDVAlQuQ==}
 
-  '@almadar/std@16.169.0':
-    resolution: {integrity: sha512-7Z5uTj1ILJKksxEGKNWRw3Zg001Ct+b+HOGIcBVuz+A2dg/kIZnng5J8ezAM+i5+gITJxV4noQk0ue6Dg6zwwQ==}
+  '@almadar/std@16.172.0':
+    resolution: {integrity: sha512-ovVuLgoTMvI+IYjYdkkk4gcOvnCEwhwl6D3pNdzQkjexgMdb8BRezhujNotQbY5etonwsuh65iJZQpMjxIeVvg==}
 
   '@anthropic-ai/sdk@0.103.0':
     resolution: {integrity: sha512-1uG7RNgoHTUxzOXqSCODKt0UTVlxWiHk/2Tt2/uQJiPW7XzBeKVuJyd3Aw6T3LPyvZV/jDTnPLX7SaM70WLLjA==}
@@ -1509,7 +1509,7 @@ packages:
 
 snapshots:
 
-  '@almadar/core@10.56.0':
+  '@almadar/core@10.58.0':
     dependencies:
       zod: 3.25.76
 
@@ -1518,9 +1518,9 @@ snapshots:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.40.0(@almadar/core@10.56.0)':
+  '@almadar/llm@2.40.0(@almadar/core@10.58.0)':
     dependencies:
-      '@almadar/core': 10.56.0
+      '@almadar/core': 10.58.0
       '@almadar/logger': 1.11.0
       '@anthropic-ai/sdk': 0.52.0
       '@langchain/anthropic': 1.5.1(@langchain/core@1.2.2(openai@6.45.0(zod@3.25.76)))
@@ -1540,11 +1540,11 @@ snapshots:
 
   '@almadar/logger@1.11.0':
     dependencies:
-      '@almadar/core': 10.56.0
+      '@almadar/core': 10.58.0
 
-  '@almadar/std@16.169.0':
+  '@almadar/std@16.172.0':
     dependencies:
-      '@almadar/core': 10.56.0
+      '@almadar/core': 10.58.0
 
   '@anthropic-ai/sdk@0.103.0(zod@3.25.76)':
     dependencies:

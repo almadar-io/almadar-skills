@@ -17,7 +17,7 @@ export function getDesignErrorsSection(): string {
 | Error | Wrong | Correct |
 |-------|-------|---------|
 | Entity binding | \`@entity.task.title\` | \`@entity.title\` |
-| Toast effect | \`["toast", "success", "msg"]\` | \`["notify", "in_app", "msg"]\` |
+| Toast effect | \`["toast", "success", "msg"]\` | \`["notify", "in-app", "msg"]\` |
 | Select missing options | \`{ "type": "select" }\` | Add \`"options": [{ "value": "x", "label": "X" }]\` |
 | Undefined trait | \`{ "ref": "NewTrait" }\` | Define trait in \`traits[]\` FIRST |
 | Missing action | \`{ "type": "button" }\` | \`{ "type": "button", "action": "SAVE" }\` |
@@ -37,7 +37,7 @@ export function getDesignErrorsSection(): string {
 Use \`notify\` effect, NOT \`toast\`:
 
 \`\`\`json
-["notify", "in_app", "Saved!", "success"]  // ✅ Correct
+["notify", "in-app", "Saved!", "success"]  // ✅ Correct
 ["toast", "success", "Saved!"]              // ❌ Invalid effect
 \`\`\`
 
@@ -73,7 +73,7 @@ export function getDesignErrorsCompact(): string {
 | Wrong | Correct |
 |-------|---------|
 | \`@entity.task.title\` | \`@entity.title\` |
-| \`["toast", "success", "msg"]\` | \`["notify", "in_app", "msg"]\` |
+| \`["toast", "success", "msg"]\` | \`["notify", "in-app", "msg"]\` |
 | \`{ "type": "select" }\` | Add \`options: [{value, label}]\` |
 | \`{ "ref": "NewTrait" }\` | Define in \`traits[]\` first |
 `;
