@@ -28,6 +28,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
         env:
           GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: pnpm build
@@ -42,3 +43,4 @@ jobs:
         env:
           GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

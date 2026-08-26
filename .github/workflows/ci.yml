@@ -28,6 +28,7 @@ jobs:
       - run: pnpm install --no-frozen-lockfile
         env:
           GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
       - name: Typecheck
         run: pnpm typecheck
