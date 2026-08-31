@@ -19,6 +19,10 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
+          # See almadar-std/ci.yml: setup-node@v5 defaults package-manager-cache
+          # ON and resolves pnpm from `packageManager` before pnpm is installed
+          # below, failing with "Unable to locate executable file: pnpm".
+          package-manager-cache: false
 
       # pnpm/action-setup@v6 was observed installing pnpm 11.0.0-beta.4-1
       # despite `version: 10.30.3`. Bypass the action; pin via npm.
