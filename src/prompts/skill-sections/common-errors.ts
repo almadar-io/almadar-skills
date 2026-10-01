@@ -256,8 +256,8 @@ Delete confirmation dialogs use \`alert\` or \`confirmation\` patterns, NOT \`fo
   }]] }
 \`\`\`
 
-**Rule:** In non-form modal states (alert, confirmation, detail-panel), use \`CLOSE\` to dismiss. Reserve \`CANCEL\` for \`form-section\` states only.
-This applies to \`actions\` button groups. Per-row \`itemActions\` entries are row actions, not form buttons — a list row action may use any event name (e.g. \`CANCEL\` for "cancel this item") without tripping this check.
+**Rule:** In non-form modal states (alert, confirmation), use \`CLOSE\` to dismiss. Reserve \`CANCEL\` for \`form-section\` states only.
+This applies to \`actions\` button groups that are not record-scoped. Record-scoped actions are lifecycle events of one record and may use any event name: per-row \`itemActions\` entries (e.g. \`CANCEL\` for "cancel this item") and the \`actions\` of a pattern that binds one record (\`detail-panel\`, e.g. \`SUBMIT\` for "submit for approval").
 
 ### 10. Dead Handler: Action Fires Event With No Transition From Current State (CIRCUIT_DEAD_HANDLER)
 
