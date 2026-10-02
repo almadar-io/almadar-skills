@@ -32,8 +32,8 @@ When generating, read context from the orbital:
 If domainContext.vocabulary.create = "Recruit"
   → Button label: "Recruit" instead of "Create"
 
-If design.uxHints.listPattern = "entity-cards"
-  → Use entity-cards pattern instead of entity-table
+If design.uxHints.listPattern = "data-grid"
+  → Use data-grid pattern instead of table-view
 
 If design.uxHints.formPattern = "drawer"
   → Render create/edit forms in drawer slot
@@ -47,7 +47,7 @@ If design.uxHints.formPattern = "drawer"
 export function getContextUsageCompact(): string {
     return `## Context Usage
 - \`domainContext.vocabulary\` → labels (item, create, delete)
-- \`design.uxHints.listPattern\` → entity-table | entity-cards | entity-list
+- \`design.uxHints.listPattern\` → table-view | data-grid | data-list
 - \`design.uxHints.formPattern\` → modal | drawer | page
 - \`design.uxHints.relatedLinks\` → navigation to related orbitals
 `;

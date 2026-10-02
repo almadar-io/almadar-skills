@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@almadar/core':
-        specifier: ^10.114.0
-        version: 10.114.0
+        specifier: ^10.115.0
+        version: 10.115.0
       '@almadar/llm':
-        specifier: ^2.57.0
-        version: 2.57.0(@almadar/core@10.114.0)
+        specifier: ^2.58.0
+        version: 2.58.0(@almadar/core@10.115.0)
       '@almadar/std':
-        specifier: ^16.238.0
-        version: 16.238.0
+        specifier: ^16.239.0
+        version: 16.239.0
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -57,24 +57,24 @@ importers:
 
 packages:
 
-  '@almadar/core@10.114.0':
-    resolution: {integrity: sha512-xLfxujr5kyT1la8pvFtmHK3n8cz8LOA+VHSjwLeyI4Xg6HHOm7D5KWF42Cj/c95LHAAKqR/l4q52nYdbXM3UZQ==}
+  '@almadar/core@10.115.0':
+    resolution: {integrity: sha512-1k2TZEkgNGVT0uMC4PiZITTEJ+HbRvKcsYtNzQ62jjEUbJqmgAs+I3AtcRiO3FFR+0QHhzx0DGUgYFn1ZXYFyg==}
 
   '@almadar/eslint-plugin@2.21.0':
     resolution: {integrity: sha512-H010BxnM/s2v17EcFzh3hGTD1o3AJCBLqrmh1Fupvgdq2oP/PDicU5XAWTYt9apdIiM5yDs11trUT3BYFkGqCA==}
     peerDependencies:
       eslint: '>=8.0.0'
 
-  '@almadar/llm@2.57.0':
-    resolution: {integrity: sha512-Yr39mIMoO571PpwJ1ZJuw3xLFqd0zD9u73UEkCveQgb6/Q7zTvy4viEU1Y5hU3jf6khPSRkOdSuhzcUxhWqz2w==}
+  '@almadar/llm@2.58.0':
+    resolution: {integrity: sha512-rXoIXsZu1YBnWVcXNRE/XyFMK7UFXI9A7Qyi2T+i3WQuqHJtccYDyR+6y/CcOHTVHXbjQtzMn7txzT55p3L5yw==}
     peerDependencies:
-      '@almadar/core': ^10.114.0
+      '@almadar/core': ^10.115.0
 
   '@almadar/logger@1.15.0':
     resolution: {integrity: sha512-N2ea4I+NQ/1ItDIu75zg1LZMZww8FkNUbx+DEgapKdQSc6XvIT56dh9YmKxXFbNDU5+M+oawo42m5M57CYcSWQ==}
 
-  '@almadar/std@16.238.0':
-    resolution: {integrity: sha512-LVVczeXpdvL3qNo0r+V3A7Gz8v2yiyZvVvb+tRpPjzmFT6gLpNz949M2DOMZM4TWAu1xczUYQ+kseX83guNPvw==}
+  '@almadar/std@16.239.0':
+    resolution: {integrity: sha512-GAILsahjsvcwytQXVb7Vvt/3LgzPfDqDq6m6DNW8lqbDv3T++h8qyXiyErBMuSgR/amA/ZRQEJeli0qLDparEQ==}
 
   '@anthropic-ai/sdk@0.103.0':
     resolution: {integrity: sha512-1uG7RNgoHTUxzOXqSCODKt0UTVlxWiHk/2Tt2/uQJiPW7XzBeKVuJyd3Aw6T3LPyvZV/jDTnPLX7SaM70WLLjA==}
@@ -1513,7 +1513,7 @@ packages:
 
 snapshots:
 
-  '@almadar/core@10.114.0':
+  '@almadar/core@10.115.0':
     dependencies:
       zod: 3.25.76
 
@@ -1522,9 +1522,9 @@ snapshots:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.57.0(@almadar/core@10.114.0)':
+  '@almadar/llm@2.58.0(@almadar/core@10.115.0)':
     dependencies:
-      '@almadar/core': 10.114.0
+      '@almadar/core': 10.115.0
       '@almadar/logger': 1.15.0
       '@anthropic-ai/sdk': 0.52.0
       '@langchain/anthropic': 1.5.1(@langchain/core@1.2.2(openai@6.45.0(zod@3.25.76)))
@@ -1545,11 +1545,11 @@ snapshots:
 
   '@almadar/logger@1.15.0':
     dependencies:
-      '@almadar/core': 10.114.0
+      '@almadar/core': 10.115.0
 
-  '@almadar/std@16.238.0':
+  '@almadar/std@16.239.0':
     dependencies:
-      '@almadar/core': 10.114.0
+      '@almadar/core': 10.115.0
 
   '@anthropic-ai/sdk@0.103.0(zod@3.25.76)':
     dependencies:

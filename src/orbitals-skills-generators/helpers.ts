@@ -73,9 +73,9 @@ export function getRenderUIQuickRef(): string {
 **Example**:
 \`\`\`json
 ["render-ui", "main", {
-  "type": "entity-table",
+  "type": "table-view",
   "entity": "Task",
-  "columns": ["title", "status"]
+  "columns": [{ "key": "title", "header": "Title" }, { "key": "status", "header": "Status" }]
 }]
 \`\`\`
 

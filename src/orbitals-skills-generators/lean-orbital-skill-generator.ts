@@ -211,7 +211,7 @@ Every orbital MUST include:
   "style": "modern",
   "uxHints": {
     "flowPattern": "crud-cycle",
-    "listPattern": "entity-table",
+    "listPattern": "table-view",
     "formPattern": "modal"
   }
 }
@@ -342,11 +342,11 @@ Use Read tool to check each orbital file has entity field.
 Before calling \`finish_task\`, verify each INIT transition:
 
 1. **Uses a single \`render-ui\` call** with top-level \`stack\` and \`children\` — NOT flat sequential calls
-2. **Has 3+ composed sections**: header (HStack: title + action), metrics (HStack/Grid of Box cards), data (entity-table/entity-cards)
+2. **Has 3+ composed sections**: header (HStack: title + action), metrics (HStack/Grid of Box cards), data (table-view/data-grid)
 3. **Uses domain-appropriate atoms**: \`badge\` for status, \`typography\` for labels/values, \`button\` for actions
 4. **Props are correct**: \`submitEvent\` not \`onSubmit\`, \`actions\` not \`headerActions\`, \`fields\` not \`fieldNames\`
 
-If any INIT transition is flat (just \`page-header\` + \`entity-table\`), redesign it as a composed VStack hierarchy before finishing.
+If any INIT transition is flat (just \`page-header\` + \`table-view\`), redesign it as a composed VStack hierarchy before finishing.
 `;
 }
 
@@ -414,7 +414,7 @@ This example passes \`npx @almadar/cli validate\` with zero errors:
                         "children": [{ "type": "typography", "variant": "caption", "text": "Done" }, { "type": "badge", "variant": "success", "text": "@count:status=done" }] }
                     ]
                   },
-                  { "type": "entity-table", "entity": "Task", "columns": ["title", "status"], "searchable": true,
+                  { "type": "table-view", "entity": "Task", "columns": [{ "key": "title", "header": "Title" }, { "key": "status", "header": "Status" }],
                     "itemActions": [{ "label": "View", "event": "VIEW" }, { "label": "Edit", "event": "EDIT" }, { "label": "Delete", "event": "DELETE" }] }
                 ]
               }]
@@ -463,10 +463,10 @@ This example passes \`npx @almadar/cli validate\` with zero errors:
 
 **Key points — Atomic Composition**:
 - **INIT uses a SINGLE \`render-ui\` call** with a top-level \`stack\` containing composed \`children\`
-- **3 sections composed**: header (HStack: title + button), metrics (HStack of Box stat cards), data (entity-table)
+- **3 sections composed**: header (HStack: title + button), metrics (HStack of Box stat cards), data (table-view)
 - **Atoms used**: \`typography\` (h1, h2, caption), \`badge\` (status indicators), \`button\` (actions)
 - **Layout used**: \`stack\` (vertical page, horizontal rows), \`box\` (stat cards)
-- **Organism used**: \`entity-table\` with searchable + itemActions
+- **Organism used**: \`table-view\` with itemActions
 - **Theme variables**: All colors use \`var(--color-*)\`, spacing uses \`var(--spacing-*)\`, radius uses \`var(--radius-*)\`
 
 **Validation Rules** (MANDATORY):
@@ -641,7 +641,7 @@ Every .orb program MUST be a full OrbitalSchema with this exact structure:
     },
     "design": {
       "style": "modern",
-      "uxHints": { "flowPattern": "crud-cycle", "listPattern": "entity-table" }
+      "uxHints": { "flowPattern": "crud-cycle", "listPattern": "table-view" }
     }
   }]
 }
@@ -697,7 +697,7 @@ Every .orb program MUST be a full OrbitalSchema with this exact structure:
 **CRUD Pattern:**
 - States: Browsing (isInitial), Creating, Editing, Viewing
 - Events: INIT, CREATE, EDIT, VIEW, SAVE, CANCEL, DELETE
-- INIT effect: render-ui with stack containing header, metrics, entity-table
+- INIT effect: render-ui with stack containing header, metrics, table-view
 
 **Transitions:**
 - Browsing → Creating: on CREATE (render modal with form-section using submitEvent/cancelEvent)

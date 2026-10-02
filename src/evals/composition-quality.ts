@@ -72,7 +72,7 @@ Requirements:
 - Modal form for creating tasks
 - Use atomic composition with stack layouts
 - Include stats/overview section showing counts`,
-    expectedPatterns: ['stack', 'page-header', 'entity-table', 'form-section', 'box', 'typography', 'badge', 'button'],
+    expectedPatterns: ['stack', 'page-header', 'table-view', 'form-section', 'box', 'typography', 'badge', 'button'],
     minScore: 70,
     domain: 'general'
   },
@@ -91,7 +91,7 @@ Requirements:
 - Appointment scheduling view
 - Use healthcare-appropriate layouts (calm, organized)
 - Include tabs for different views`,
-    expectedPatterns: ['stack', 'grid', 'page-header', 'entity-table', 'tabs', 'badge', 'card', 'stats'],
+    expectedPatterns: ['stack', 'grid', 'page-header', 'table-view', 'tabs', 'badge', 'card', 'stats'],
     minScore: 75,
     domain: 'healthcare'
   },
@@ -110,7 +110,7 @@ Requirements:
 - Product detail view with image
 - Shopping cart indicator
 - Use product-appropriate layouts (visual, appealing)`,
-    expectedPatterns: ['stack', 'grid', 'entity-cards', 'filter-group', 'badge', 'card', 'image'],
+    expectedPatterns: ['stack', 'grid', 'data-grid', 'filter-group', 'badge', 'card', 'image'],
     minScore: 75,
     domain: 'ecommerce'
   },
@@ -148,7 +148,7 @@ Requirements:
 - Recent reports list
 - Date range selector
 - Professional, data-dense layout`,
-    expectedPatterns: ['stack', 'grid', 'stats', 'chart', 'entity-table', 'badge', 'card'],
+    expectedPatterns: ['stack', 'grid', 'stats', 'chart', 'table-view', 'badge', 'card'],
     minScore: 75,
     domain: 'general'
   }
@@ -223,7 +223,7 @@ function analyzePattern(pattern: any, metrics: CompositionMetrics, depth: number
   // Categorize pattern types
   const atomTypes = ['typography', 'badge', 'button', 'avatar', 'icon', 'progress-bar', 'divider'];
   const moleculeTypes = ['card', 'modal', 'drawer', 'tabs', 'alert', 'accordion', 'box'];
-  const organismTypes = ['entity-table', 'form-section', 'detail-panel', 'page-header', 'chart', 'timeline', 'stats'];
+  const organismTypes = ['table-view', 'form-section', 'detail-panel', 'page-header', 'chart', 'timeline', 'stats'];
 
   if (atomTypes.includes(pattern.type) && !metrics.atomTypes.includes(pattern.type)) {
     metrics.atomTypes.push(pattern.type);

@@ -67,8 +67,8 @@ The most-used patterns (by frequency across all behaviors):
 \`data-list\`, \`data-grid\`, \`search-input\`, \`form-section\`, \`meter\`
 
 **BANNED from .orb render-ui** (organisms, resolved by compiler/runtime):
-\`entity-table\`, \`entity-list\`, \`entity-cards\`, \`page-header\`, \`detail-panel\`,
-\`stats\`, \`dashboard-grid\`, \`header\`, \`sidebar\`, \`navigation\`, \`master-detail\`
+\`page-header\`, \`detail-panel\`,
+\`stats\`, \`dashboard-grid\`, \`header\`, \`sidebar\`, \`navigation\`
 
 ---
 
@@ -194,7 +194,6 @@ ${patternsRef}
 
 | Wrong | Correct |
 |-------|---------|
-| \`entity-table\` | \`data-list\` or \`data-grid\` |
 | \`page-header\` | \`stack\` with \`icon\` + \`typography\` + \`button\` |
 | \`detail-panel\` | \`stack\` with field \`typography\` rows |
 | \`stats\` | \`stat-display\` atoms in a \`stack\` |
@@ -333,7 +332,6 @@ ${patternsRef}
 
 | Wrong | Correct |
 |-------|---------|
-| \`entity-table\` | \`data-list\` or \`data-grid\` |
 | \`page-header\` | \`stack\` with \`icon\` + \`typography\` + \`button\` |
 | \`detail-panel\` | \`stack\` with field \`typography\` rows |
 | \`stats\` | \`stat-display\` atoms in a \`stack\` |

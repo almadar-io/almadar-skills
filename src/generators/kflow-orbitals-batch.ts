@@ -200,7 +200,7 @@ This example shows the batch workflow for a 4-orbital e-commerce app:
         ]
       },
       "traits": ["List", "Detail", "Form"],
-      "patterns": ["entity-table", "entity-detail", "form-section"]
+      "patterns": ["table-view", "entity-detail", "form-section"]
     },
     {
       "name": "Order Management",
@@ -214,7 +214,7 @@ This example shows the batch workflow for a 4-orbital e-commerce app:
         ]
       },
       "traits": ["List", "Detail"],
-      "patterns": ["entity-table", "entity-detail"],
+      "patterns": ["table-view", "entity-detail"],
       "listens": [{ "event": "PRODUCT_PURCHASED", "triggers": "UPDATE_STOCK" }]
     },
     {
@@ -229,7 +229,7 @@ This example shows the batch workflow for a 4-orbital e-commerce app:
         ]
       },
       "traits": ["List", "Detail", "Form"],
-      "patterns": ["entity-table", "entity-detail", "form-section"]
+      "patterns": ["table-view", "entity-detail", "form-section"]
     },
     {
       "name": "Dashboard",

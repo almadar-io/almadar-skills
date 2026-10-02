@@ -282,7 +282,7 @@ Each orbital MUST include embedded context for portability:
   },
   "design": {
     "style": "modern",
-    "uxHints": { "flowPattern": "crud-cycle", "listPattern": "entity-table", "formPattern": "modal" }
+    "uxHints": { "flowPattern": "crud-cycle", "listPattern": "table-view", "formPattern": "modal" }
   },
   "emits": ["ORDER_READY", "ORDER_COMPLETED"],
   "listens": [{ "event": "MENU_ITEM_UNAVAILABLE", "triggers": "DISABLE_ITEM" }],

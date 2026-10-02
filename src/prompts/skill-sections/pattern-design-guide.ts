@@ -53,7 +53,7 @@ Each transition executes exactly ONE render-ui effect with composed children:
       "gap": "lg",
       "children": [
         { "type": "page-header", "title": "...", "actions": [...] },
-        { "type": "entity-table", "entity": "...", ... }
+        { "type": "table-view", "entity": "...", ... }
       ]
     }]
   ]
@@ -63,7 +63,7 @@ Each transition executes exactly ONE render-ui effect with composed children:
 {
   "effects": [
     ["render-ui", "main", { "type": "page-header", ... }],
-    ["render-ui", "main", { "type": "entity-table", ... }]
+    ["render-ui", "main", { "type": "table-view", ... }]
   ]
 }
 \`\`\`
@@ -102,7 +102,7 @@ Every composition MUST contain ALL three levels:
 
 | Type | Purpose | Example Usage |
 |------|---------|---------------|
-| \`entity-table\` | Data tables | List views |
+| \`table-view\` | Data tables | List views |
 | \`form-section\` | Forms | Create/edit |
 | \`detail-panel\` | Detail views | View record |
 | \`page-header\` | Page headers | Title + actions |
@@ -126,7 +126,7 @@ Root element MUST be a layout primitive:
 
 // ❌ WRONG: No layout wrapper
 { "type": "page-header", "title": "..." }
-{ "type": "entity-table", "entity": "..." }
+{ "type": "table-view", "entity": "..." }
 \`\`\`
 
 #### Layout Props Reference
@@ -307,10 +307,9 @@ This example has been validated with \`npx @almadar/cli validate\`:
                     "actions": [{ "label": "Create Task", "event": "CREATE", "variant": "primary" }]
                   },
                   {
-                    "type": "entity-table",
+                    "type": "table-view",
                     "entity": "Task",
-                    "columns": ["title", "status", "priority"],
-                    "searchable": true,
+                    "columns": [{ "key": "title", "header": "Title" }, { "key": "status", "header": "Status" }, { "key": "priority", "header": "Priority" }],
                     "itemActions": [
                       { "label": "Edit", "event": "EDIT" },
                       { "label": "Delete", "event": "DELETE" }
@@ -396,7 +395,7 @@ Before calling \`finish_task\`, verify:
 □ Root element is layout (stack/box/container/grid)
 □ Contains 2+ atoms (typography, badge, button, etc.)
 □ Contains 1+ molecules (box, card, tabs, alert)
-□ Contains 1+ organisms (entity-table, form-section, page-header)
+□ Contains 1+ organisms (table-view, form-section, page-header)
 □ Uses theme variables for ALL visual properties
 □ Has 3+ distinct sections (header, content, actions)
 □ Matches template quality from almadar-ui/components/templates/

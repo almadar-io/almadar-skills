@@ -174,8 +174,8 @@ export function getCommonFixPatternsSection(): string {
 
 | Pattern | Missing | Add |
 |---------|---------|-----|
-| \`entity-table\` | columns | \`"columns": ["field1", "field2"]\` |
-| \`entity-table\` | itemActions | \`"itemActions": [{ "label": "Edit", "event": "EDIT" }]\` |
+| \`table-view\` | columns | \`"columns": [{ "key": "field1", "header": "Field 1" }, { "key": "field2", "header": "Field 2" }]\` |
+| \`table-view\` | itemActions | \`"itemActions": [{ "label": "Edit", "event": "EDIT" }]\` |
 | \`form-section\` | onSubmit | \`"onSubmit": "SAVE"\` |
 | \`form-section\` | fields | \`"fields": ["field1", "field2"]\` |
 | \`detail-panel\` | fields | \`"fields": ["field1", "field2"]\` |

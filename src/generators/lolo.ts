@@ -220,7 +220,7 @@ Before calling \`finish_task\`, verify:
 [] Root element is layout (stack/box/simple-grid)
 [] Contains 2+ atoms (typography, badge, button, icon)
 [] Contains 1+ data molecules (data-grid, data-list, form-section, stats)
-[] NO organism patterns (entity-table, entity-list, page-header, etc.)
+[] NO organism patterns (page-header, etc.)
 [] Uses theme variables for ALL visual properties
 [] Passes orbital validate with zero errors and zero warnings
 \`\`\``;

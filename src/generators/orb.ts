@@ -263,9 +263,6 @@ These organism-level patterns are deprecated. Use the molecule equivalents:
 
 | Banned Pattern | Use Instead |
 |---------------|-------------|
-| \`entity-table\` | \`data-grid\` with \`entity\`, \`fields\`, \`itemActions\` |
-| \`entity-list\` | \`data-list\` with \`entity\`, \`fields\`, \`itemActions\` |
-| \`entity-cards\` | \`data-grid\` with \`cols: 3\`, or compose with \`card\` children in a \`simple-grid\` |
 | \`page-header\` | Compose with \`stack\` (horizontal) + \`typography\` (h1) + \`button\` |
 | \`detail-panel\` | Compose with \`stack\` (vertical) + \`typography\` + \`badge\` + \`divider\` |
 | \`timeline\` | Compose with \`data-list\` or \`stack\` + timestamp items |
@@ -397,7 +394,7 @@ Before calling \`finish_task\`, verify:
 [] Root element is layout (stack/box/simple-grid)
 [] Contains 2+ atoms (typography, badge, button, icon)
 [] Contains 1+ data molecules (data-grid, data-list, form-section, stats)
-[] NO organism patterns (entity-table, entity-list, page-header, etc.)
+[] NO organism patterns (page-header, etc.)
 [] Uses theme variables for ALL visual properties
 [] Matches production quality from standard behaviors
 [] Passes orbital validate with zero errors and zero warnings
@@ -417,8 +414,6 @@ Before calling \`finish_task\`, verify:
 | Emits as strings \`["INIT"]\` | Emit objects \`[{ "event": "INIT" }]\` |
 | \`onSubmit\` / \`onCancel\` | \`submitEvent\` / \`cancelEvent\` |
 | \`headerActions\` | \`actions\` |
-| \`entity-table\` | \`data-grid\` |
-| \`entity-list\` | \`data-list\` |
 | \`page-header\` | \`stack\` + \`typography\` + \`button\` |
 
 ---
@@ -472,7 +467,7 @@ Before calling \`finish_task\`, verify each INIT transition:
 1. **Uses a single \`render-ui\` call** with top-level \`stack\` and \`children\`
 2. **Has 3+ composed sections**: header (HStack: title + action), metrics (stat-display/stats), data (data-grid/data-list)
 3. **Uses domain-appropriate atoms**: \`badge\` for status, \`typography\` for labels/values, \`button\` for actions
-4. **NO organisms**: Never \`entity-table\`, \`entity-list\`, \`page-header\`, \`detail-panel\`
+4. **NO organisms**: Never \`page-header\`, \`detail-panel\`
 5. **Props are correct**: \`submitEvent\` not \`onSubmit\`, \`fields\` not \`fieldNames\`
 `;
 }
@@ -573,6 +568,6 @@ The INIT transition is the most important: it defines the main view. This shows 
 - **CANCEL/CLOSE**: \`["render-ui", "modal", null]\`
 - **DELETE**: \`["persist", "delete", "Task", "@payload.id"], ["fetch", "Task"]\`
 
-**Key rules**: header = \`stack\` + \`typography\` + \`button\` (NOT \`page-header\`). Data = \`data-grid\` (NOT \`entity-table\`). Forms = \`form-section\` with \`submitEvent\`/\`cancelEvent\`.
+**Key rules**: header = \`stack\` + \`typography\` + \`button\` (NOT \`page-header\`). Data = \`data-grid\`. Forms = \`form-section\` with \`submitEvent\`/\`cancelEvent\`.
 `;
 }

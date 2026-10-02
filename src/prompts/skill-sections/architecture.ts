@@ -71,7 +71,7 @@ Trait State Machine → render-ui → UI Component → User Action → Event →
 │ Page: /tasks                                │
 ├─────────────────────────────────────────────┤
 │ TaskManagement trait OWNS:                  │
-│   • main → entity-table, page-header        │
+│   • main → table-view, page-header          │
 │   • modal → form-section (create/edit)      │
 │   • drawer → detail-panel (view)            │
 │                                             │

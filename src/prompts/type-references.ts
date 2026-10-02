@@ -135,9 +135,9 @@ ${slots.map(slot => `- \`${slot}\``).join('\n')}
 
 \`\`\`typescript
 ["render-ui", "main", {
-  type: "entity-table",
+  type: "table-view",
   entity: "Task",
-  columns: ["title", "status"],
+  columns: [{ key: "title", header: "Title" }, { key: "status", header: "Status" }],
   itemActions: [{ label: "Edit", event: "EDIT" }]
 }]
 \`\`\`

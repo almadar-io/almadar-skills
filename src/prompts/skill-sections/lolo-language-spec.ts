@@ -353,8 +353,6 @@ ${patternTables}
 
 | Banned Pattern | Use Instead |
 |---------------|-------------|
-| \`entity-table\` | \`data-grid\` with \`entity\`, \`fields\`, \`itemActions\` |
-| \`entity-list\` | \`data-list\` with \`entity\`, \`fields\`, \`itemActions\` |
 | \`page-header\` | Compose with \`stack\` (horizontal) + \`typography\` (h1) + \`button\` |
 | \`detail-panel\` | Compose with \`stack\` (vertical) + \`typography\` + \`badge\` + \`divider\` |
 | \`timeline\` | Compose with \`data-list\` or \`stack\` + timestamp items |
@@ -544,7 +542,7 @@ orbital TaskOrbital {
 
 **Key patterns**:
 - Header = \`stack\` + \`typography\` + \`button\` (NOT \`page-header\`)
-- Data = \`data-grid\` (NOT \`entity-table\`)
+- Data = \`data-grid\`
 - Detail = \`stack\` + \`typography\` + \`badge\` + \`divider\` (NOT \`detail-panel\`)
 - Form = \`form-section\` with \`submitEvent\`/\`cancelEvent\` (NOT \`onSubmit\`)
 - Modal dismiss = \`(render-ui modal null)\``;

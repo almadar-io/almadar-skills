@@ -33,7 +33,7 @@ function getPatternCategories(): string {
     Navigation: PATTERN_TYPES.filter((p) => ["tabs", "breadcrumb"].includes(p)),
     Layout: PATTERN_TYPES.filter(
       (p) =>
-        p.includes("layout") || p.includes("grid") || p === "master-detail",
+        p.includes("layout") || p.includes("grid"),
     ),
     Interaction: PATTERN_TYPES.filter((p: any) => p === "confirmation" || (typeof p === 'string' && p.includes("confirmation"))),
     Game: PATTERN_TYPES.filter(
@@ -102,7 +102,7 @@ The INIT render-ui MUST be a **single composed stack**, not flat calls:
             { "type": "button", "label": "Create", "event": "CREATE", "variant": "primary" }
           ]
         },
-        { "type": "entity-table", "entity": "EntityName", "columns": ["..."], "searchable": true,
+        { "type": "table-view", "entity": "EntityName", "columns": [{ "key": "...", "header": "..." }],
           "itemActions": [{ "label": "View", "event": "VIEW" }] }
       ]
     }]
@@ -216,10 +216,10 @@ Every pattern object in render-ui MUST include a \`"type"\` field. This applies 
 
 \`\`\`json
 // WRONG - missing type:
-["render-ui", "main", { "entity": "Product", "columns": ["name"] }]
+["render-ui", "main", { "entity": "Product", "columns": [{ "key": "name", "header": "Name" }] }]
 
 // CORRECT:
-["render-ui", "main", { "type": "entity-table", "entity": "Product", "columns": ["name"] }]
+["render-ui", "main", { "type": "table-view", "entity": "Product", "columns": [{ "key": "name", "header": "Name" }] }]
 
 // WRONG - child missing type:
 { "type": "stack", "children": [{ "text": "Hello" }] }
@@ -345,10 +345,10 @@ CORRECT: Use form-section with submitEvent/cancelEvent props
 \`\`\`
 Actions are INSIDE patterns, not separate patterns.
 
-### 14. Forgetting itemActions in entity-table
+### 14. Forgetting itemActions in table-view
 \`\`\`
-WRONG: { "type": "entity-table", "entity": "Task" }
-CORRECT: { "type": "entity-table", "entity": "Task", "itemActions": [{"label": "Edit", "event": "EDIT"}] }
+WRONG: { "type": "table-view", "entity": "Task" }
+CORRECT: { "type": "table-view", "entity": "Task", "itemActions": [{"label": "Edit", "event": "EDIT"}] }
 \`\`\`
 
 ### 15. Duplicate Trait Names Across Orbitals
@@ -373,12 +373,12 @@ Event listeners go INSIDE traits, not at orbital level:
 \`\`\`
 
 ### 18. Wrong Filtering Pattern (Use Query Singleton)
-Use a singleton entity for filter state + \`query\` prop on entity-table:
+Use a singleton entity for filter state + \`query\` prop on table-view:
 \`\`\`json
 { "name": "TaskQuery", "entity": { "name": "TaskQuery", "singleton": true, "runtime": true,
     "fields": [{ "name": "status", "type": "string" }, { "name": "search", "type": "string" }] } }
 \`\`\`
-Reference: \`["render-ui", "main", { "type": "entity-table", "entity": "Task", "query": "@TaskQuery" }]\`
+Reference: \`["render-ui", "main", { "type": "search-input", "query": "@TaskQuery" }]\`
 
 `;
 }

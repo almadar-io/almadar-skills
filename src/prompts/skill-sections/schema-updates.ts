@@ -87,9 +87,9 @@ grep -n '"pages"' schema.orb -A 10
 }
 \`\`\`
 
-**Add itemActions to entity-table:**
+**Add itemActions to table-view:**
 \`\`\`json
-// Find: "entity-table" in INIT transition
+// Find: "table-view" in INIT transition
 // Add itemActions prop:
 "itemActions": [
   { "label": "View", "event": "VIEW" },
@@ -203,7 +203,7 @@ grep -n '"transitions"' schema.orb     # Find transitions
 | State | \`"states": [\` | StateMachine states |
 | Transition | \`"transitions": [\` | StateMachine transitions |
 | Button | \`"page-header"\` | actions array |
-| Row action | \`"entity-table"\` | itemActions array |
+| Row action | \`"table-view"\` | itemActions array |
 
 **After changes, verify:**
 - New events have transitions using them

@@ -42,7 +42,7 @@ export function getCompositionRules(): string {
 
 ${patternTables}
 ### Banned Patterns (do not use)
-entity-table, entity-list, entity-cards, page-header, detail-panel, timeline, crud-template, list-template, detail-template`;
+page-header, detail-panel, timeline, crud-template, list-template, detail-template`;
 }
 
 /**

@@ -107,7 +107,7 @@ const LEAN_COMMON_ERRORS = `
 const ODL_PATTERNS = `
 ## Patterns
 
-Entity patterns: entity-table, entity-list, entity-cards
+Entity patterns: table-view, data-list, data-grid
 Form patterns: form-section
 `;
 
@@ -228,7 +228,7 @@ The tools handle proper prompting, caching, and S-Expression syntax. Writing dir
     { "name": "TasksPage", "path": "/tasks", "viewType": "list", "isInitial": true }
   ],
   "traits": ["TaskManager"],
-  "patterns": ["page-header", "entity-table", "form-section", "detail-panel"]
+  "patterns": ["page-header", "table-view", "form-section", "detail-panel"]
 }
 \`\`\`
 
@@ -311,7 +311,7 @@ TaskManager behavior:
   Transitions:
     - From Browsing to Browsing on INIT
       then ["render-ui", "main", {"type": "page-header", "title": "Tasks", "actions": [{"label": "New Task", "event": "CREATE", "variant": "primary"}]}]
-      then ["render-ui", "center", {"type": "entity-table", "entity": "Task", "columns": ["title", "status", "priority", "dueDate"], "itemActions": [{"label": "View", "event": "VIEW"}, {"label": "Edit", "event": "EDIT"}, {"label": "Delete", "event": "DELETE", "variant": "danger"}]}]
+      then ["render-ui", "center", {"type": "table-view", "entity": "Task", "columns": [{"key": "title", "header": "Title"}, {"key": "status", "header": "Status"}, {"key": "priority", "header": "Priority"}, {"key": "dueDate", "header": "Due"}], "itemActions": [{"label": "View", "event": "VIEW"}, {"label": "Edit", "event": "EDIT"}, {"label": "Delete", "event": "DELETE", "variant": "danger"}]}]
 
     - From Browsing to Creating on CREATE
       then ["render-ui", "modal", {"type": "form-section", "entity": "Task", "fields": ["title", "description", "status", "priority", "dueDate"], "submitEvent": "SAVE", "cancelEvent": "CANCEL"}]
@@ -363,7 +363,7 @@ TaskManager behavior:
 
 **Key points in this example:**
 - **Entity: Task** explicitly links the behavior to the Task entity (REQUIRED)
-- INIT renders BOTH page-header (with "New Task" action) AND entity-table (with View/Edit/Delete itemActions)
+- INIT renders BOTH page-header (with "New Task" action) AND table-view (with View/Edit/Delete itemActions)
 - All effects use S-Expression format
 - Modal for create/edit, drawer for view, overlay for delete confirmation
 - Each open slot is closed with \`null\` when done
