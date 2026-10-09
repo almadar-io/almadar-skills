@@ -170,7 +170,7 @@ orbital SecondOrbital {
 
 - File extension: \`.orb\` (compiler auto-detects LOLO syntax)
 - Single-orbital programs: omit \`app\` header
-- Multi-orbital programs: include \`app Name vX.Y.Z\` header`;
+- Multi-orbital programs: include the \`app Name [ version: "1.0.0", description: "…", theme: "…", locales: [en] ]\` header — app modifiers go in its bracket, never on loose lines`;
 }
 
 /**
@@ -286,6 +286,9 @@ state creating {
 page "/path" as PageName -> TraitName [view: list, entity: EntityName, initial]
 \`\`\`
 Always write \`as PageName\` so the generated route name is explicit and stable across renames.
+Head modifiers go in the same bracket: \`access: public | authenticated\`, \`indexing: index | noindex\`,
+\`title\`/\`description\` (a string or \`(i18n/t "key")\`), and \`translationOf: "group"\` to link one page's
+translations authored per locale. An imported orbital's \`pages { "/up": "/local" [access: public] }\` entry takes the same head keys.
 
 ### 6. ONE Orbital Per Entity
 
