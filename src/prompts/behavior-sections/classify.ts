@@ -38,7 +38,7 @@ function isInlineTrait(traitRef: TraitRef): traitRef is Trait {
 
 /**
  * Known atom behavior names. Atoms are self-contained, irreducible state machines.
- * Derived from the behaviors/functions/atoms/ directory in @almadar/std source.
+ * The atoms of @almadar/std.
  */
 const ATOM_NAMES = new Set([
     'std-browse', 'std-modal', 'std-confirmation', 'std-search', 'std-filter',

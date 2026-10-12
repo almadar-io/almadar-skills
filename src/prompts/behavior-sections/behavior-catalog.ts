@@ -25,9 +25,9 @@
  * @packageDocumentation
  */
 
-import { readdirSync, readFileSync, existsSync, realpathSync, statSync } from 'fs';
-import { dirname, resolve, basename } from 'path';
-import { fileURLToPath } from 'url';
+import { readdirSync, readFileSync, existsSync, statSync } from 'fs';
+import { resolve, basename } from 'path';
+import { resolveStdRegistryRoot } from './behavior-loader.js';
 
 // ============================================================================
 // Types (narrowly typed from the .orb JSON we read off disk)
@@ -60,40 +60,9 @@ interface RawOrb {
 // Filesystem resolution
 // ============================================================================
 
-/**
- * Narrow helper: does this `import.meta` expose the Node 20+ `resolve`
- * method? Avoids any cast by doing a real runtime type guard.
- */
-function hasImportMetaResolve(
-    meta: ImportMeta,
-): meta is ImportMeta & { resolve(specifier: string): string } {
-    // ImportMeta doesn't declare `resolve`, so we touch it via `in`.
-    return 'resolve' in meta && typeof (meta as { resolve?: unknown }).resolve === 'function';
-}
-
-/**
- * Walk the `@almadar/std` package and return every `behaviors/registry/<topic>/<tier>`
- * directory (post-Phase-3.5.G layout, std 7.11+). Returns an empty array
- * when the std package isn't resolvable (e.g. tests in a detached
- * environment) so the caller can degrade gracefully. Also handles the
- * legacy flat layout (`behaviors/registry/<tier>`) as a fallback for
- * older std versions.
- *
- * Topics: core | agent | app | game | service | probes (+ any future tier).
- */
 function resolveBehaviorTierDirs(tier: 'atoms' | 'molecules' | 'organisms'): string[] {
-    let stdPkgRoot: string;
-    try {
-        if (!hasImportMetaResolve(import.meta)) return [];
-        const url = import.meta.resolve('@almadar/std/behaviors/functions');
-        const filePath = fileURLToPath(url);
-        stdPkgRoot = realpathSync(resolve(dirname(filePath), '..', '..', '..'));
-    } catch {
-        return [];
-    }
-
-    const registryRoot = resolve(stdPkgRoot, 'behaviors', 'registry');
-    if (!existsSync(registryRoot)) return [];
+    const registryRoot = resolveStdRegistryRoot();
+    if (registryRoot === null) return [];
 
     const dirs: string[] = [];
 

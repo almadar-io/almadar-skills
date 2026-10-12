@@ -18,9 +18,10 @@
  * @packageDocumentation
  */
 
-import { readdirSync, readFileSync, existsSync, realpathSync, statSync } from 'fs';
+import { readdirSync, readFileSync, existsSync, statSync } from 'fs';
 import { dirname, resolve, basename } from 'path';
 import { fileURLToPath } from 'url';
+import { behaviorRegistryDir, findInstalledBehaviorPackage } from '@almadar/core/behavior-package';
 
 export type BehaviorTier = 'atoms' | 'molecules' | 'organisms';
 
@@ -58,12 +59,6 @@ export interface LoadedBehavior {
     raw: RawOrb;
 }
 
-function hasImportMetaResolve(
-    meta: ImportMeta,
-): meta is ImportMeta & { resolve(specifier: string): string } {
-    return 'resolve' in meta && typeof (meta as { resolve?: unknown }).resolve === 'function';
-}
-
 function safeReaddir(dir: string): string[] {
     try { return readdirSync(dir); } catch { return []; }
 }
@@ -74,19 +69,12 @@ function isDir(path: string): boolean {
 
 let cachedRegistryRoot: string | null | undefined;
 
-/** Resolve `node_modules/@almadar/std/behaviors/registry`. Cached. */
+/** The installed `@almadar/std` registry directory, through its package manifest; null when std is not installed. Cached. */
 export function resolveStdRegistryRoot(): string | null {
     if (cachedRegistryRoot !== undefined) return cachedRegistryRoot;
     try {
-        if (!hasImportMetaResolve(import.meta)) {
-            cachedRegistryRoot = null;
-            return null;
-        }
-        const url = import.meta.resolve('@almadar/std/behaviors/functions');
-        const filePath = fileURLToPath(url);
-        const stdPkgRoot = realpathSync(resolve(dirname(filePath), '..', '..', '..'));
-        const registryRoot = resolve(stdPkgRoot, 'behaviors', 'registry');
-        cachedRegistryRoot = existsSync(registryRoot) ? registryRoot : null;
+        const std = findInstalledBehaviorPackage('@almadar/std', dirname(fileURLToPath(import.meta.url)));
+        cachedRegistryRoot = behaviorRegistryDir(std);
     } catch {
         cachedRegistryRoot = null;
     }
