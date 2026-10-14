@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@almadar/core':
-        specifier: ^10.127.0
-        version: 10.127.0
+        specifier: ^10.128.0
+        version: 10.128.0
       '@almadar/llm':
-        specifier: ^2.63.0
-        version: 2.63.0(@almadar/core@10.127.0)
+        specifier: ^2.64.0
+        version: 2.64.0(@almadar/core@10.128.0)
       '@almadar/std':
-        specifier: ^16.251.0
-        version: 16.251.0
+        specifier: ^16.253.0
+        version: 16.253.0
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -25,8 +25,8 @@ importers:
         version: 10.5.0
     devDependencies:
       '@almadar/eslint-plugin':
-        specifier: ^2.21.0
-        version: 2.21.0(eslint@10.0.0)
+        specifier: ^2.22.0
+        version: 2.22.0(eslint@10.0.0)
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.19
@@ -57,24 +57,29 @@ importers:
 
 packages:
 
-  '@almadar/core@10.127.0':
-    resolution: {integrity: sha512-49o0hUM04KjC+Vg8exw9cHcw5vU78oWgKQk4lEKbFZmGz3t1pPVjfs86hMGDAyGnHmkxZAyLRI6rjDVa2iqhlg==}
+  '@almadar/core@10.128.0':
+    resolution: {integrity: sha512-H5gDoXFAcLfj6CrKonK+zvGPapm/uorR3gO9zE8IebQCYWotCZphyFnegNwJPZg0MNAL/sDX2+vGk7tlQGFOqw==}
+    engines: {node: '>=22'}
 
-  '@almadar/eslint-plugin@2.21.0':
-    resolution: {integrity: sha512-H010BxnM/s2v17EcFzh3hGTD1o3AJCBLqrmh1Fupvgdq2oP/PDicU5XAWTYt9apdIiM5yDs11trUT3BYFkGqCA==}
+  '@almadar/eslint-plugin@2.22.0':
+    resolution: {integrity: sha512-LKs49DVTMpx0DKhLLqX3vdqB4FDsgFbvIatTYEi01kQSU4BLE593jtJ/9TsfPXflw0vk3EA5RGX5a3JJU8/5WQ==}
+    engines: {node: '>=22'}
     peerDependencies:
       eslint: '>=8.0.0'
 
-  '@almadar/llm@2.63.0':
-    resolution: {integrity: sha512-m4RjKLVLRnwF3CZcVcpsRI9Ysenq41V2iyJsEk6Xr7NrpmC8++tAb+3AdsLAA+wRkYLzZmjUAn4n3ygjOksXbw==}
+  '@almadar/llm@2.64.0':
+    resolution: {integrity: sha512-XYr7hRbHtyENXNgPAtIUAio5mma2bm2WLANoi99EmRZysNIBuRSpb13A7Yc/GLEXbKs5v5kz2bcuFOB8MuVBTg==}
+    engines: {node: '>=22'}
     peerDependencies:
-      '@almadar/core': ^10.126.0
+      '@almadar/core': ^10.128.0
 
-  '@almadar/logger@1.17.0':
-    resolution: {integrity: sha512-uskg2LHs5cWyCSbGia4fHo4nrvtmefN4Ms3YQJR9V9dRcMcrMHtpZnDMexA9VUcwXT8UD4dwuBolV/Gswdwe7g==}
+  '@almadar/logger@1.18.0':
+    resolution: {integrity: sha512-9DkdCx3R4x0NGx6REkK6LD2H598pziE0MENeQctuuMf3SzNxAtEljIhv09HTHx7lySiVdbPm/4Qy+PnAq/Qc+w==}
+    engines: {node: '>=22'}
 
-  '@almadar/std@16.251.0':
-    resolution: {integrity: sha512-vWbVQJUtwhAU6HbeF1nxSDzMDXPaW2FWQhS3eczLV8kG1oA0SbjRQIdkBc6k/BlhhmtAXEQEGWQ1nlVCV7cf4w==}
+  '@almadar/std@16.253.0':
+    resolution: {integrity: sha512-unc/3+ZUEZ9IC6LuyWxhQgP7TkpEc5j4YqdWYOznsWXnBd5qY4dVIe2K4wxR0H7+V1pRL1H/LQOA5G9YLAw5cA==}
+    engines: {node: '>=22'}
 
   '@anthropic-ai/sdk@0.103.0':
     resolution: {integrity: sha512-1uG7RNgoHTUxzOXqSCODKt0UTVlxWiHk/2Tt2/uQJiPW7XzBeKVuJyd3Aw6T3LPyvZV/jDTnPLX7SaM70WLLjA==}
@@ -1513,19 +1518,19 @@ packages:
 
 snapshots:
 
-  '@almadar/core@10.127.0':
+  '@almadar/core@10.128.0':
     dependencies:
       zod: 3.25.76
 
-  '@almadar/eslint-plugin@2.21.0(eslint@10.0.0)':
+  '@almadar/eslint-plugin@2.22.0(eslint@10.0.0)':
     dependencies:
       eslint: 10.0.0
       jsonc-eslint-parser: 3.1.0
 
-  '@almadar/llm@2.63.0(@almadar/core@10.127.0)':
+  '@almadar/llm@2.64.0(@almadar/core@10.128.0)':
     dependencies:
-      '@almadar/core': 10.127.0
-      '@almadar/logger': 1.17.0
+      '@almadar/core': 10.128.0
+      '@almadar/logger': 1.18.0
       '@anthropic-ai/sdk': 0.52.0
       '@langchain/anthropic': 1.5.1(@langchain/core@1.2.2(openai@6.45.0(zod@3.25.76)))
       '@langchain/core': 1.2.2(openai@6.45.0(zod@3.25.76))
@@ -1543,13 +1548,13 @@ snapshots:
       - '@smithy/signature-v4'
       - ws
 
-  '@almadar/logger@1.17.0':
+  '@almadar/logger@1.18.0':
     dependencies:
-      '@almadar/core': 10.127.0
+      '@almadar/core': 10.128.0
 
-  '@almadar/std@16.251.0':
+  '@almadar/std@16.253.0':
     dependencies:
-      '@almadar/core': 10.127.0
+      '@almadar/core': 10.128.0
 
   '@anthropic-ai/sdk@0.103.0(zod@3.25.76)':
     dependencies:
